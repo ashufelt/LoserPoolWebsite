@@ -20,8 +20,6 @@ kanban-plugin: basic
 - [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
 - [ ] Register Username with a PIN
 - [ ] Only list teams that are available for that user
-- [ ] Week function: disable picks Sunday and Monday
-- [ ] Week function: don't show current picks until they are locked on Sunday
 
 
 ## In Progress
@@ -30,6 +28,10 @@ kanban-plugin: basic
 
 ## Completed
 
+- [ ] Week function: disable picks Sunday and Monday
+- [ ] Week function: don't show current picks until they are locked on Sunday
+- [ ] Show list of picks all the time
+- [ ] Move server and db info out of main files. Now just in connection info file that I never need to rewrite, and can be saved outside of the repo
 - [ ] Automatically set week
 - [ ] Week function: only pick for current week
 - [ ] Week function: disable Thursday night teams

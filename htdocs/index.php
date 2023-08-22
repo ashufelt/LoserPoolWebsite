@@ -2,6 +2,9 @@
 <html>
 
 <?php
+
+use function PickHandling\ph_get_picks_html_table;
+
 require "router.php";
 $router = new Router();
 
@@ -73,25 +76,13 @@ include_once "users_handling/user_handler.php";
                 </select>
                 <input type="submit" value="Submit Pick">
             </form>
-            <form action="/picks/" method="get">
-                <button name="get_picks" value="all">Get list of Picks</button>
-            </form>
             <form id="clear_picks_button" class="clear_button" action="/picks/" method="get">
                 <button name="clear_picks" value="all">Clear list of Picks</button>
             </form>
         </div>
         <br><br>
         <?php echo $router->processRequest($_REQUEST, $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']); ?>
-<!--
-        <br><br>
-        <div class="set_week">
-            <form action="/setweek/" method="post">
-                <label for="newweek">Set week:</label>
-                <input type="text" id="newweek" name="newweek" required pattern="\d{1}">
-                <input type="submit" value="Change week">
-            </form>
-        </div>
---!>
+        <?php echo $router->get_picks_table_html(); ?>
     </main>
     <?php include "template/footer.html"; ?>
 </body>

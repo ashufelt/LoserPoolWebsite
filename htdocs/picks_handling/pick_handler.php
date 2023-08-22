@@ -15,22 +15,25 @@ function ph_add_pick(SqlAccessController $controller, array $params_list): bool
     $users_picks = $controller->get_user_all_picks($user);
     if (in_array($team, $users_picks, true)) {
         return false;
-    } else if (0 == $controller->add_pick($user, $team, $week_number)) {
-        return true;
-    } else {
+    } else if (is_sunday_or_monday()) {
         return false;
+    } else if (0 != $controller->add_pick($user, $team, $week_number)) {
+        return false;
+    } else {
+        return true;
     }
 }
 
 function ph_get_picks_html_table(SqlAccessController $controller): string
 {
+    $show_weeks_count = 8;
     $hide_picks = !is_sunday_or_monday();
     $current_week = get_current_week();
-    if ($current_week <= 7) {
+    if ($current_week <= $show_weeks_count) {
         $start_week = 1;
-        $end_week = 7;
+        $end_week = $show_weeks_count;
     } else {
-        $start_week = $current_week - 7;
+        $start_week = $current_week - $show_weeks_count;
         $end_week = $current_week;
     }
 

@@ -61,9 +61,6 @@ class Router
                     echo "<h3>Could not create pick</h3><br>";
                 }
                 break;
-            case "/picks/?get_picks=all":
-                return ph_get_picks_html_table($this->controller);
-                break;
             case "/picks/?clear_picks=all":
                 if (ph_clear_picks_table($this->controller)) {
                     echo "<h3>Picks cleared</h3><br>";
@@ -77,17 +74,13 @@ class Router
         }
     }
 
+    public function get_picks_table_html(): string
+    {
+        return ph_get_picks_html_table($this->controller);
+    }
+
     public function get_user_option_list_html(): string
     {
         return uh_get_user_option_list_html($this->controller);
-    }
-
-    public function get_week_options(): string
-    {
-        $options = "";
-        for ($i = 0; $i < WEEKS; $i++) {
-            $options .= "<option value='" . ($i + 1) . "'>" . ($i + 1) . "</option>";
-        }
-        return $options;
     }
 }
