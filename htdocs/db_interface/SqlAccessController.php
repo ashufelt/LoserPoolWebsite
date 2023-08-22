@@ -2,23 +2,23 @@
 
 namespace SqlAccess;
 
+include_once "conn_info.php";
+
 use mysqli;
+use function ConnectionInfo\get_host;
+use function ConnectionInfo\get_user;
+use function ConnectionInfo\get_pass;
+use function ConnectionInfo\get_picks_db_name;
 
 class SqlAccessController
 {
     private mysqli $sql_conn;
     private mysqli $picks_db_conn;
     protected $construct_error = null;
-
-    private string $servername;
-    private string $username;
-    private string $password;
     private string $log_file;
 
     private const USER_TABLE = "Users";
     private const PICKS_TABLE = "Picks";
-    private const PICKS_DB_NAME = "LPDP";
-    # private const PICKS_DB_NAME = "if0_34807647_lpdb";
     /*
     * Constructor. Establishes connection with SQL, and creates DB, connects to DB
     * and creates two tables (Users and Picks). Should gracefully only create when
@@ -26,24 +26,18 @@ class SqlAccessController
     *
     * Check SqlAccessController->$construct_error == null to check success
     */
-    public function __construct(
-        string $servername,
-        string $username,
-        string $password
-    ) {
-        $this->servername = $servername;
-        $this->username = $username;
-        $this->password = $password;
+    public function __construct()
+    {
         $this->log_file = "./sql_interface_errors.log";
 
-        $this->sql_conn = new mysqli($servername, $username, $password);
+        $this->sql_conn = new mysqli(get_host(), get_user(), get_pass());
 
         if ($this->sql_conn->connect_error) {
             error_log("Could not establish connection with SQL\n", 3, $this->log_file);
-        } else if (!$this->initialize_pick_database(self::PICKS_DB_NAME)) {
+        } else if (!$this->initialize_pick_database(get_picks_db_name())) {
             $this->construct_error = "DB Init error";
             $this->sql_conn->close();
-        } else if (!$this->establish_connection_to_db(self::PICKS_DB_NAME)) {
+        } else if (!$this->establish_connection_to_db(get_picks_db_name())) {
             $this->construct_error = "DB connection error";
             $this->sql_conn->close();
         } else if (!$this->create_tables(self::USER_TABLE, self::PICKS_TABLE)) {
@@ -76,9 +70,9 @@ class SqlAccessController
     private function establish_connection_to_db(string $db_name): bool
     {
         $this->picks_db_conn = new mysqli(
-            $this->servername,
-            $this->username,
-            $this->password,
+            get_host(),
+            get_user(),
+            get_pass(),
             $db_name
         );
         if (!$this->picks_db_conn) {

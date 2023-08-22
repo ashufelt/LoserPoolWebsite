@@ -24,7 +24,7 @@ class Router
 
     public function __construct()
     {
-        $this->controller = new SqlAccessController("localhost", "root", "M7ajs5grn3!");
+        $this->controller = new SqlAccessController();
         # $this->controller = new SqlAccessController("sql310.infinityfree.com", "if0_34807647", "3pzOJOHlUKkV2d");
     }
 
