@@ -15,9 +15,10 @@ include_once "users_handling/user_handler.php";
 ?>
 
 <body>
-    <?php
-    include "template/banner.html";
-    ?>
+    <?php include "template/banner.html"; ?>
+    <?php $processed_request = $router->processRequest($_REQUEST, $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']); ?>
+
+
     <main>
         <br>
         <div class="user_adding">
@@ -79,7 +80,7 @@ include_once "users_handling/user_handler.php";
             </form>
         </div>
         <br><br>
-        <?php echo $router->processRequest($_REQUEST, $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']); ?>
+        <?php echo $processed_request ?>
         <?php echo $router->get_picks_table_html(); ?>
     </main>
     <?php include "template/footer.html"; ?>

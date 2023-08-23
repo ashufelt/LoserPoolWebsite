@@ -23,12 +23,13 @@ kanban-plugin: basic
 
 ## In Progress
 
-- [ ] Check PIN for making a pick
 - [ ] Re-implement drop-down list, verify the username and team inside
+- [ ] Show username in dropdown immediately after it's registered. Reloading is bad for user experience
 
 
 ## Completed
 
+- [ ] Check PIN for making a pick
 - [ ] List a user's picks to them
 - [ ] Register Username with a PIN
 - [ ] Week function: disable picks Sunday and Monday

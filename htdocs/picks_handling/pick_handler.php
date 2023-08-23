@@ -16,11 +16,6 @@ function ph_add_pick(SqlAccessController $controller, string $userin, string $we
     $week_number = intval($week);
     $users_picks = $controller->get_user_all_picks($user);
     $create_ecode = 0;
-    echo print_r($user, true) . "\n";
-    echo print_r($week, true) . "\n";
-    echo print_r($team, true) . "\n";
-    echo print_r($pickpin, true) . "\n";
-    echo print_r($correctpin, true) . "\n";
     if ($pickpin != $correctpin) {
         echo "<h4>Username/PIN combo is not valid</h4>";
         return false;

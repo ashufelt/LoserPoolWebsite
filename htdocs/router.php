@@ -36,11 +36,9 @@ class Router
                     $params_list['pin'],
                     $params_list['repin']
                 )) {
-                    echo "<h3>User added successfully!</h3><br>";
-                    include("users_handling/add_user.html");
+                    return "<h3>User added successfully!</h3><br>";
                 } else {
-                    echo "<h3>User could not be added</h3><br>";
-                    include("users_handling/add_user_fail.html");
+                    return "<h3>User could not be added</h3><br>" . file_get_contents("users_handling/add_user_fail.html");
                 }
                 break;
             case "/users/?get_users=all":
@@ -48,9 +46,9 @@ class Router
                 break;
             case "/users/?clear_users=all":
                 if (uh_clear_users_table($this->controller)) {
-                    echo "<h3>User list cleared</h3><br>";
+                    return "<h3>User list cleared</h3><br>";
                 } else {
-                    echo "<h3>Failed to clear user list</h3><br>";
+                    return "<h3>Failed to clear user list</h3><br>";
                 }
                 break;
                 /*
@@ -59,23 +57,23 @@ class Router
             case "/picks/":
                 if ($params_list['button'] == 'Submit Pick') {
                     if (ph_add_pick($this->controller, $params_list['userpick'], $params_list['week'], $params_list['team'], $params_list['pickpin'])) {
-                        echo "<h3>Pick added successfully!</h3><br>";
+                        return "<h3>Pick added successfully!</h3><br>";
                     }
                 } else if ($params_list['button'] == 'View my picks') {
-                    echo (ph_get_user_picks_html($this->controller, $params_list['userpick'], $params_list['pickpin']));
+                    return (ph_get_user_picks_html($this->controller, $params_list['userpick'], $params_list['pickpin']));
                 } else {
-                    include("main/main.html");
+                    return "";
                 }
                 break;
             case "/picks/?clear_picks=all":
                 if (ph_clear_picks_table($this->controller)) {
-                    echo "<h4>Picks cleared</h4><br>";
+                    return "<h4>Picks cleared</h4><br>";
                 } else {
-                    echo "<h4>Failed to clear picks list</h4><br>";
+                    return "<h4>Failed to clear picks list</h4><br>";
                 }
                 break;
             default:
-                include("main/main.html");
+                return "";
                 break;
         }
     }
