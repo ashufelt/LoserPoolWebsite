@@ -52,9 +52,6 @@ include_once "users_handling/user_handler.php";
                     </tr>
                 </table>
             </form>
-            <form id="clear_user_button" action="/users/" method="get">
-                <button name="clear_users" value="all">Clear list of Users</button>
-            </form>
         </div>
         <br><br>
         <div class="pick_adding">
@@ -75,9 +72,6 @@ include_once "users_handling/user_handler.php";
                 </datalist>
                 <input type="submit" value="Submit Pick" name="button" value="makepick">
                 <input type="submit" value="View my picks" name="button" value="view">
-            </form>
-            <form id="clear_picks_button" class="clear_button" action="/picks/" method="get">
-                <button name="clear_picks" value="all">Clear list of Picks</button>
             </form>
         </div>
         <br><br>

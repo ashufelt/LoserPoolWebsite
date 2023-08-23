@@ -4,31 +4,40 @@ kanban-plugin: basic
 
 ---
 
+## HTMX rewrite
+
+- [ ] Try out HTMX in fresh project
+- [ ] Reorganize HTML/Router stuff
+
+
 ## Backlog
 
+- [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
 - [ ] Only list teams that are available for that user
 - [ ] Sort tables
 - [ ] Suggestion box
 - [ ] Confirmation that they would like to overwrite a previous pick
 - [ ] Look into ways to refactor code. Could probably be neater.
 - [ ] Random funny comment on someone's pick
-- [ ] Start using HTMX?: After MVP achieved
-- [ ] Reorganize HTML/Router stuff
 
 
-## Todo for MVP
+## To Do
 
-- [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
+- [ ] Mark correct and incorrect picks from previous weeks
 
 
 ## In Progress
 
-- [ ] Re-implement drop-down list, verify the username and team inside
-- [ ] Show username in dropdown immediately after it's registered. Reloading is bad for user experience
 
 
 ## Completed
 
+
+
+## MVP Achieved
+
+- [ ] Show username in dropdown immediately after it's registered. Reloading is bad for user experience
+- [ ] Re-implement drop-down list, verify the username and team inside
 - [ ] Check PIN for making a pick
 - [ ] List a user's picks to them
 - [ ] Register Username with a PIN
