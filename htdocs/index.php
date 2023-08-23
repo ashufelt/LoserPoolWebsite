@@ -51,11 +51,6 @@ include_once "users_handling/user_handler.php";
                     </tr>
                 </table>
             </form>
-            <!--
-            <form action="/users/" method="get">
-                <button name="get_users" value="all">Get list of Users</button>
-            </form>
-            --!>
             <form id="clear_user_button" action="/users/" method="get">
                 <button name="clear_users" value="all">Clear list of Users</button>
             </form>
@@ -63,18 +58,21 @@ include_once "users_handling/user_handler.php";
         <br><br>
         <div class="pick_adding">
             <h3> Make a pick for Week <?php echo get_current_week() ?></h3>
-            <form action="/picks/add/" method="post">
+            <form action="/picks/" method="post">
                 <label for="userpick">Username:</label>
                 <select id="userpick" name="userpick" required>
                     <?php echo $router->get_user_option_list_html(); ?>
                 </select>
+                <label for="pickpin">PIN:</label>
+                <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}">
                 <input type="hidden" name="week" value=<?php echo get_current_week() ?>>
                 </select>
                 <label for="team">Losing Team:</label>
                 <select id="team" name="team" required>
                     <?php echo get_team_options() ?>
                 </select>
-                <input type="submit" value="Submit Pick">
+                <input type="submit" value="Submit Pick" name="button" value="makepick">
+                <input type="submit" value="View my picks" name="button" value="view">
             </form>
             <form id="clear_picks_button" class="clear_button" action="/picks/" method="get">
                 <button name="clear_picks" value="all">Clear list of Picks</button>

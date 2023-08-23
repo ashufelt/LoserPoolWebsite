@@ -49,6 +49,7 @@ function uh_get_user_option_list_html(SqlAccessController $controller): string
     $option_list = '';
 
     $users = $controller->get_user_table();
+    sort($users, SORT_NATURAL | SORT_FLAG_CASE);
     if (is_countable($users)) {
         foreach ($users as $user) {
             $addition = '<option value="' . $user . '">'

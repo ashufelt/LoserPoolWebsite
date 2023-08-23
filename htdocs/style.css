@@ -47,6 +47,11 @@ h3 {
     font-size: 1.5em;
 }
 
+h4 {
+    padding-bottom: 0.25em;
+    font-size: 1.5em;
+}
+
 p {
     font-size: 1em;
 }
@@ -115,6 +120,16 @@ tr.pick_table:hover {
 }
 
 th.pick_table, td.pick_table {
+    border: 1px solid #0d2a2e;
+}
+
+table.users_picks {
+    border : 2px solid #0d2a2e;
+}
+
+th.users_picks, td.users_picks{
+    text-align: center;
+    font-weight: bold;
     border: 1px solid #0d2a2e;
 }
 

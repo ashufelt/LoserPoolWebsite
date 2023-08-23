@@ -24,11 +24,12 @@ kanban-plugin: basic
 ## In Progress
 
 - [ ] Check PIN for making a pick
-- [ ] List a user's picks to them
+- [ ] Re-implement drop-down list, verify the username and team inside
 
 
 ## Completed
 
+- [ ] List a user's picks to them
 - [ ] Register Username with a PIN
 - [ ] Week function: disable picks Sunday and Monday
 - [ ] Week function: don't show current picks until they are locked on Sunday

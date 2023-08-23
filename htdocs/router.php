@@ -10,6 +10,7 @@ use SqlAccess\SqlAccessController;
 use function PickHandling\ph_add_pick;
 use function PickHandling\ph_clear_picks_table;
 use function PickHandling\ph_get_picks_html_table;
+use function PickHandling\ph_get_user_picks_html;
 use function UserHandling\uh_add_user;
 use function UserHandling\uh_clear_users_table;
 use function UserHandling\uh_get_user_option_list_html;
@@ -55,18 +56,22 @@ class Router
                 /*
             * Handle all picks below. Adding, viewing, deleting
             */
-            case "/picks/add/":
-                if (ph_add_pick($this->controller, $params_list)) {
-                    echo "<h3>Pick added successfully!</h3><br>";
+            case "/picks/":
+                if ($params_list['button'] == 'Submit Pick') {
+                    if (ph_add_pick($this->controller, $params_list['userpick'], $params_list['week'], $params_list['team'], $params_list['pickpin'])) {
+                        echo "<h3>Pick added successfully!</h3><br>";
+                    }
+                } else if ($params_list['button'] == 'View my picks') {
+                    echo (ph_get_user_picks_html($this->controller, $params_list['userpick'], $params_list['pickpin']));
                 } else {
-                    echo "<h3>Could not create pick</h3><br>";
+                    include("main/main.html");
                 }
                 break;
             case "/picks/?clear_picks=all":
                 if (ph_clear_picks_table($this->controller)) {
-                    echo "<h3>Picks cleared</h3><br>";
+                    echo "<h4>Picks cleared</h4><br>";
                 } else {
-                    echo "<h3>Failed to clear picks list</h3><br>";
+                    echo "<h4>Failed to clear picks list</h4><br>";
                 }
                 break;
             default:

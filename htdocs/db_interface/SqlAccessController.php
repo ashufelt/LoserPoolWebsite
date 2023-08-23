@@ -179,8 +179,23 @@ class SqlAccessController
         }
     }
 
+    /*
+    * Returns a users PIN. If the user does not exist, or a pin is not found, 
+    * returns -1
+    */
     public function get_user_pin(string $user): int
     {
+        if (!$this->user_exists($user)) {
+            return -1;
+        }
+        $select_cmd = "SELECT pin FROM " . self::USER_TABLE . " WHERE username='" . $user . "';";
+        $result = $this->picks_db_conn->query($select_cmd);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row['pin'];
+        } else {
+            return -1;
+        }
     }
 
     /*
