@@ -99,9 +99,10 @@ class SqlAccessController
     */
     private function create_tables(string $users, string $picks): bool
     {
-        $create_user_table = "CREATE TABLE IF NOT EXISTS " . $users . "(
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(30))";
+        $create_user_table = "CREATE TABLE IF NOT EXISTS " . $users . "( 
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+            username VARCHAR(30), 
+            pin INT)";
         $create_picks_table = "CREATE TABLE IF NOT EXISTS " . $picks . "(
             pickid INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             username VARCHAR(30),
@@ -163,18 +164,23 @@ class SqlAccessController
     *  1 : Sql Creation error
     *  4 : User already exists
     */
-    public function add_user(string $new_user): int
+    public function add_user(string $new_user, int $new_pin): int
     {
         if ($this->user_exists($new_user)) {
             return 4;
         }
-        $create_user_cmd = "INSERT INTO " . self::USER_TABLE . " (username) VALUES ('" . $new_user . "');";
+        $create_user_cmd = "INSERT INTO " . self::USER_TABLE . " (username, pin) 
+                            VALUES ('" . $new_user . "', '" . $new_pin . "');";
         if ($this->picks_db_conn->query($create_user_cmd) === TRUE) {
             return 0;
         } else {
             error_log("Could not create new user\n", 3, $this->log_file);
             return 1;
         }
+    }
+
+    public function get_user_pin(string $user): int
+    {
     }
 
     /*

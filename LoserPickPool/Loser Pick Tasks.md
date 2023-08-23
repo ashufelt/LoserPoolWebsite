@@ -6,6 +6,7 @@ kanban-plugin: basic
 
 ## Backlog
 
+- [ ] Only list teams that are available for that user
 - [ ] Sort tables
 - [ ] Suggestion box
 - [ ] Confirmation that they would like to overwrite a previous pick
@@ -18,16 +19,17 @@ kanban-plugin: basic
 ## Todo for MVP
 
 - [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
-- [ ] Register Username with a PIN
-- [ ] Only list teams that are available for that user
 
 
 ## In Progress
 
+- [ ] Check PIN for making a pick
+- [ ] List a user's picks to them
 
 
 ## Completed
 
+- [ ] Register Username with a PIN
 - [ ] Week function: disable picks Sunday and Monday
 - [ ] Week function: don't show current picks until they are locked on Sunday
 - [ ] Show list of picks all the time

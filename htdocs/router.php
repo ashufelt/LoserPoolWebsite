@@ -4,10 +4,8 @@ include_once "./db_interface/SqlAccessController.php";
 include_once "./picks_handling/pick_handler.php";
 include_once "./users_handling/user_handler.php";
 include_once "./data/week_manager.php";
-#include_once "./db_interface/SqlAccessErrorCode.php";
 
 use SqlAccess\SqlAccessController;
-#use SqlAccess\SqlAccessErrorCode;
 
 use function PickHandling\ph_add_pick;
 use function PickHandling\ph_clear_picks_table;
@@ -16,7 +14,6 @@ use function UserHandling\uh_add_user;
 use function UserHandling\uh_clear_users_table;
 use function UserHandling\uh_get_user_option_list_html;
 use function UserHandling\uh_get_users_html_table;
-use const PickHandling\WEEKS;
 
 class Router
 {
@@ -25,7 +22,6 @@ class Router
     public function __construct()
     {
         $this->controller = new SqlAccessController();
-        # $this->controller = new SqlAccessController("sql310.infinityfree.com", "if0_34807647", "3pzOJOHlUKkV2d");
     }
 
     public function processRequest(array $params_list, string $method, string $uri)
@@ -33,7 +29,12 @@ class Router
         $uri = filter_var($uri, FILTER_SANITIZE_URL);
         switch ($uri) {
             case "/users/add/":
-                if (uh_add_user($this->controller, $params_list['username'])) {
+                if (uh_add_user(
+                    $this->controller,
+                    $params_list['username'],
+                    $params_list['pin'],
+                    $params_list['repin']
+                )) {
                     echo "<h3>User added successfully!</h3><br>";
                     include("users_handling/add_user.html");
                 } else {

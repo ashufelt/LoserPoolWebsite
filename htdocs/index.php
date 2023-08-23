@@ -38,7 +38,7 @@ include_once "users_handling/user_handler.php";
                             <label for="pin">PIN (4 digits):</label>
                         </td>
                         <td class="user_adding cell_display_left">
-                            <input type="text" id="pin" name="pin" required pattern="\d{4}">
+                            <input type="password" id="pin" name="pin" required pattern="\d{4}">
                         </td>
                     </tr>
                     <tr class="user_adding">
@@ -46,7 +46,7 @@ include_once "users_handling/user_handler.php";
                             <label for="repin">Repeat PIN:</label>
                         </td>
                         <td class="user_adding cell_display_left">
-                            <input type="text" id="repin" name="repin" required pattern="\d{4}">
+                            <input type="password" id="repin" name="repin" required pattern="\d{4}">
                         </td>
                     </tr>
                 </table>

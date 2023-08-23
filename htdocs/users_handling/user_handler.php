@@ -6,12 +6,14 @@ include_once "db_interface/SqlAccessController.php";
 
 use SqlAccess\SqlAccessController;
 
-function uh_add_user(SqlAccessController $controller, $new_user): bool
+function uh_add_user(SqlAccessController $controller, string $new_user, string $pin, string $repin): bool
 {
     $new_user = htmlspecialchars($new_user);
-    if (strlen($new_user) == 0) {
+    if ($pin != $repin) {
         return false;
-    } else if (0 == $controller->add_user($new_user)) {
+    } else if (strlen($new_user) == 0) {
+        return false;
+    } else if (0 == $controller->add_user($new_user, intval($pin))) {
         return true;
     } else {
         return false;
