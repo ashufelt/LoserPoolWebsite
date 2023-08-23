@@ -6,39 +6,36 @@ include_once "db_interface/SqlAccessController.php";
 
 use SqlAccess\SqlAccessController;
 
-function ph_add_pick(SqlAccessController $controller, string $userin, string $weekin, string $teamin, string $pinin): bool
+function ph_add_pick(SqlAccessController $controller, string $userin, string $weekin, string $teamin, string $pinin): string
 {
     $user = htmlspecialchars($userin);
     $week = htmlspecialchars($weekin);
     $team = htmlspecialchars($teamin);
     $pickpin = intval($pinin);
+    if ($controller->user_exists($user) == false) {
+        return "<h4>User does not exist</h4>";
+    }
     $correctpin = $controller->get_user_pin($user);
     $week_number = intval($week);
     $users_picks = $controller->get_user_all_picks($user);
     $create_ecode = 0;
     if ($pickpin != $correctpin) {
-        echo "<h4>Username/PIN combo is not valid</h4>";
-        return false;
+        return "<h4>Username/PIN combo is not valid</h4>";
     } else if (in_array($team, $users_picks, true)) {
-        echo "<h4>Cannot repeat a choice</h4>";
-        return false;
+        return "<h4>Cannot repeat a choice</h4>";
     } else if (is_sunday_or_monday()) {
-        echo "<h4>Can't make a pick on Sunday or Monday</h4>";
-        return false;
+        return "<h4>Can't make a pick on Sunday or Monday</h4>";
     } else if (0 != ($create_ecode = $controller->add_pick($user, $team, $week_number))) {
         if ($create_ecode == 2) {
-            echo "<h4>Invalid username</h4>";
-            return false;
+            return "<h4>Invalid username</h4>";
         } else if ($create_ecode == 1) {
-            echo "<h4>Database error. Try viewing your pick or submitting again.</h4>
+            return "<h4>Database error. Try viewing your pick or submitting again.</h4>
                   <p>If you aren't able to verify your pick with 'View my picks', 
                     email adam.shufelt.official@gmail.com to ensure that your 
                     pick is received. I do not expect this message to ever appear.</p>";
-            return false;
         }
-        return false;
     } else {
-        return true;
+        return "<h3>Pick added successfully</h3><br>";
     }
 }
 

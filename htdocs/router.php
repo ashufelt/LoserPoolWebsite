@@ -38,7 +38,8 @@ class Router
                 )) {
                     return "<h3>User added successfully!</h3><br>";
                 } else {
-                    return "<h3>User could not be added</h3><br>" . file_get_contents("users_handling/add_user_fail.html");
+                    return "<h3>User could not be added</h3><br>"
+                        . file_get_contents("users_handling/add_user_fail.html");
                 }
                 break;
             case "/users/?get_users=all":
@@ -56,11 +57,19 @@ class Router
             */
             case "/picks/":
                 if ($params_list['button'] == 'Submit Pick') {
-                    if (ph_add_pick($this->controller, $params_list['userpick'], $params_list['week'], $params_list['team'], $params_list['pickpin'])) {
-                        return "<h3>Pick added successfully!</h3><br>";
-                    }
+                    return ph_add_pick(
+                        $this->controller,
+                        $params_list['userpick'],
+                        $params_list['week'],
+                        $params_list['team'],
+                        $params_list['pickpin']
+                    );
                 } else if ($params_list['button'] == 'View my picks') {
-                    return (ph_get_user_picks_html($this->controller, $params_list['userpick'], $params_list['pickpin']));
+                    return (ph_get_user_picks_html(
+                        $this->controller,
+                        $params_list['userpick'],
+                        $params_list['pickpin']
+                    ));
                 } else {
                     return "";
                 }

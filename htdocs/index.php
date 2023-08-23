@@ -61,17 +61,18 @@ include_once "users_handling/user_handler.php";
             <h3> Make a pick for Week <?php echo get_current_week() ?></h3>
             <form action="/picks/" method="post">
                 <label for="userpick">Username:</label>
-                <select id="userpick" name="userpick" required>
+                <input list="userpicks" name="userpick" id="userpick">
+                <datalist id="userpicks" name="userpick" required>
                     <?php echo $router->get_user_option_list_html(); ?>
-                </select>
+                </datalist>
                 <label for="pickpin">PIN:</label>
                 <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}">
                 <input type="hidden" name="week" value=<?php echo get_current_week() ?>>
-                </select>
                 <label for="team">Losing Team:</label>
-                <select id="team" name="team" required>
+                <input list="teams" name="team" id="team">
+                <datalist id="teams" name="team" required>
                     <?php echo get_team_options() ?>
-                </select>
+                </datalist>
                 <input type="submit" value="Submit Pick" name="button" value="makepick">
                 <input type="submit" value="View my picks" name="button" value="view">
             </form>
