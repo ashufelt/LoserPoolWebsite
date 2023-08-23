@@ -91,7 +91,8 @@ function ph_get_user_picks_html(SqlAccessController $controller, string $user, s
         return "<h4>Username/PIN combo is not valid</h4>";
     }
 
-    $picks_html_table = "<table class='users_picks'>
+    $picks_html_table = "<div class=users_picks>
+                         <table class='users_picks'>
                             <tr class='users_picks'>
                                 <th class='users_picks'>Week</th>
                                 <th class='users_picks'>Pick</th>";
@@ -106,7 +107,11 @@ function ph_get_user_picks_html(SqlAccessController $controller, string $user, s
                                 <td class='users_picks'>" . $i . "</td>
                                 <td class='users_picks pick_team'>" . $pick . "</td></tr>";
     }
-    $picks_html_table .= "</table><br><br>";
+    $picks_html_table .= "</table>
+                            <form action='/' method='get'>
+                            <input class='hidepicks' type='submit' value='Hide picks'>           
+                            </form>
+                            </div><br><br>";
     return $picks_html_table;
 }
 

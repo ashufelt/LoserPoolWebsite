@@ -23,6 +23,7 @@ kanban-plugin: basic
 
 ## To Do
 
+- [ ] Hide picks button on View Picks page
 - [ ] Mark correct and incorrect picks from previous weeks
 
 

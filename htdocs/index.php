@@ -78,6 +78,24 @@ include_once "users_handling/user_handler.php";
         <?php echo $processed_request ?>
         <?php echo $router->get_picks_table_html(); ?>
     </main>
+    <?php /*
+    <div class="usercomments grid-container">
+        <div class="grid-item"></div>
+        <div class="grid-item"></div>
+        <div class="comments">
+            <p>Is something not working quite right?</p>
+            <p>Have a suggestion to make the site better?</p>
+            <p>Let me know!</p><br>
+            <form class="usercomments" action="/comment/" method="post">
+                <label for="commentname">Name:</label>
+                <input type="text" name="commentname" id="commentname" required pattern="\w{1,20}"><br>
+                <label class="commentfield" for="comment">Comment:</label>
+                <textarea class="commentfield" name="comment" required pattern=".+{5,280}"></textarea>
+                <input type="submit">
+            </form>
+        </div>
+    </div> */
+    ?>
     <?php include "template/footer.html"; ?>
 </body>
 

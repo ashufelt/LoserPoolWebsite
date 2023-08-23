@@ -4,6 +4,7 @@ include_once "./db_interface/SqlAccessController.php";
 include_once "./picks_handling/pick_handler.php";
 include_once "./users_handling/user_handler.php";
 include_once "./data/week_manager.php";
+include_once "./commentform/commentform.php";
 
 use SqlAccess\SqlAccessController;
 
@@ -15,6 +16,7 @@ use function UserHandling\uh_add_user;
 use function UserHandling\uh_clear_users_table;
 use function UserHandling\uh_get_user_option_list_html;
 use function UserHandling\uh_get_users_html_table;
+use function Comments\comment_send;
 
 class Router
 {
@@ -81,6 +83,12 @@ class Router
                     return "<h4>Failed to clear picks list</h4><br>";
                 }
                 break;
+            case "/comment/":
+                if (comment_send($params_list['commentname'], $params_list['comment'])) {
+                    return "<h4>Thanks for your input!</h4>";
+                } else {
+                    return "<h4>There was an error submitting your input.</h4>";
+                }
             default:
                 return "";
                 break;
