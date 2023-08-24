@@ -34,6 +34,7 @@ class Router
             case "/users/add/":
                 if (uh_add_user(
                     $this->controller,
+                    $params_list['name'],
                     $params_list['username'],
                     $params_list['pin'],
                     $params_list['repin']

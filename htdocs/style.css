@@ -82,8 +82,12 @@ table.user_adding {
 }
 
 td.user_adding {
-    width: 11em;
+    width: 13em;
     border:none;
+}
+
+p.user_adding {
+    font-size: 12px;
 }
 
 .cell_display_right {

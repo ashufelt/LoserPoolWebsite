@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "c9e6769b1189dab6",
+        "id": "3a08f660bc877e9b",
         "type": "tabs",
         "children": [
           {
-            "id": "a9ab0211331d2b75",
+            "id": "7182c239fd1b108f",
             "type": "leaf",
             "state": {
               "type": "kanban",
@@ -67,7 +67,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "990779c6b8d5b57a",
@@ -144,12 +144,13 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a9ab0211331d2b75",
+  "active": "7182c239fd1b108f",
   "lastOpenFiles": [
+    "Loser Picks HTMX.md",
+    "Loser Pick Tasks.md",
+    "Component Diagram.md",
     "style 1.css",
     "style.css",
-    "Component Diagram.md",
-    "Loser Pick Tasks.md",
     "Components"
   ]
 }

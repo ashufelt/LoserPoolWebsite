@@ -17,14 +17,24 @@ include_once "users_handling/user_handler.php";
 <body>
     <?php include "template/banner.html"; ?>
     <?php $processed_request = $router->processRequest($_REQUEST, $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']); ?>
-
-
     <main>
         <br>
         <div class="user_adding">
             <h3> Register Username </h3>
             <form action="/users/add/" method="post">
                 <table class="user_adding">
+                    <tr class="user_adding">
+                        <td class="user_adding cell_display_right">
+                            <label for="name">Name: (3-40 chars)</label>
+                        </td>
+                        <td class="user_adding cell_display_left">
+                            <input type="text" id="name" name="name" required pattern="^[A-Za-z]+\s[A-Za-z]+{3-30}">
+                    </tr>
+                    <tr class="user_adding">
+                        <td class="user_adding name_subscript" colspan=3>
+                            <p class="user_adding name_subscript">Name will not be visible, and only used to associate your username with your real name</p>
+                        </td>
+                    </tr>
                     <tr class="user_adding">
                         <td class="user_adding cell_display_right">
                             <label for="username">Username: (3-20 chars)</label>

@@ -4,12 +4,6 @@ kanban-plugin: basic
 
 ---
 
-## HTMX rewrite
-
-- [ ] Try out HTMX in fresh project
-- [ ] Reorganize HTML/Router stuff
-
-
 ## Backlog
 
 - [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
@@ -23,7 +17,7 @@ kanban-plugin: basic
 
 ## To Do
 
-- [ ] Hide picks button on View Picks page
+- [ ] Switch everything to grid or flex layout
 - [ ] Mark correct and incorrect picks from previous weeks
 
 
@@ -33,6 +27,8 @@ kanban-plugin: basic
 
 ## Completed
 
+- [ ] First and Last Name with Username
+- [ ] Hide picks button on View Picks page
 
 
 ## MVP Achieved
