@@ -64,14 +64,14 @@
                 Make a pick for Week 1
             </h3>
             <form action="/picks/" method="post">
-                <label for="userpick">Username:</label>
+                <label for="userpicks">Username:</label>
                 <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load" hx-target="this"
                     hx-swap="outerHTML">
                     <option value="Users here"></option>
                 </select>
                 <label for="pickpin">PIN:</label>
                 <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}">
-                <label for="team">Losing Team:</label>
+                <label for="teams">Losing Team:</label>
                 <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load" hx-target="this"
                     hx-swap="outerHTML">
                     <option value="Values here"></option>

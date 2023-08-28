@@ -1,0 +1,156 @@
+{
+  "main": {
+    "id": "28033f76ca99f6d5",
+    "type": "split",
+    "children": [
+      {
+        "id": "3a08f660bc877e9b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7182c239fd1b108f",
+            "type": "leaf",
+            "state": {
+              "type": "kanban",
+              "state": {
+                "file": "Loser Picks HTMX.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "658c82b1e49ac249",
+    "type": "split",
+    "children": [
+      {
+        "id": "00c906f5646086b1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aa696f3094e5bdc7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "6dff333ac21add22",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "7186c9cf8ba5a05b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "990779c6b8d5b57a",
+    "type": "split",
+    "children": [
+      {
+        "id": "dbe7c4c19e764dc5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6aa6c800ed74f79d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Loser Picks HTMX.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "3bf6982cb5d66d61",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Loser Picks HTMX.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "c9a911b697c43e1f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "432c291ad77070b2",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Loser Picks HTMX.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "7182c239fd1b108f",
+  "lastOpenFiles": [
+    "Loser Pick Tasks.md",
+    "Loser Picks HTMX.md",
+    "Component Diagram.md",
+    "style 1.css",
+    "style.css",
+    "Components"
+  ]
+}

@@ -1,0 +1,145 @@
+/*
+ * Color palette
+ * #040707 : Basically black
+ * #od2a2e : Gunmetal green
+ * #0d4851 : Midnight Green
+ * #4590A1 : Blue (Munsell)
+ * #8abecf : Sky Blue
+ * #bcdde8 : Light Blue 
+ * #e3e5e6 : Platinum
+ */
+
+* {
+    margin:0px;
+}
+
+html { 
+    font-family: helvetica, arial, sans-serif;
+    font-size: 16px;
+}
+
+body {
+    box-sizing: border-box;
+    background-color: #e3e5e6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border: 10px solid #0d2a2e;
+}
+
+main {
+    color: #040707;
+    padding: 1em;
+}
+
+h1 {
+    font-size: 3em;
+    color: #040707;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+p {
+    font-size: 1em;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    border: 2px solid #0d2a2e;
+    width: 100%;
+}
+
+table.user_table {
+    width: 30%;
+}
+
+td, th {
+    border: 1px solid #0d2a2e;
+    text-align: left;
+    padding: 0.25em;
+}
+
+th.tHeader {
+    width:5em;
+    border:2px solid #0d2a2e;
+}
+
+th.tcolumn1, tHeader {
+    width: 3em;
+    border:2px solid #0d2a2e;
+    font-weight: bold;
+}
+
+tr {
+    max-width: 8em;
+    border-left: 2px solid #0d2a2e;
+    border-right: 2px solid #0d2a2e;
+}
+
+tr:nth-child(even) {
+    background-color: #bcdde8;
+}
+
+tr:hover {
+    background-color: #8abecf;
+}
+
+div.banner {
+    background-color: #0d4851;
+    text-align: center;
+    color: #e3e5e6;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+div.banner h1 {
+    color: #e3e5e6;
+}
+
+div.user_access form {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+div.pick_access form {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+footer { 
+    margin-top: auto; 
+    background-color: #0d4851;
+    color: #e3e5e6;
+    min-height: 10%;
+    text-align: center;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: flex;
+    justify-content:space-between;
+}
+
+footer p {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+#pick_input {
+    border: 2px solid #0d2a2e;
+}
+
+div#welcome_stmt{
+    padding-top: 0.75em;
+    padding-left: 0.75em;
+}
+div#welcome_stmt h2{
+    padding-bottom: 0.375em;
+}
