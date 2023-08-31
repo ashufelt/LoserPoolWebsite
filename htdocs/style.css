@@ -83,6 +83,10 @@ div.banner > h1 {
     color: var(--plat-bg);
 }
 
+div.pick_adding{
+    margin-bottom: 0.5em;
+}
+
 div.pick_adding > form{
     display: inline-block;
     vertical-align: baseline;

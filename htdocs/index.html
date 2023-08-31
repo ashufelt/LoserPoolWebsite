@@ -22,7 +22,7 @@
                             <label for="name">Name: (3-40 chars)</label>
                         </td>
                         <td class="user_adding cell_display_left">
-                            <input type="text" id="name" name="name" required pattern="/^[A-Za-z]+\s[A-Za-z]+{3-30}">
+                            <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}">
                     </tr>
                     <tr class="user_adding">
                         <td class="user_adding name_subscript cell_display_right" colspan=3>
@@ -36,6 +36,12 @@
                         </td>
                         <td class="user_adding cell_display_left">
                             <input type="text" id="username" name="username" required pattern="\w{3,20}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="user_adding name_subscript cell_display_right" colspan=2>
+                            <p class="user_adding name_subscript">Username may consist of letters, numbers, and
+                                underscores</p>
                         </td>
                     </tr>
                     <tr class="user_adding">
@@ -83,6 +89,8 @@
         </div>
         <div id="both_tables_of_picks">
             <div id="one_set_of_picks">
+            </div>
+            <div id="additional_context">
             </div>
             <div id="picks_table" hx-get="picks/all.php" hx-trigger="load" hx-target="this" hx-swap="outerHTML">
             </div>

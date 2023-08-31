@@ -10,16 +10,19 @@ kanban-plugin: basic
 
 ## To Do
 
+- [ ] Add "About" page. Rules, how to enter, about the dev
 
 
 ## In Progress
 
-- [ ] Update view picks right away when making a pick
-- [ ] Change team list to not eliminate current weeks pick
+- [ ] Fix: "Username/PIN combo is not valid" is displaying twice
+- [ ] Fix: "Could not register the new user..." does not go away without a full reset
 
 
 ## Completed
 
+- [ ] Update view picks right away when making a pick
+- [ ] Change team list to not eliminate current weeks pick
 - [ ] Drop down for username doesn't update after adding username
 - [ ] Reorganize HTML/Router stuff
 - [ ] MVP: Add pick

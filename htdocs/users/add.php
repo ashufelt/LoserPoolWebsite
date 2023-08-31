@@ -26,5 +26,4 @@ $select_foot = "</select>";
 
 $replace_select_users = $select_head . uh_get_user_option_list_html() . $select_foot;
 
-
 echo $replace_select_users . $additional_info . ph_get_picks_html_table();
