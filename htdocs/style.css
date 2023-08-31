@@ -193,3 +193,23 @@ th.users_picks, td.users_picks{
 .hidepicks {
     margin-left: 0.5em;
 }
+
+.grid-container-upper {
+    display:grid;
+    grid-template-columns: 50% 50%;
+}
+
+ grid-container-right-upper {
+    display:grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 2em auto;
+ }
+
+ p.instruction {
+    font-weight: bold;
+    margin: 0.2em;
+ }
+
+ .instruction-bullets { 
+    margin: 0.2em;
+ }

@@ -13,59 +13,88 @@
         <h1 id="headerh1">Pick the Loser! 2023</h1>
     </div>
     <main>
-        <div class="user_adding">
-            <h3> Register Username </h3>
-            <form hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
-                <table class="user_adding">
-                    <tr class="user_adding">
-                        <td class="user_adding cell_display_right">
-                            <label for="name">Name: (3-40 chars)</label>
-                        </td>
-                        <td class="user_adding cell_display_left">
-                            <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}">
-                    </tr>
-                    <tr class="user_adding">
-                        <td class="user_adding name_subscript cell_display_right" colspan=3>
-                            <p class="user_adding name_subscript">Name will not be visible, and only used to associate
-                                your username with your real name</p>
-                        </td>
-                    </tr>
-                    <tr class="user_adding">
-                        <td class="user_adding cell_display_right">
-                            <label for="username">Username: (3-20 chars)</label>
-                        </td>
-                        <td class="user_adding cell_display_left">
-                            <input type="text" id="username" name="username" required pattern="\w{3,20}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="user_adding name_subscript cell_display_right" colspan=2>
-                            <p class="user_adding name_subscript">Username may consist of letters, numbers, and
-                                underscores</p>
-                        </td>
-                    </tr>
-                    <tr class="user_adding">
-                        <td class="user_adding cell_display_right">
-                            <label for="pin">PIN (4 digits):</label>
-                        </td>
-                        <td class="user_adding cell_display_left">
-                            <input type="password" id="pin" name="pin" required pattern="\d{4}">
-                        </td>
-                    </tr>
-                    <tr class="user_adding">
-                        <td class="user_adding cell_display_right">
-                            <label for="repin">Repeat PIN:</label>
-                        </td>
-                        <td class="user_adding cell_display_left">
-                            <input type="password" id="repin" name="repin" required pattern="\d{4}">
-                        </td>
-                        <td><input type="submit" value="Submit"></td>
-                    </tr>
-                </table>
-            </form>
+        <div class="grid-container-upper">
+            <div class="user_adding">
+                <h3> Register Username </h3>
+                <form hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
+                    <table class="user_adding">
+                        <tr class="user_adding">
+                            <td class="user_adding cell_display_right">
+                                <label for="name">Name: (3-40 chars)</label>
+                            </td>
+                            <td class="user_adding cell_display_left">
+                                <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}">
+                        </tr>
+                        <tr class="user_adding">
+                            <td class="user_adding name_subscript cell_display_right" colspan=3>
+                                <p class="user_adding name_subscript">Name will not be visible, and only used to
+                                    associate
+                                    your username with your real name</p>
+                            </td>
+                        </tr>
+                        <tr class="user_adding">
+                            <td class="user_adding cell_display_right">
+                                <label for="username">Username: (3-20 chars)</label>
+                            </td>
+                            <td class="user_adding cell_display_left">
+                                <input type="text" id="username" name="username" required pattern="\w{3,20}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="user_adding name_subscript cell_display_right" colspan=2>
+                                <p class="user_adding name_subscript">Username may consist of letters, numbers, and
+                                    underscores</p>
+                            </td>
+                        </tr>
+                        <tr class="user_adding">
+                            <td class="user_adding cell_display_right">
+                                <label for="pin">PIN (4 digits):</label>
+                            </td>
+                            <td class="user_adding cell_display_left">
+                                <input type="password" id="pin" name="pin" required pattern="\d{4}">
+                            </td>
+                        </tr>
+                        <tr class="user_adding">
+                            <td class="user_adding cell_display_right">
+                                <label for="repin">Repeat PIN:</label>
+                            </td>
+                            <td class="user_adding cell_display_left">
+                                <input type="password" id="repin" name="repin" required pattern="\d{4}">
+                            </td>
+                            <td><input type="submit" value="Submit"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="right-side-upper grid-container-right-upper">
+                <h3>How To Play</h3>
+                <ol>
+                    <li>
+                        <p class="instruction">Register your username</p>
+                        <ul>
+                            <li class="instruction-bullets">Remember your PIN! You will need it all year</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p class="instruction">Make your pick below</p>
+                        <ul>
+                            <li class="instruction-bullets">You must make your pick from Tuesday to Saturday</li>
+                            <li class="instruction-bullets">Double check that you haven't repeated a pick</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p class="instruction">Make multiple usernames for multiple picks</p>
+                        <ul>
+                            <li class="instruction-bullets">Adding "_2" is the recommended style</li>
+                            <li class="instruction-bullets">Example: dabearsstillsuck, dabearsstillsuck_2, and so on
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
         </div>
         <br><br>
-        <div class="pick_adding">
+        <div class=" pick_adding">
             <h3 hx-get="/data/get_week.php" hx-trigger="load" hx-target="this" hx-swap="outerHTML">
                 Make a pick for Week 1
             </h3>
