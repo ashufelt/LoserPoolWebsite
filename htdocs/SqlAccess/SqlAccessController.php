@@ -102,6 +102,7 @@ class SqlAccessController
         $create_user_table = "CREATE TABLE IF NOT EXISTS " . $users . "( 
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
             name VARCHAR(30),
+            email VARCHAR(100),
             username VARCHAR(30), 
             pin INT)";
         $create_picks_table = "CREATE TABLE IF NOT EXISTS " . $picks . "(
@@ -165,13 +166,13 @@ class SqlAccessController
     *  1 : Sql Creation error
     *  4 : User already exists
     */
-    public function add_user(string $name, string $new_user, int $new_pin): int
+    public function add_user(string $name, string $email, string $new_user, int $new_pin): int
     {
         if ($this->user_exists($new_user)) {
             return 4;
         }
-        $create_user_cmd = "INSERT INTO " . self::USER_TABLE . " (name, username, pin) 
-                            VALUES ('" . $name . "', '" . $new_user . "', '" . $new_pin . "');";
+        $create_user_cmd = "INSERT INTO " . self::USER_TABLE . " (name, email, username, pin) 
+                            VALUES ('" . $name . "', '" . $email . "', '" . $new_user . "', '" . $new_pin . "');";
         if ($this->picks_db_conn->query($create_user_cmd) === TRUE) {
             return 0;
         } else {

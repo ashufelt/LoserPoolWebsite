@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
 
 $additional_info = "";
-if (!uh_add_user($_POST['name'], $_POST['username'], $_POST['pin'], $_POST['repin'])) {
+if (!uh_add_user($_POST['name'], $_POST['email'], $_POST['username'], $_POST['pin'], $_POST['repin'])) {
     $additional_info = "<p>Could not register the new user. Make sure your pins match, 
                         and that your username is not already taken. If this message 
                         doesn't go away, please refresh the page.</p>";
