@@ -26,45 +26,12 @@ const TNF = [
 ];
 
 const losers = [
-    [
-        "Atlanta Falcons",
-        "Baltimore Ravens",
-        "Buffalo Bills",
-        "Carolina Panthers",
-        "Chicago Bears",
-        "Cincinnati Bengals",
-        "Cleveland Browns",
-        "Dallas Cowboys",
-        "Denver Broncos",
-        "Detroit Lions",
-        "Green Bay Packers",
-        "Houston Texans",
-        "Indianapolis Colts",
-        "Jacksonville Jaguars",
-    ],
+    [], //week 1
     [],
 ];
 
 const winners = [
-    [
-        "Kansas City Chiefs",
-        "Las Vegas Raiders",
-        "Los Angeles Chargers",
-        "Los Angeles Rams",
-        "Miami Dolphins",
-        "Minnesota Vikings",
-        "New England Patriots",
-        "New Orleans Saints",
-        "New York Giants",
-        "New York Jets",
-        "Philadelpia Eagles",
-        "Pittsburgh Steelers",
-        "San Francisco 49ers",
-        "Seattle Seahawks",
-        "Tampa Bay Buccaneers",
-        "Tennessee Titans",
-        "Washington Commanders"
-    ],
+    [], //week 1
     [],
 ];
 
