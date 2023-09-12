@@ -33,7 +33,7 @@ const TEAMS = [
     "New Orleans Saints",
     "New York Giants",
     "New York Jets",
-    "Philadelpia Eagles",
+    "Philadelphia Eagles",
     "Pittsburgh Steelers",
     "San Francisco 49ers",
     "Seattle Seahawks",
