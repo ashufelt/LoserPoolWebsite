@@ -25,6 +25,49 @@ const TNF = [
     ["New York Jets", "Cleveland Browns"]          // 17
 ];
 
+const losers = [
+    [
+        "Atlanta Falcons",
+        "Baltimore Ravens",
+        "Buffalo Bills",
+        "Carolina Panthers",
+        "Chicago Bears",
+        "Cincinnati Bengals",
+        "Cleveland Browns",
+        "Dallas Cowboys",
+        "Denver Broncos",
+        "Detroit Lions",
+        "Green Bay Packers",
+        "Houston Texans",
+        "Indianapolis Colts",
+        "Jacksonville Jaguars",
+    ],
+    [],
+];
+
+const winners = [
+    [
+        "Kansas City Chiefs",
+        "Las Vegas Raiders",
+        "Los Angeles Chargers",
+        "Los Angeles Rams",
+        "Miami Dolphins",
+        "Minnesota Vikings",
+        "New England Patriots",
+        "New Orleans Saints",
+        "New York Giants",
+        "New York Jets",
+        "Philadelpia Eagles",
+        "Pittsburgh Steelers",
+        "San Francisco 49ers",
+        "Seattle Seahawks",
+        "Tampa Bay Buccaneers",
+        "Tennessee Titans",
+        "Washington Commanders"
+    ],
+    [],
+];
+
 /*
  * September 1st = 243
  * Week 1: <= 253
@@ -58,4 +101,16 @@ function is_sunday_or_monday(): bool
 function get_TNF_teams($week): array
 {
     return TNF[$week - 1];
+}
+
+// Returns -1 if a team was an incorrect pick, 1 if correct, 0 if undetermined
+function check_loser($week, $team): int
+{
+    if (in_array($team, losers[$week - 1])) {
+        return 1;
+    } else if (in_array($team, winners[$week - 1])) {
+        return -1;
+    } else {
+        return 0;
+    }
 }

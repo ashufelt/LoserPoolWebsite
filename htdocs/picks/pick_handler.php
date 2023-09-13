@@ -72,13 +72,21 @@ function ph_get_picks_html_table(): string
         $users_picks = $controller->get_user_all_picks($user);
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
+            $result_bg_styling = "";
             if (array_key_exists($i, $users_picks)) {
                 $pick = $users_picks[$i];
                 if ($hide_picks && ($i == $current_week)) {
                     $pick = "Submitted";
+                } else {
+                    $team_result = check_loser($i, $pick);
+                    if ($team_result == -1) {
+                        $result_bg_styling = "style='background-color:#d63131'";
+                    } else if ($team_result == 1) {
+                        $result_bg_styling = "style='background-color:#3e9c3e'";
+                    }
                 }
             }
-            $picks_html_table .= "<td class='pick_table pick_team'>" . $pick . "</td>";
+            $picks_html_table .= "<td class='pick_table pick_team'" .  $result_bg_styling . ">" . $pick . "</td>";
         }
         $picks_html_table .= "</tr>";
     }
