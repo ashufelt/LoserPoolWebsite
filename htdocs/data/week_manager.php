@@ -1,25 +1,58 @@
 <?php
 
+//Also include bye week teams
 const TNF = [
     ["Detroit Lions", "Kansas City Chiefs"],  // 1
     ["Minnesota Vikings", "Philadelphia Eagles"], // 2
     ["New York Giants", "San Francisco 49ers"],   // 3
     ["Detroit Lions", "Green Bay Packers"],       // 4
-    ["Chicago Bears", "Washington Commanders"],   // 5
-    ["Denver Broncos", "Kansas City Chiefs"],     // 6
-    ["Jacksonville Jaguars", "New Orleans Saints"], // 7
+    [
+        "Chicago Bears", "Washington Commanders",
+        "Cleveland Browns", "Los Angeles Chargers",
+        "Seattle Seahawks", "Tampa Bay Buccaneers"
+    ],   // 5
+    [
+        "Denver Broncos", "Kansas City Chiefs",
+        "Green Bay Packers", "Pittsburgh Steelers"
+    ],     // 6
+    [
+        "Jacksonville Jaguars", "New Orleans Saints",
+        "Carolina Panthers", "Cincinnati Bengals",
+        "Dallas Cowboys", "Houston Texans",
+        "New York Jets", "Tennessee Titans"
+    ], // 7
     ["Tampa Bay Buccaneers", "Buffalo Bills"],    // 8
-    ["Tennessee Titans", "Pittsburgh Steelers"],  // 9
-    ["Carolina Panthers", "Chicago Bears"],       // 10
-    ["Cincinnati Bengals", "Baltimore Ravens"],   // 11
+    [
+        "Tennessee Titans", "Pittsburgh Steelers",
+        "Denver Broncos", "Detroit Lions",
+        "Jacksonville Jaguars", "San Francisco 49ers"
+    ],  // 9
+    [
+        "Carolina Panthers", "Chicago Bears",
+        "Kansas City Chiefs", "Los Angeles Rams",
+        "Miami Dolphins", "Philadelphia Eagles"
+    ],       // 10
+    [
+        "Cincinnati Bengals", "Baltimore Ravens",
+        "Atlanta Falcons", "Indianapolis Colts",
+        "New England Patriots", "New Orleans Saints"
+    ],   // 11
     [
         "Green Bay Packers", "Detroit Lions",
         "Washington Commanders", "Dallas Cowboys",
         "San Francisco 49ers", "Seattle Seahawks",
         "Miami Dolphins", "New York Jets"
     ],       // 12
-    ["Seattle Seahawks", "Dallas Cowboys"],       // 13
-    ["New England Patriots", "Pittsburgh Steelers"], // 14
+    [
+        "Seattle Seahawks", "Dallas Cowboys",
+        "Baltimore Ravens", "Buffalo Bills",
+        "Chicago Bears", "Las Vegas Raiders",
+        "Minnesota Vikings", "New York Giants"
+    ],       // 13
+    [
+        "New England Patriots", "Pittsburgh Steelers",
+        "Arizona Cardinals", "Washington Commanders"
+    ], // 14
     ["Los Angeles Chargers", "Las Vegas Raiders"], // 15
     ["New Orleans Saints", "Los Angeles Rams"],    // 16
     ["New York Jets", "Cleveland Browns"]          // 17
@@ -43,7 +76,23 @@ const losers = [
         "Buffalo Bills",
         "New York Giants",
     ], //week 1
-    [],
+    [], //week 2
+    [], //week 3
+    [], //week 4
+    [], //week 5
+    [], //week 6
+    [], //week 7
+    [], //week 8
+    [], //week 9
+    [], //week 10
+    [], //week 11
+    [], //week 12
+    [], //week 13
+    [], //week 14
+    [], //week 15
+    [], //week 16
+    [], //week 17
+    [], //week 18
 ];
 
 const winners = [
@@ -64,7 +113,23 @@ const winners = [
         "New York Jets",
         "Dallas Cowboys",
     ], //week 1
-    [],
+    [], //week 2
+    [], //week 3
+    [], //week 4
+    [], //week 5
+    [], //week 6
+    [], //week 7
+    [], //week 8
+    [], //week 9
+    [], //week 10
+    [], //week 11
+    [], //week 12
+    [], //week 13
+    [], //week 14
+    [], //week 15
+    [], //week 16
+    [], //week 17
+    [], //week 18
 ];
 
 /*
