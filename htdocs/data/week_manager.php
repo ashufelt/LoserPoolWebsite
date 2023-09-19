@@ -76,7 +76,24 @@ const losers = [
         "Buffalo Bills",
         "New York Giants",
     ], //week 1
-    [], //week 2
+    [
+        "Minnesota Vikings",
+        "Cincinnati Bengals",
+        "Detroit Lions",
+        "Houston Texans",
+        "Chicago Bears",
+        "Jacksonville Jaguars",
+        "Green Bay Packers",
+        "Las Vegas Raiders",
+        "Los Angeles Chargers",
+        "Los Angeles Rams",
+        "Arizona Cardinals",
+        "New York Jets",
+        "Denver Broncos",
+        "New England Patriots",
+        "Carolina Panthers",
+        "Cleveland Browns",
+    ], //week 2
     [], //week 3
     [], //week 4
     [], //week 5
@@ -113,7 +130,24 @@ const winners = [
         "New York Jets",
         "Dallas Cowboys",
     ], //week 1
-    [], //week 2
+    [
+        "Philadelphia Eagles",
+        "Baltimore Ravens",
+        "Seattle Seahawks",
+        "Indianapolis Colts",
+        "Tampa Bay Buccaneers",
+        "Kansas City Chiefs",
+        "Atlanta Falcons",
+        "Buffalo Bills",
+        "Tennessee Titans",
+        "San Francisco 49ers",
+        "New York Giants",
+        "Dallas Cowboys",
+        "Washington Commanders",
+        "Miami Dolphins",
+        "New Orleans Saints",
+        "Pittsburgh Steelers",
+    ], //week 2
     [], //week 3
     [], //week 4
     [], //week 5
