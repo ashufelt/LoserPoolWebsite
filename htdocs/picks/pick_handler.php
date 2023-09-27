@@ -2,14 +2,16 @@
 
 namespace PickHandling;
 
-include_once "db_interface/SqlAccessController.php";
+include_once "../SqlAccess/SqlAccessController.php";
+include_once "../data/week_manager.php";
 
 use SqlAccess\SqlAccessController;
 
-function ph_add_pick(SqlAccessController $controller, string $userin, string $weekin, string $teamin, string $pinin): string
+function ph_add_pick(string $userin, string $teamin, string $pinin): string
 {
+    $controller = new SqlAccessController();
     $user = htmlspecialchars($userin);
-    $week = htmlspecialchars($weekin);
+    $week = get_current_week();
     $team = htmlspecialchars($teamin);
     $pickpin = intval($pinin);
     if ($controller->user_exists($user) == false) {
@@ -39,8 +41,9 @@ function ph_add_pick(SqlAccessController $controller, string $userin, string $we
     }
 }
 
-function ph_get_picks_html_table(SqlAccessController $controller): string
+function ph_get_picks_html_table(): string
 {
+    $controller = new SqlAccessController();
     $show_weeks_count = 8;
     $hide_picks = !is_sunday_or_monday();
     $current_week = get_current_week();
@@ -53,6 +56,7 @@ function ph_get_picks_html_table(SqlAccessController $controller): string
     }
 
     $picks_html_table = "
+        <div id='picks_table'>
             <table class='pick_table'>
                 <tr class='pick_table'>
                     <th class='pickcolumn1 pick_table'>Username</th>";
@@ -79,12 +83,13 @@ function ph_get_picks_html_table(SqlAccessController $controller): string
         $picks_html_table .= "</tr>";
     }
 
-    $picks_html_table .= "</table>";
+    $picks_html_table .= "</table></div>";
     return $picks_html_table;
 }
 
-function ph_get_user_picks_html(SqlAccessController $controller, string $user, string $pin)
+function ph_get_user_picks_html(string $user, string $pin)
 {
+    $controller = new SqlAccessController();
     $user = htmlspecialchars($user);
     $pin_num = intval($pin);
     if ($pin_num != $controller->get_user_pin($user)) {
@@ -108,15 +113,24 @@ function ph_get_user_picks_html(SqlAccessController $controller, string $user, s
                                 <td class='users_picks pick_team'>" . $pick . "</td></tr>";
     }
     $picks_html_table .= "</table>
-                            <form action='/' method='get'>
-                            <input class='hidepicks' type='submit' value='Hide picks'>           
-                            </form>
-                            </div><br><br>";
+                            <button hx-get='/picks/hide.php' hx-target='#one_set_of_picks' 
+                                    hx-swap='innerHTML' class='hidepicks' type='submit' value='Hide picks'>
+                                Hide picks
+                            </button>           
+                            </div>";
     return $picks_html_table;
 }
 
-function ph_clear_picks_table(SqlAccessController $controller): bool
+function ph_get_user_picks_list(string $user)
 {
+    $controller = new SqlAccessController();
+    $user = htmlspecialchars($user);
+    return $controller->get_user_all_picks($user);
+}
+
+function ph_clear_picks_table(): bool
+{
+    $controller = new SqlAccessController();
     if (0 == $controller->clear_pick_table()) {
         return true;
     } else {

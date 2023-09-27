@@ -2,7 +2,7 @@
 # php_value mbstring.http_input auto
 # php_value date.timezone America/New_York
 
-FallbackResource /index.php
+# FallbackResource /index.html
 
 #RewriteEngine on
 #RewriteCond %{REQUEST_FILENAME} !-f
@@ -10,4 +10,4 @@ FallbackResource /index.php
 #RewriteRule ^.*$ /index.php [L,QSA]
 
 # enable directory listing
-Options -Indexes
+Options +Indexes

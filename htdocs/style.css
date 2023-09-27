@@ -52,12 +52,7 @@ h2 {
     font-size: 2em;
 }
 
-h3 {
-    font-size: 1.5em;
-    padding-bottom: 0.25em;
-}
-
-h4 {
+h3, h4 {
     font-size: 1.5em;
     padding-bottom: 0.25em;
 }
@@ -74,6 +69,42 @@ table {
 td, th {
     text-align: left;
     padding: 0.25em;
+}
+
+div.banner {
+    background-color: var(--banner-bg);
+    text-align: center;
+    color: var(--plat-bg);
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+div.banner > h1 {
+    color: var(--plat-bg);
+}
+
+div.pick_adding > form{
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+footer { 
+    margin-top: auto;
+    background-color: var(--banner-bg);
+    color: var(--plat-bg);
+    min-height: 10%;
+    text-align: center;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: flex;
+    justify-content:space-between;
+}
+
+footer > p {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 
 table.user_adding {
@@ -99,6 +130,7 @@ p.user_adding {
 }
 
 table.pick_table {
+    margin-top: 0.5em;
     width: auto;
     border: 2px solid var(--text-green);
 }
@@ -138,6 +170,7 @@ th.pick_table, td.pick_table {
 }
 
 div.users_picks {
+    margin-top:0.5em;
     display: flex;
     align-items: baseline;
     justify-content: center;
@@ -155,71 +188,4 @@ th.users_picks, td.users_picks{
 
 .hidepicks {
     margin-left: 0.5em;
-}
-
-div.banner {
-    background-color: var(--banner-bg);
-    text-align: center;
-    color: var(--plat-bg);
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-div.banner > h1 {
-    color: var(--plat-bg);
-}
-
-div.pick_adding > form {
-    display: inline-block;
-    vertical-align: baseline;
-}
-
-#clear_user_button {
-    position: absolute;
-    right: 2em;
-}
-
-#clear_picks_button {
-    position: absolute;
-    right: 2em;
-}
-
-div.comments { grid-area: comments;}
-
-div.usercomments.grid-container {
-    min-height: 10em;
-    margin-top:auto;
-    padding: 1em;
-    display:inline-grid;
-    grid-template-areas: "reserved reserved comments";
-    gap: 5px;
-    grid-auto-columns: 30%;
-}
-
-form.usercomments {
-    display:flex-inline;
-}
-
-.commentfield {
-    margin-top: auto;
-    padding: 0.5em;
-}
-
-footer { 
-    margin-top: auto;
-    background-color: var(--banner-bg);
-    color: var(--plat-bg);
-    min-height: 10%;
-    text-align: center;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    display: flex;
-    justify-content:space-between;
-}
-
-footer > p {
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
 }

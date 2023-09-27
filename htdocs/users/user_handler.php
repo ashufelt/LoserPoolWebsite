@@ -2,12 +2,13 @@
 
 namespace UserHandling;
 
-include_once "db_interface/SqlAccessController.php";
+include_once "../SqlAccess/SqlAccessController.php";
 
 use SqlAccess\SqlAccessController;
 
-function uh_add_user(SqlAccessController $controller, string $name, string $new_user, string $pin, string $repin): bool
+function uh_add_user(string $name, string $new_user, string $pin, string $repin): bool
 {
+    $controller = new SqlAccessController();
     $new_user = htmlspecialchars($new_user);
     $name = htmlspecialchars($name);
     if ($pin != $repin) {
@@ -21,8 +22,9 @@ function uh_add_user(SqlAccessController $controller, string $name, string $new_
     }
 }
 
-function uh_get_users_html_table(SqlAccessController $controller): string
+function uh_get_users_html_table(): string
 {
+    $controller = new SqlAccessController();
     $users = $controller->get_user_table();
     $user_table = " <table class='user_table'] <tr> <th class='thcolumn1'>Username</th> </tr>";
     if (is_countable($users)) {
@@ -36,8 +38,9 @@ function uh_get_users_html_table(SqlAccessController $controller): string
     return $user_table;
 }
 
-function uh_clear_users_table(SqlAccessController $controller): bool
+function uh_clear_users_table(): bool
 {
+    $controller = new SqlAccessController();
     if (0 == $controller->clear_user_table()) {
         return true;
     } else {
@@ -45,12 +48,14 @@ function uh_clear_users_table(SqlAccessController $controller): bool
     }
 }
 
-function uh_get_user_option_list_html(SqlAccessController $controller): string
+function uh_get_user_option_list_html(): string
 {
+    $controller = new SqlAccessController();
     $option_list = '';
 
     $users = $controller->get_user_table();
     sort($users, SORT_NATURAL | SORT_FLAG_CASE);
+    $option_list .= "";
     if (is_countable($users)) {
         foreach ($users as $user) {
             $addition = '<option value="' . $user . '">'
