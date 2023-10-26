@@ -7,7 +7,6 @@ kanban-plugin: basic
 ## Backlog
 
 - [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
-- [ ] Only list teams that are available for that user
 - [ ] Sort tables
 - [ ] Suggestion box
 - [ ] Confirmation that they would like to overwrite a previous pick
@@ -18,7 +17,7 @@ kanban-plugin: basic
 ## To Do
 
 - [ ] Switch everything to grid or flex layout
-- [ ] Mark correct and incorrect picks from previous weeks
+- [ ] Two tables: One for entries still alive, one for the rest
 
 
 ## In Progress
@@ -27,6 +26,8 @@ kanban-plugin: basic
 
 ## Completed
 
+- [ ] Only list teams that are available for that user
+- [ ] Mark correct and incorrect picks from previous weeks
 - [ ] First and Last Name with Username
 - [ ] Hide picks button on View Picks page
 

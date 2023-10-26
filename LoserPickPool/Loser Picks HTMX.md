@@ -10,7 +10,6 @@ kanban-plugin: basic
 
 ## To Do
 
-- [ ] Add Emergency contact
 - [ ] Fix: "Username/PIN combo is not valid" displays twice when you press submit followed by view
 - [ ] Fix: "Could not register the new user..." does not go away without a full reset
 - [ ] Add "About" page. More detailed rules, about the dev
@@ -22,6 +21,7 @@ kanban-plugin: basic
 
 ## Completed
 
+- [ ] Add Emergency contact
 - [ ] Add simple instructions to top right. Empty space available
 - [ ] Display correct and incorrect guesses with background colors
 - [ ] Fix: "Username/PIN combo is not valid" is displaying twice when failing to submit

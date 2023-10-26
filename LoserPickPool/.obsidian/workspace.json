@@ -16,8 +16,19 @@
                 "file": "Loser Picks HTMX.md"
               }
             }
+          },
+          {
+            "id": "0467f5b310ef363f",
+            "type": "leaf",
+            "state": {
+              "type": "kanban",
+              "state": {
+                "file": "Loser Pick Tasks.md"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -83,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Loser Picks HTMX.md",
+                "file": "Loser Pick Tasks.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +111,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Loser Picks HTMX.md",
+                "file": "Loser Pick Tasks.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -123,7 +134,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Loser Picks HTMX.md"
+                "file": "Loser Pick Tasks.md"
               }
             }
           }
@@ -144,10 +155,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "7182c239fd1b108f",
+  "active": "0467f5b310ef363f",
   "lastOpenFiles": [
-    "Loser Pick Tasks.md",
     "Loser Picks HTMX.md",
+    "Loser Pick Tasks.md",
     "Component Diagram.md",
     "style 1.css",
     "style.css",

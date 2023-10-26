@@ -94,11 +94,44 @@ const losers = [
         "Carolina Panthers",
         "Cleveland Browns",
     ], //week 2
-    [], //week 3
-    [], //week 4
-    [], //week 5
-    [], //week 6
-    [], //week 7
+    [
+        "Atlanta Falcons",
+        "Minnesota Vikings",
+        "New Orleans Saints",
+        "Jacksonville Jaguars",
+        "Denver Broncos",
+        "Tennessee Titans",
+        "Washington Commanders",
+        "Baltimore Ravens",
+        "New York Jets",
+        "Carolina Panthers",
+        "Chicago Bears",
+        "Dallas Cowboys",
+    ], //week 3
+    [
+        "Arizona Cardinals",
+        "Washington Commanders",
+        "New York Jets",
+        "Indianapolis Colts",
+        "Carolina Panthers",
+        "Las Vegas Raiders",
+    ], //week 4
+    [
+        "New York Giants",
+        "Carolina Panthers",
+        "Dallas Cowboys",
+        "Arizona Cardinals",
+    ], //week 5
+    [
+        "Carolina Panthers",
+        "New York Giants",
+        "Indianapolis Colts",
+        "Arizona Cardinals"
+    ], //week 6
+    [
+        "Los Angeles Chargers",
+        "Arizona Cardinals",
+    ], //week 7
     [], //week 8
     [], //week 9
     [], //week 10
@@ -148,11 +181,35 @@ const winners = [
         "New Orleans Saints",
         "Pittsburgh Steelers",
     ], //week 2
-    [], //week 3
+    [
+        "Detroit Lions",
+        "Los Angeles Chargers",
+        "Green Bay Packers",
+        "Houston Texans",
+        "Miami Dolphins",
+        "Cleveland Browns",
+        "Buffalo Bills",
+        "Indianapolis Colts",
+        "New England Patriots",
+        "Seattle Seahawks",
+        "Kansas City Chiefs",
+        "Arizona Cardinals",
+        "Cincinnati Bengals",
+    ], //week 3
     [], //week 4
-    [], //week 5
-    [], //week 6
-    [], //week 7
+    [
+        "Pittsburgh Steelers",
+        "Jacksonville Jaguars",
+    ], //week 5
+    [
+        "Cleveland Browns",
+        "New York Jets"
+    ], //week 6
+    [
+        "New England Patriots",
+        "Minnesota Vikings",
+        "Pittsburgh Steelers"
+    ], //week 7
     [], //week 8
     [], //week 9
     [], //week 10
