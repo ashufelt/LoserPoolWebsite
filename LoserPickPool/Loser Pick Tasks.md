@@ -6,6 +6,9 @@ kanban-plugin: basic
 
 ## Backlog
 
+- [ ] Switch everything to grid or flex layout
+- [ ] Two tables: One for entries still alive, one for the rest
+- [ ] Redo SQL backend<br>- Use constraints (reference user table, NOT NULL, etc.)
 - [ ] Make visual diagram of code organization.  <br>Will help for adding more complexity, and identifying currently existing spaghetti
 - [ ] Sort tables
 - [ ] Suggestion box
@@ -16,8 +19,6 @@ kanban-plugin: basic
 
 ## To Do
 
-- [ ] Switch everything to grid or flex layout
-- [ ] Two tables: One for entries still alive, one for the rest
 
 
 ## In Progress
@@ -26,14 +27,17 @@ kanban-plugin: basic
 
 ## Completed
 
+- [ ] Update to work in 2024
+- [ ] Update get_current_week logic
+- [ ] New table of bye weeks/TNF
+
+
+## 2023 (MVP)
+
 - [ ] Only list teams that are available for that user
 - [ ] Mark correct and incorrect picks from previous weeks
 - [ ] First and Last Name with Username
 - [ ] Hide picks button on View Picks page
-
-
-## MVP Achieved
-
 - [ ] Show username in dropdown immediately after it's registered. Reloading is bad for user experience
 - [ ] Re-implement drop-down list, verify the username and team inside
 - [ ] Check PIN for making a pick

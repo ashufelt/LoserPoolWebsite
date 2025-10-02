@@ -54,7 +54,7 @@ function get_team_options_html($user = ""): string
     }
 
     foreach (TEAMS as $team) {
-        if (!in_array($team, get_TNF_teams(get_current_week())) && !in_array($team, $users_picks)) {
+        if (!in_array($team, get_INELIGIBLE_teams(get_current_week())) && !in_array($team, $users_picks)) {
             $options_list .= "<option>" . $team . "</option>";
         } else if (in_array($team, $users_picks) && (array_key_exists(get_current_week(), $users_picks))) {
             if ($team == $users_picks[get_current_week()]) {

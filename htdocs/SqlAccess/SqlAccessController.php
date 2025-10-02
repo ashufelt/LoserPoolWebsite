@@ -17,8 +17,8 @@ class SqlAccessController
     protected $construct_error = null;
     private string $log_file;
 
-    private const USER_TABLE = "Users";
-    private const PICKS_TABLE = "Picks";
+    private const USER_TABLE = "Users_25";
+    private const PICKS_TABLE = "Picks_25";
     /*
     * Constructor. Establishes connection with SQL, and creates DB, connects to DB
     * and creates two tables (Users and Picks). Should gracefully only create when

@@ -4,21 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "3a08f660bc877e9b",
+        "id": "76b8b49ac66cb19e",
         "type": "tabs",
         "children": [
           {
-            "id": "7182c239fd1b108f",
-            "type": "leaf",
-            "state": {
-              "type": "kanban",
-              "state": {
-                "file": "Loser Picks HTMX.md"
-              }
-            }
-          },
-          {
-            "id": "0467f5b310ef363f",
+            "id": "2f9ac624e375ad40",
             "type": "leaf",
             "state": {
               "type": "kanban",
@@ -27,8 +17,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -137,6 +126,18 @@
                 "file": "Loser Pick Tasks.md"
               }
             }
+          },
+          {
+            "id": "3784408afb30d54c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              }
+            }
           }
         ]
       }
@@ -155,8 +156,9 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "0467f5b310ef363f",
+  "active": "2f9ac624e375ad40",
   "lastOpenFiles": [
+    "Untitled",
     "Loser Picks HTMX.md",
     "Loser Pick Tasks.md",
     "Component Diagram.md",
