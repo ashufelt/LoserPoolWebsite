@@ -1,0 +1,40 @@
+# Fly.io deployment for the Loser Pool.
+#
+# One machine, one SQLite file on a mounted volume. SQLite means the volume
+# can only attach to a single machine -- do not scale this past one. At ~60
+# players and ~1,000 rows a season that is not a constraint worth engineering
+# around.
+
+app = "loser-pool-2026"
+primary_region = "ord"          # Chicago: the pool's timezone, and most players
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  LP_SQLITE_PATH = "/data/pool.sqlite"
+  LP_CACHE_DIR = "/var/www/var/cache"
+
+[[mounts]]
+  source = "pool_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  # Traffic arrives in bursts a few days a week, so idle machines stop and
+  # cost nothing; the next request starts one again.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/health.php"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

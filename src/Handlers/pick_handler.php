@@ -2,32 +2,30 @@
 
 namespace PickHandling;
 
-include_once "../SqlAccess/SqlAccessController.php";
-include_once "../data/week_manager.php";
+include_once __DIR__ . "/../bootstrap.php";
+include_once __DIR__ . "/../week_manager.php";
 
-use SqlAccess\SqlAccessController;
 
 function ph_add_pick(string $userin, string $teamin, string $pinin): string
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($userin);
     $week = get_current_week();
     $team = htmlspecialchars($teamin);
     $pickpin = intval($pinin);
-    if ($controller->user_exists($user) == false) {
+    if ($store->userExists($user) == false) {
         return "<h4>User does not exist</h4>";
     }
-    $correctpin = $controller->get_user_pin($user);
     $week_number = intval($week);
-    $users_picks = $controller->get_user_all_picks($user);
+    $users_picks = $store->picksFor($user);
     $create_ecode = 0;
-    if ($pickpin != $correctpin) {
+    if (!$store->verifyPin($user, $pickpin)) {
         return "<h4>Username/PIN combo is not valid</h4>";
     } else if (in_array($team, $users_picks, true)) {
         return "<h4>Cannot repeat a choice</h4>";
-    } else if (is_sunday_or_monday() && intval(date('z')) > 245) {
+    } else if (lp_picks_are_locked()) {
        return "<h4>Can't make a pick on Sunday or Monday</h4>";
-    } else if (0 != ($create_ecode = $controller->add_pick($user, $team, $week_number))) {
+    } else if (0 != ($create_ecode = $store->savePick($user, $team, $week_number))) {
         if ($create_ecode == 2) {
             return "<h4>Invalid username</h4>";
         } else if ($create_ecode == 1) {
@@ -43,9 +41,9 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
 
 function ph_get_picks_html_table(): string
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $show_weeks_count = 8;
-    $hide_picks = !is_sunday_or_monday() || intval(date('z')) < 245;
+    $hide_picks = lp_picks_are_hidden();
     $current_week = get_current_week();
     if ($current_week <= $show_weeks_count) {
         $start_week = 1;
@@ -65,28 +63,42 @@ function ph_get_picks_html_table(): string
     }
     $picks_html_table .= "</tr>";
 
-    $users = $controller->get_user_table();
+    $users = $store->allUsernames();
     sort($users, SORT_NATURAL | SORT_FLAG_CASE);
+
+    /* One query for the whole grid rather than one per player. */
+    $all_picks = $store->allPicks();
+
     foreach ($users as $user) {
         $picks_html_table .= "<tr class='pick_table'><td class='pickcolumn1 pick_table'>" . $user . "</td>";
-        $users_picks = $controller->get_user_all_picks($user);
+        $users_picks = $all_picks[$user] ?? [];
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
-            $result_bg_styling = "";
+            $result_class = "";
+            $mark = "";
             if (array_key_exists($i, $users_picks)) {
                 $pick = $users_picks[$i];
                 if ($hide_picks && ($i == $current_week)) {
-                    $pick = "Submitted";
+                    $pick = "<span class='pick-pending'>Submitted</span>";
                 } else {
+                    /*
+                     * Result cells carry a glyph as well as a colour. Colour
+                     * alone is unreadable for colour blind players, and these
+                     * cells are the entire point of the table.
+                     */
                     $team_result = check_loser($i, $pick);
                     if ($team_result == -1) {
-                        $result_bg_styling = "style='background-color:#d63131'";
+                        $result_class = " res-wrong";
+                        $mark = "<span class='res-mark' aria-hidden='true'>&#10007;</span>";
+                        $pick = "<span class='visually-hidden'>Out: </span>" . $pick;
                     } else if ($team_result == 1) {
-                        $result_bg_styling = "style='background-color:#3e9c3e'";
+                        $result_class = " res-correct";
+                        $mark = "<span class='res-mark' aria-hidden='true'>&#10003;</span>";
+                        $pick = "<span class='visually-hidden'>Survived: </span>" . $pick;
                     }
                 }
             }
-            $picks_html_table .= "<td class='pick_table pick_team'" .  $result_bg_styling . ">" . $pick . "</td>";
+            $picks_html_table .= "<td class='pick_table pick_team" . $result_class . "'>" . $mark . $pick . "</td>";
         }
         $picks_html_table .= "</tr>";
     }
@@ -97,10 +109,10 @@ function ph_get_picks_html_table(): string
 
 function ph_get_user_picks_html(string $user, string $pin)
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($user);
     $pin_num = intval($pin);
-    if ($pin_num != $controller->get_user_pin($user)) {
+    if (!$store->verifyPin($user, $pin_num)) {
         return "<h4>Username/PIN combo is not valid</h4>";
     }
 
@@ -110,7 +122,7 @@ function ph_get_user_picks_html(string $user, string $pin)
                                 <th class='users_picks'>Week</th>
                                 <th class='users_picks'>Pick</th>";
 
-    $users_picks = $controller->get_user_all_picks($user);
+    $users_picks = $store->picksFor($user);
     for ($i = 1; $i <= get_current_week(); $i++) {
         $pick = "";
         if (array_key_exists($i, $users_picks)) {
@@ -129,19 +141,14 @@ function ph_get_user_picks_html(string $user, string $pin)
     return $picks_html_table;
 }
 
+
+/*
+* Returns a user's picks as an associative array of week => team.
+* Used by the team dropdown to hide teams the user has already picked.
+*/
 function ph_get_user_picks_list(string $user)
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($user);
-    return $controller->get_user_all_picks($user);
-}
-
-function ph_clear_picks_table(): bool
-{
-    $controller = new SqlAccessController();
-    if (0 == $controller->clear_pick_table()) {
-        return true;
-    } else {
-        return false;
-    }
+    return $store->picksFor($user);
 }

@@ -1,0 +1,43 @@
+name: tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 7.4 is the floor the production host is assumed to support: the
+        # pre-existing code uses typed properties but nothing newer, and the
+        # host's version is unknown. Newer versions guard against rot.
+        php: ['7.4', '8.1', '8.3']
+
+    name: PHP ${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, curl
+          coverage: none
+
+      # Catches syntax that would fatal on the oldest supported runtime.
+      - name: Lint every PHP file
+        run: |
+          status=0
+          while IFS= read -r file; do
+            php -l "$file" > /dev/null || { echo "Syntax error in $file"; status=1; }
+          done < <(find htdocs tests bin -name '*.php')
+          exit $status
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Run test suite
+        run: vendor/bin/phpunit --colors=never

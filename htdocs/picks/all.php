@@ -1,6 +1,6 @@
 <?php
 
-include_once("pick_handler.php");
+include_once(__DIR__ . "/../../src/Handlers/pick_handler.php");
 
 use function PickHandling\ph_get_picks_html_table;
 

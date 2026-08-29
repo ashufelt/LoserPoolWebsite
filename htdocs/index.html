@@ -1,156 +1,208 @@
 <!doctype html>
+<html lang="en">
 
-<html>
 <head>
-    <title>Loser Pool 2025</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Loser Pool 2026</title>
     <link rel="stylesheet" href="/style.css" />
+    <!--
+      Applied before first paint. Deferring this to the end of the body makes
+      a dark-mode user watch the page flash white on every load.
+    -->
+    <script>
+        (function () {
+            try {
+                var choice = localStorage.getItem('lp-theme');
+                if (choice === 'light' || choice === 'dark') {
+                    document.documentElement.setAttribute('data-theme', choice);
+                }
+            } catch (e) {
+                /* Private browsing can throw on localStorage; auto is fine. */
+            }
+        })();
+    </script>
     <script type="text/javascript" src="/htmx.js"></script>
 </head>
 
 <body>
-    <div class="banner">
-        <h1 id="headerh1">Pick the Loser! 2025</h1>
-    </div>
+    <header class="banner">
+        <div class="banner-inner">
+            <h1>Pick the Loser! <span class="banner-year">2026</span></h1>
+            <div class="theme-toggle" role="group" aria-label="Colour theme">
+                <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+                <button type="button" data-theme-choice="auto" aria-pressed="true">Auto</button>
+                <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+            </div>
+        </div>
+    </header>
+
     <main>
-        <div>
-            <br>
-            <br>
-            <h3> Welcome back to the Loser Pool!
-            </h3>
-            <br>
-            <br>
-        </div>
-        <div class="grid-container-upper">
-            <div class="user_adding">
-                <h3> Register Username </h3>
-                <form hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
-                    <table class="user_adding">
-                        <tr class="user_adding">
-                            <td class="user_adding cell_display_right">
-                                <label for="name">Name: (3-40 chars)</label>
-                            </td>
-                            <td class="user_adding cell_display_left">
-                                <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}">
-                            </td>
-                        </tr>
-                        <tr class="user_adding">
-                            <td class="user_adding cell_display_right">
-                                <label for="email">Email:</label>
-                            </td>
-                            <td class="user_adding cell_display_left">
-                                <input type="email" id="email" name="email" required>
-                            </td>
-                        </tr>
-                        <tr class="user_adding">
-                            <td class="user_adding name_subscript cell_display_right" colspan=2>
-                                <p class="user_adding name_subscript">Name and email will not be visible to others</p>
-                            </td>
-                        </tr>
-                        <tr class="user_adding">
-                            <td class="user_adding cell_display_right">
-                                <label for="username">Username: (3-20 chars)</label>
-                            </td>
-                            <td class="user_adding cell_display_left">
-                                <input type="text" id="username" name="username" required pattern="\w{3,20}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="user_adding name_subscript cell_display_right" colspan=2>
-                                <p class="user_adding name_subscript">Username may consist of letters, numbers, and
-                                    underscores</p>
-                            </td>
-                        </tr>
-                        <tr class="user_adding">
-                            <td class="user_adding cell_display_right">
-                                <label for="pin">PIN (4 digits):</label>
-                            </td>
-                            <td class="user_adding cell_display_left">
-                                <input type="password" id="pin" name="pin" required pattern="\d{4}">
-                            </td>
-                        </tr>
-                        <tr class="user_adding">
-                            <td class="user_adding cell_display_right">
-                                <label for="repin">Repeat PIN:</label>
-                            </td>
-                            <td class="user_adding cell_display_left">
-                                <input type="password" id="repin" name="repin" required pattern="\d{4}">
-                            </td>
-                            <td><input type="submit" value="Submit"></td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-            <div class="right-side-upper grid-container-right-upper">
-                <h3>How To Play</h3>
-                <ol>
-                    <li>
-                        <p class="instruction">Register your username</p>
-                        <ul>
-                            <li class="instruction-bullets">Remember your PIN! You will need it all year</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <p class="instruction">Make your pick below</p>
-                        <ul>
-                            <li class="instruction-bullets">You must make your pick from Tuesday to Saturday</li>
-                            <li class="instruction-bullets">Double check that you haven't repeated a pick</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <p class="instruction">Make multiple usernames for multiple picks</p>
-                        <ul>
-                            <li class="instruction-bullets">Adding "_2" is the recommended style</li>
-                            <li class="instruction-bullets">Example: dabearsstillsuck, dabearsstillsuck_2, and so on
-                            </li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <br>
-        <br>
-        <p>If you want to change your pick, just submit again! You can check that it changed with the 'View Picks' button on the right.</p>
-        <br>
-        <p>If you're having any trouble making a pick, or you forgot your PIN, you can send an email to
-            <a href="mailto: adamshufelt.official@gmail.com">adamshufelt.official@gmail.com</a>. Be sure to use the
-            same email that you used to sign-up.
-        </p>
-        <br>
-        <div class=" pick_adding">
-            <h3 hx-get="/data/get_week.php" hx-trigger="load" hx-target="this" hx-swap="outerHTML">
-                Make a pick for Week 1
-            </h3>
-            <form action="/picks/" method="post">
-                <label for="userpicks">Username:</label>
-                <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load" hx-target="this"
-                    hx-swap="outerHTML">
-                    <option value="Users here"></option>
-                </select>
-                <label for="pickpin">PIN:</label>
-                <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}">
-                <label for="teams">Losing Team:</label>
-                <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load" hx-target="this"
-                    hx-swap="outerHTML">
-                    <option value="Values here"></option>
-                </select>
-                <button class="btn" hx-post="/picks/add.php" hx-target="#both_tables_of_picks"
-                    hx-swap="innerHTML">Submit</button>
-                <button class="btn" hx-post="/picks/view.php" hx-target="#one_set_of_picks">View Picks</button>
+        <!--
+          The pick form comes first. A returning player opens this site to do
+          exactly one thing, and registration happens once a season.
+        -->
+        <section class="card card-primary" aria-labelledby="pick-heading">
+            <h2 id="pick-heading" hx-get="/week.php" hx-trigger="load" hx-target="this" hx-swap="outerHTML">
+                Make your pick
+            </h2>
+
+            <form class="pick-form" action="/picks/" method="post">
+                <div class="field">
+                    <label for="userpicks">Username</label>
+                    <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load"
+                        hx-target="this" hx-swap="outerHTML">
+                        <option value="">Loading…</option>
+                    </select>
+                </div>
+
+                <div class="field field-narrow">
+                    <label for="pickpin">PIN</label>
+                    <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}"
+                        inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••">
+                </div>
+
+                <div class="field">
+                    <label for="teams">Team you think will lose</label>
+                    <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load"
+                        hx-target="this" hx-swap="outerHTML">
+                        <option value="">Loading…</option>
+                    </select>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" hx-post="/picks/add.php" hx-target="#both_tables_of_picks"
+                        hx-swap="innerHTML">Submit pick</button>
+                    <button class="btn btn-secondary" hx-post="/picks/view.php"
+                        hx-target="#one_set_of_picks">View my picks</button>
+                </div>
             </form>
-        </div>
-        
+
+            <p class="hint">
+                Changed your mind? Submit again — your latest pick for the week replaces the last one.
+            </p>
+        </section>
+
         <div id="both_tables_of_picks">
-            <div id="one_set_of_picks">
-            </div>
-            <div id="picks_table" hx-get="picks/all.php" hx-trigger="load" hx-target="this" hx-swap="outerHTML">
-            </div>
+            <div id="one_set_of_picks"></div>
+            <div id="picks_table" hx-get="picks/all.php" hx-trigger="load" hx-target="this"
+                hx-swap="outerHTML"></div>
+        </div>
+
+        <div class="grid-two">
+            <section class="card" aria-labelledby="rules-heading">
+                <h2 id="rules-heading">The rules</h2>
+                <ul class="rules">
+                    <li><strong>Pick a team you think will lose.</strong> Get it right and you survive the week.</li>
+                    <li><strong>No repeat picks</strong> — once you have used a team, it is gone for the season.</li>
+                    <li><strong>A tie eliminates you.</strong> A team that ties did not lose.</li>
+                    <li><strong>No teams playing Wednesday, Thursday or Friday.</strong> Those games start before
+                        the deadline. Saturday games are fine.</li>
+                    <li><strong>Teams on a bye</strong> cannot be picked.</li>
+                    <li><strong>Picks are open Tuesday to Saturday</strong> and lock Sunday and Monday. Everyone
+                        else's picks stay hidden until they lock.</li>
+                    <li><strong>Buy back in — week 1 only.</strong></li>
+                    <li><strong>Final four or fewer can split the pot</strong>, if everyone still in agrees.</li>
+                </ul>
+                <p class="hint">
+                    The dropdown only offers teams you are allowed to pick, so anything ineligible is already
+                    filtered out.
+                </p>
+            </section>
+
+            <section class="card" aria-labelledby="register-heading">
+                <h2 id="register-heading">New here?</h2>
+                <p class="hint">
+                    Register a username to join. Want more than one entry? Register again with
+                    <code>_2</code> on the end.
+                </p>
+
+                <form class="register-form" hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}"
+                            autocomplete="name">
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <p class="field-note">Your name and email are never shown to other players.</p>
+                    </div>
+
+                    <div class="field">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required pattern="\w{3,20}"
+                            autocomplete="username">
+                        <p class="field-note">3–20 characters: letters, numbers and underscores.</p>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field field-narrow">
+                            <label for="pin">PIN</label>
+                            <input type="password" id="pin" name="pin" required pattern="\d{4}"
+                                inputmode="numeric" maxlength="4" autocomplete="new-password">
+                        </div>
+                        <div class="field field-narrow">
+                            <label for="repin">Repeat PIN</label>
+                            <input type="password" id="repin" name="repin" required pattern="\d{4}"
+                                inputmode="numeric" maxlength="4" autocomplete="new-password">
+                        </div>
+                    </div>
+                    <p class="field-note">Four digits. You will need it every week, so pick something memorable.</p>
+
+                    <div class="actions">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </form>
+            </section>
         </div>
     </main>
+
     <footer>
-        <p>About</p>
-        <p>Other Info</p>
+        <p>Stuck, or forgotten your PIN? Email
+            <a href="mailto:adamshufelt.official@gmail.com">adamshufelt.official@gmail.com</a>
+            from the address you signed up with.</p>
     </footer>
 
+    <script>
+        (function () {
+            var buttons = document.querySelectorAll('[data-theme-choice]');
+
+            function apply(choice) {
+                if (choice === 'auto') {
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    document.documentElement.setAttribute('data-theme', choice);
+                }
+                buttons.forEach(function (button) {
+                    button.setAttribute('aria-pressed', String(button.dataset.themeChoice === choice));
+                });
+                try {
+                    if (choice === 'auto') {
+                        localStorage.removeItem('lp-theme');
+                    } else {
+                        localStorage.setItem('lp-theme', choice);
+                    }
+                } catch (e) {
+                    /* Choice still applies for this page view. */
+                }
+            }
+
+            var stored = 'auto';
+            try {
+                stored = localStorage.getItem('lp-theme') || 'auto';
+            } catch (e) { /* ignore */ }
+            apply(stored);
+
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    apply(button.dataset.themeChoice);
+                });
+            });
+        })();
+    </script>
 </body>
 
 </html>

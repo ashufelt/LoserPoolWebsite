@@ -1,6 +1,6 @@
 <?php
-include_once("user_handler.php");
-include_once("../picks/pick_handler.php");
+include_once(__DIR__ . "/../../src/Handlers/user_handler.php");
+include_once(__DIR__ . "/../../src/Handlers/pick_handler.php");
 
 use function UserHandling\uh_add_user;
 use function PickHandling\ph_get_picks_html_table;

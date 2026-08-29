@@ -1,215 +1,647 @@
 /*
- * Color palette
- * #040707 : Basically black
- * #od2a2e : Gunmetal green
- * #0d4851 : Midnight Green
- * #4590A1 : Blue (Munsell)
- * #8abecf : Sky Blue
- * #bcdde8 : Light Blue 
- * #e3e5e6 : Platinum
+ * Loser Pool stylesheet.
+ *
+ * Mobile-first: the base rules describe a phone and one breakpoint at 48em
+ * adds the wider layout. Most people open this on a phone to make one pick.
+ *
+ * Theming works in three states. An explicit choice sets data-theme on the
+ * root element; the default "auto" sets nothing and lets prefers-color-scheme
+ * decide. So every colour is defined once on bare :root, then redefined in
+ * both the media query (guarded so an explicit light choice wins) and the
+ * [data-theme="dark"] block.
  */
 
+/* ------------------------------------------------------------ light theme */
+
 :root {
-    --text-black: #040707;
-    --text-green: #0d2a2e;
-    --banner-bg:  #0d4851;
-    --munsell-bl: #4590a1;
-    --row-hvr: #8abecf;
-    --row-hl: #a3bbbf;
-    --plat-bg: #e3e5e6;
+    --midnight: #0d4851;
+    --gunmetal: #0d2a2e;
+    --munsell: #4590a1;
+
+    --page-bg: #e3e5e6;
+    --surface: #ffffff;
+    --surface-sunken: #f2f4f5;
+    --surface-raised: #ffffff;
+    --border: #c9d2d4;
+    --border-strong: #9fb0b4;
+
+    --text: #101c1f;
+    --text-muted: #4a5a5e;
+    --text-inverse: #f4f7f7;
+
+    --header-bg: #0d4851;
+    --header-text: #f4f7f7;
+
+    --accent: #0d4851;
+    --accent-text: #f4f7f7;
+    --accent-hover: #0d2a2e;
+
+    --ok-bg: #d5efdb;
+    --ok-text: #14532d;
+    --ok-border: #86c898;
+    --bad-bg: #f8d9d9;
+    --bad-text: #7f1d1d;
+    --bad-border: #e39a9a;
+
+    --shadow: 0 1px 2px rgba(13, 42, 46, 0.06), 0 2px 8px rgba(13, 42, 46, 0.08);
+
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2rem;
+
+    --radius: 12px;
+    --radius-sm: 8px;
+    --tap: 2.75rem;
+}
+
+/* --------------------------------------------------- dark theme (tokens) */
+
+/*
+ * Not a colour inversion. Dark surfaces are desaturated teal rather than grey
+ * so the pool keeps its identity, and the result colours are re-picked rather
+ * than reused: the light tints are far too bright against a dark background.
+ */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --page-bg: #0b1416;
+        --surface: #13212400;
+        --surface: #132124;
+        --surface-sunken: #0f1b1e;
+        --surface-raised: #182b2f;
+        --border: #24393e;
+        --border-strong: #365055;
+
+        --text: #e6eef0;
+        --text-muted: #9db0b5;
+        --text-inverse: #0b1416;
+
+        --header-bg: #0f1e21;
+        --header-text: #e6eef0;
+
+        --accent: #4590a1;
+        --accent-text: #06171b;
+        --accent-hover: #63a9b9;
+
+        --ok-bg: #14361f;
+        --ok-text: #a7e0b8;
+        --ok-border: #2c6b3f;
+        --bad-bg: #3d1717;
+        --bad-text: #f3b0b0;
+        --bad-border: #7d2f2f;
+
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+}
+
+:root[data-theme="dark"] {
+    --page-bg: #0b1416;
+    --surface: #132124;
+    --surface-sunken: #0f1b1e;
+    --surface-raised: #182b2f;
+    --border: #24393e;
+    --border-strong: #365055;
+
+    --text: #e6eef0;
+    --text-muted: #9db0b5;
+    --text-inverse: #0b1416;
+
+    --header-bg: #0f1e21;
+    --header-text: #e6eef0;
+
+    --accent: #4590a1;
+    --accent-text: #06171b;
+    --accent-hover: #63a9b9;
+
+    --ok-bg: #14361f;
+    --ok-text: #a7e0b8;
+    --ok-border: #2c6b3f;
+    --bad-bg: #3d1717;
+    --bad-text: #f3b0b0;
+    --bad-border: #7d2f2f;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------------------------------------------------------------- basics */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 * {
-    margin:0px;
+    margin: 0;
 }
 
-html { 
-    font-family: helvetica, arial, sans-serif;
+html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     font-size: 16px;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-    box-sizing: border-box;
-    background-color: var(--plat-bg);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    border: 10px solid var(--text-green);
+    background-color: var(--page-bg);
+    color: var(--text);
+    line-height: 1.55;
 }
 
 main {
-    color: var(--text-black);
-    padding: 1em;
-    height: auto;
+    flex: 1;
+    width: 100%;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
 }
 
 h1 {
-    font-size: 3em;
-    color: var(--text-black);
+    font-size: clamp(1.5rem, 5vw, 2.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
 }
 
 h2 {
-    font-size: 2em;
+    font-size: clamp(1.15rem, 3vw, 1.5rem);
+    line-height: 1.2;
+    margin-bottom: var(--sp-3);
 }
 
-h3, h4 {
-    font-size: 1.5em;
-    padding-bottom: 0.25em;
+a {
+    color: var(--accent);
 }
 
-p {
-    font-size: 1em;
+:root[data-theme="dark"] a,
+:root:not([data-theme="light"]) a {
+    color: var(--munsell);
 }
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.05em 0.35em;
+}
+
+:focus-visible {
+    outline: 3px solid var(--munsell);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* ---------------------------------------------------------------- header */
+
+.banner {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: var(--sp-4);
+}
+
+.banner-inner {
+    max-width: 68rem;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+}
+
+.banner h1 {
+    color: var(--header-text);
+}
+
+.banner-year {
+    opacity: 0.65;
+    font-weight: 400;
+}
+
+/* Segmented light / auto / dark control. */
+.theme-toggle {
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.theme-toggle button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--header-text);
+    font: inherit;
+    font-size: 0.8125rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    cursor: pointer;
+    opacity: 0.75;
+}
+
+.theme-toggle button:hover {
+    opacity: 1;
+}
+
+.theme-toggle button[aria-pressed="true"] {
+    background: var(--header-text);
+    color: var(--header-bg);
+    opacity: 1;
+    font-weight: 600;
+}
+
+/* ----------------------------------------------------------------- cards */
+
+.card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--sp-4);
+}
+
+/* The pick form is the reason people are here; give it a little weight. */
+.card-primary {
+    border-color: var(--accent);
+    border-top-width: 3px;
+}
+
+.grid-two {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+}
+
+/* ----------------------------------------------------------------- forms */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    margin-bottom: var(--sp-3);
+}
+
+.field-row {
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+}
+
+.field-row .field {
+    flex: 1 1 8rem;
+}
+
+label {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--text);
+}
+
+.field-note,
+.hint {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.hint {
+    margin-top: var(--sp-3);
+}
+
+/*
+ * 16px is not a stylistic choice: iOS Safari zooms the viewport when a focused
+ * input has a smaller font, which reads as the layout breaking.
+ */
+input,
+select,
+button {
+    font: inherit;
+    font-size: 16px;
+    max-width: 100%;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    min-height: var(--tap);
+    padding: var(--sp-2) var(--sp-3);
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+}
+
+input:focus-visible,
+select:focus-visible {
+    border-color: var(--munsell);
+}
+
+.field-narrow input {
+    max-width: 8rem;
+    letter-spacing: 0.25em;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-4);
+}
+
+.btn {
+    min-height: var(--tap);
+    padding: var(--sp-2) var(--sp-5);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--accent);
+    border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+    background-color: var(--surface-sunken);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* ----------------------------------------------------------------- rules */
+
+.rules {
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    font-size: 0.9375rem;
+}
+
+/* ------------------------------------------------------------- the grids */
 
 table {
-    font-family: arial, sans-serif;
     border-collapse: collapse;
 }
 
-td, th {
+td,
+th {
     text-align: left;
-    padding: 0.25em;
+    padding: var(--sp-2) var(--sp-3);
 }
 
-div.banner {
-    background-color: var(--banner-bg);
-    text-align: center;
-    color: var(--plat-bg);
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-div.banner > h1 {
-    color: var(--plat-bg);
-}
-
-div.pick_adding{
-    margin-bottom: 0.5em;
-}
-
-div.pick_adding > form{
-    display: inline-block;
-    vertical-align: baseline;
-}
-
-footer { 
-    margin-top: auto;
-    background-color: var(--banner-bg);
-    color: var(--plat-bg);
-    min-height: 10%;
-    text-align: center;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    display: flex;
-    justify-content:space-between;
-}
-
-footer > p {
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-
-table.user_adding {
-    font-family: arial, sans-serif;
-    border: none;
-}
-
-td.user_adding {
-    width: 13em;
-    border:none;
-}
-
-p.user_adding {
-    font-size: 12px;
-}
-
-.cell_display_right {
-    text-align: right;
-}
-
-.cell_display_left {
-    text-align: left;
+/*
+ * The standings grid is username plus up to eight weeks, so it scrolls inside
+ * its own box rather than widening the page. The username column is pinned,
+ * because scrolling sideways without it means losing track of whose row it is.
+ */
+#picks_table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }
 
 table.pick_table {
-    margin-top: 0.5em;
-    width: auto;
-    border: 2px solid var(--text-green);
-}
-
-tr.pickcolumn1 {
-    border-left: 2px solid var(--text-green);
-    border-right: 2px solid var(--text-green);
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 th.pickHeader {
-    text-align:center;
-    width:12em;
-    border:2px solid var(--text-green);
-    font-weight: bold;
+    text-align: center;
+    min-width: 6.5rem;
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border-strong);
+}
+
+th.pickcolumn1,
+td.pickcolumn1 {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: var(--surface);
+    min-width: 8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border-right: 2px solid var(--border-strong);
 }
 
 th.pickcolumn1 {
-    width:8em;
-    border:2px solid var(--text-green);
-    font-weight: bold;
+    border-bottom: 2px solid var(--border-strong);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
 }
 
-td.pickcolumn1 {
-    font-weight: bold;
+tr.pick_table:nth-child(even) td {
+    background-color: var(--surface-sunken);
 }
 
-tr.pick_table:nth-child(even) {
-    background-color: var(--row-hl);
+tr.pick_table:nth-child(even) td.pickcolumn1 {
+    background-color: var(--surface-sunken);
 }
 
-tr.pick_table:hover {
-    background-color: var(--row-hvr);
+td.pick_table {
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9375rem;
+    white-space: nowrap;
 }
 
-th.pick_table, td.pick_table {
-    border: 1px solid var(--text-green);
+/*
+ * Results carry a glyph as well as a colour. Colour alone fails for colour
+ * blind players, and these cells are the entire point of the table.
+ */
+.res-correct {
+    background-color: var(--ok-bg) !important;
+    color: var(--ok-text);
+    box-shadow: inset 0 0 0 1px var(--ok-border);
 }
 
+.res-wrong {
+    background-color: var(--bad-bg) !important;
+    color: var(--bad-text);
+    box-shadow: inset 0 0 0 1px var(--bad-border);
+}
+
+.res-mark {
+    font-weight: 700;
+    margin-right: 0.35em;
+}
+
+.pick-pending {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* A player's own picks, shown after "View my picks". */
 div.users_picks {
-    margin-top:0.5em;
+    margin-bottom: var(--sp-4);
+    max-width: 100%;
+    overflow-x: auto;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--sp-4);
     display: flex;
-    align-items: baseline;
-    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--sp-4);
 }
 
 table.users_picks {
-    border : 2px solid var(--text-green);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
 }
 
-th.users_picks, td.users_picks{
+th.users_picks,
+td.users_picks {
     text-align: center;
-    font-weight: bold;
-    border: 1px solid var(--text-green);
+    border: 1px solid var(--border);
+}
+
+th.users_picks {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .hidepicks {
-    margin-left: 0.5em;
+    min-height: var(--tap);
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.grid-container-upper {
-    display:grid;
-    grid-template-columns: 50% 50%;
+/* ------------------------------------------------------ status messages */
+
+/*
+ * The handlers return bare <h3>/<h4> strings as the only feedback channel.
+ * Styled here so a rejected pick reads as a message rather than a heading.
+ */
+#both_tables_of_picks > h3,
+#both_tables_of_picks > h4,
+#picks_table > h4 {
+    font-size: 1rem;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--sp-3);
+    border: 1px solid var(--bad-border);
+    background-color: var(--bad-bg);
+    color: var(--bad-text);
 }
 
- grid-container-right-upper {
-    display:grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 2em auto;
- }
+#both_tables_of_picks > h3 {
+    border-color: var(--ok-border);
+    background-color: var(--ok-bg);
+    color: var(--ok-text);
+}
 
- p.instruction {
-    font-weight: bold;
-    margin: 0.2em;
- }
+/* ---------------------------------------------------------------- footer */
 
- .instruction-bullets { 
-    margin: 0.2em;
- }
+footer {
+    margin-top: auto;
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: var(--sp-4);
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+footer a {
+    color: var(--header-text);
+}
+
+/* ------------------------------------------------------------ wider screens */
+
+@media (min-width: 48em) {
+    main {
+        padding: var(--sp-6) var(--sp-5);
+        gap: var(--sp-5);
+    }
+
+    .card {
+        padding: var(--sp-5);
+    }
+
+    .grid-two {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--sp-5);
+        align-items: start;
+    }
+
+    .pick-form {
+        display: grid;
+        grid-template-columns: 1fr 7rem 1fr;
+        gap: var(--sp-4);
+        align-items: end;
+    }
+
+    .pick-form .field {
+        margin-bottom: 0;
+    }
+
+    .pick-form .actions {
+        grid-column: 1 / -1;
+        margin-top: var(--sp-2);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn:active {
+        transform: none;
+    }
+}
+
+/* Screen-reader-only text: the result glyphs are decorative, so the outcome
+   is also stated in words for anyone not looking at colours or ticks. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

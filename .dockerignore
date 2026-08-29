@@ -1,0 +1,10 @@
+.git
+.github
+tests
+vendor
+docs
+LoserPickPool
+Old_version.zip
+*.md
+composer.json
+phpunit.xml
