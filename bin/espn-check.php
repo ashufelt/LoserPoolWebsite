@@ -48,8 +48,10 @@ printf("Week 1 games     %d\n", count($schedule->games()));
 $snapshots = glob($snapshotDir . '/*.json') ?: [];
 printf("Snapshots        %d files\n", count($snapshots));
 if ($snapshots !== []) {
-    $newest = max(array_map('filemtime', $snapshots));
-    $ageDays = (int) floor((time() - $newest) / 86400);
+    /* generated_at, not mtime: in a container mtime is the image build date. */
+    $recorded = json_decode((string) file_get_contents($snapshots[0]), true);
+    $generated = isset($recorded['generated_at']) ? strtotime($recorded['generated_at']) : false;
+    $ageDays = $generated === false ? 0 : (int) floor((time() - $generated) / 86400);
     printf("Snapshot age     %d day(s)\n", $ageDays);
     if ($ageDays > 21) {
         echo "  ! Snapshots are stale. Late-season kickoff times are provisional\n";
