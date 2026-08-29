@@ -177,6 +177,5 @@ Regardless of where this deploys:
 1. Run `php bin/espn-check.php` and `php --version` on the host (above).
 2. Rotate the MySQL password committed at `htdocs/SqlAccess/conn_info.php`, and
    take that file out of the repo. Only he can do this.
-3. Decide the tie rule: ESPN reports a tie as `winner: false` for both teams,
-   which would score as a losing pick. The code currently treats a tie as
-   undecided. Confirm that is what the pool wants.
+3. Nothing further. The tie rule is settled: a tie eliminates the player,
+   because you must pick a team that loses and a team that ties did not lose.

@@ -62,16 +62,23 @@ final class Rules
     /*
      * Did this pick come in? Returns one of the PICK_* constants.
      *
-     * A tie is reported as undecided. ESPN marks both competitors
-     * `winner: false` in a tie, which would otherwise read as "this team did
-     * not lose" and eliminate the player. Whether a tie should actually count
-     * as surviving is a commissioner's call, not something to infer here.
+     * A tie eliminates the player. You are picking a team to lose, and a team
+     * that ties did not lose -- so the pick failed. This is not the same as
+     * "undecided": the game is over and the answer is no.
+     *
+     * It needs stating because ESPN encodes a tie as `winner: false` on both
+     * competitors, so the naive read of "was this team the winner?" quietly
+     * scores a tie as a successful pick.
      */
     public static function checkPick(Schedule $schedule, string $team): int
     {
         $game = $schedule->gameFor($team);
-        if ($game === null || !$game->isCompleted() || $game->isTie()) {
+        if ($game === null || !$game->isCompleted()) {
             return self::PICK_UNDECIDED;
+        }
+
+        if ($game->isTie()) {
+            return self::PICK_INCORRECT;
         }
 
         return $game->winner() === $team ? self::PICK_INCORRECT : self::PICK_CORRECT;

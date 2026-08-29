@@ -158,11 +158,14 @@ final class RulesTest extends TestCase
     }
 
     /*
-     * ESPN reports a tie as `winner: false` on both competitors, which would
-     * otherwise read as "this team did not lose" and eliminate the player.
-     * Whether a tie should count as surviving is the commissioner's call.
+     * A tie eliminates the player: you must pick a team that loses, and a team
+     * that ties did not lose.
+     *
+     * The trap is that ESPN encodes a tie as `winner: false` on both
+     * competitors, so checking only "was this team the winner?" scores a tie
+     * as a successful pick -- silently keeping an eliminated player alive.
      */
-    public function testATieIsUndecidedRatherThanALoss(): void
+    public function testATieEliminatesThePicker(): void
     {
         $payload = ['events' => [[
             'date' => '2026-11-08T18:00Z',
@@ -177,8 +180,8 @@ final class RulesTest extends TestCase
 
         $schedule = Schedule::fromEspnPayload($payload, SeasonConfig::timezone());
 
-        $this->assertSame(Rules::PICK_UNDECIDED, Rules::checkPick($schedule, 'Chicago Bears'));
-        $this->assertSame(Rules::PICK_UNDECIDED, Rules::checkPick($schedule, 'Detroit Lions'));
+        $this->assertSame(Rules::PICK_INCORRECT, Rules::checkPick($schedule, 'Chicago Bears'));
+        $this->assertSame(Rules::PICK_INCORRECT, Rules::checkPick($schedule, 'Detroit Lions'));
     }
 
     /*
