@@ -74,21 +74,31 @@ function ph_get_picks_html_table(): string
         $users_picks = $all_picks[$user] ?? [];
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
-            $result_bg_styling = "";
+            $result_class = "";
+            $mark = "";
             if (array_key_exists($i, $users_picks)) {
                 $pick = $users_picks[$i];
                 if ($hide_picks && ($i == $current_week)) {
-                    $pick = "Submitted";
+                    $pick = "<span class='pick-pending'>Submitted</span>";
                 } else {
+                    /*
+                     * Result cells carry a glyph as well as a colour. Colour
+                     * alone is unreadable for colour blind players, and these
+                     * cells are the entire point of the table.
+                     */
                     $team_result = check_loser($i, $pick);
                     if ($team_result == -1) {
-                        $result_bg_styling = "style='background-color:#d63131'";
+                        $result_class = " res-wrong";
+                        $mark = "<span class='res-mark' aria-hidden='true'>&#10007;</span>";
+                        $pick = "<span class='visually-hidden'>Out: </span>" . $pick;
                     } else if ($team_result == 1) {
-                        $result_bg_styling = "style='background-color:#3e9c3e'";
+                        $result_class = " res-correct";
+                        $mark = "<span class='res-mark' aria-hidden='true'>&#10003;</span>";
+                        $pick = "<span class='visually-hidden'>Survived: </span>" . $pick;
                     }
                 }
             }
-            $picks_html_table .= "<td class='pick_table pick_team'" .  $result_bg_styling . ">" . $pick . "</td>";
+            $picks_html_table .= "<td class='pick_table pick_team" . $result_class . "'>" . $mark . $pick . "</td>";
         }
         $picks_html_table .= "</tr>";
     }
