@@ -8,12 +8,25 @@ include_once __DIR__ . "/pick_handler.php";
 use LoserPool\Nfl\Teams;
 use function PickHandling\ph_get_user_picks_list;
 
-/* Each option carries its crest path so the page needs no second team map. */
+/*
+ * Each option carries its own crest and club colour, so the enhanced picker
+ * needs no second copy of the team map on the client.
+ */
 function ph_team_option(string $team): string
 {
+    $attributes = "";
+
     $logo = Teams::logoPath($team);
-    $attribute = $logo === null ? "" : " data-logo='" . $logo . "'";
-    return "<option" . $attribute . ">" . $team . "</option>";
+    if ($logo !== null) {
+        $attributes .= " data-logo='" . $logo . "'";
+    }
+
+    $color = Teams::color($team);
+    if ($color !== null) {
+        $attributes .= " data-color='" . $color . "'";
+    }
+
+    return "<option" . $attributes . ">" . $team . "</option>";
 }
 
 function get_team_options_html($user = ""): string
