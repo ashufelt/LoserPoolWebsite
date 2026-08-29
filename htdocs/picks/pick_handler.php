@@ -129,19 +129,3 @@ function ph_get_user_picks_html(string $user, string $pin)
     return $picks_html_table;
 }
 
-function ph_get_user_picks_list(string $user)
-{
-    $controller = new SqlAccessController();
-    $user = htmlspecialchars($user);
-    return $controller->get_user_all_picks($user);
-}
-
-function ph_clear_picks_table(): bool
-{
-    $controller = new SqlAccessController();
-    if (0 == $controller->clear_pick_table()) {
-        return true;
-    } else {
-        return false;
-    }
-}

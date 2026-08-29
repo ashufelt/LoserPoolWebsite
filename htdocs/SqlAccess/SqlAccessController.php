@@ -90,14 +90,6 @@ class SqlAccessController
         }
     }
 
-    /*
-    * Returns string containing most recent connection error
-    * Empty string = no error
-    */
-    public function check_connection_error()
-    {
-        return $this->construct_error;
-    }
 
     /*
     * Internal:
@@ -144,27 +136,6 @@ class SqlAccessController
         return $array_of_users;
     }
 
-    /*
-    * Currently only used for debugging. 
-    * Returns an array of picks. Each pick is an associative array
-    * key: value type
-    * 'pickid': int
-    * 'username': string
-    * 'week_number': int
-    * 'pick': string
-    */
-    public function get_pick_table(): array
-    {
-        $get_all_cmd = "SELECT * FROM " . self::PICKS_TABLE;
-        $result = $this->picks_db_conn->query($get_all_cmd);
-        $array_of_picks = [];
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                array_push($array_of_picks, $row);
-            }
-        }
-        return $array_of_picks;
-    }
 
     /*
     * Adds user to Database
@@ -237,70 +208,10 @@ class SqlAccessController
         }
     }
 
-    /*
-    * Deletes all entries from the users list in database
-    * Returns success code int
-    *  0 : Success
-    *  6 : Sql Deletion error
-    */
-    public function clear_user_table(): int
-    {
-        $delete_all_users_cmd = "DELETE FROM " . self::USER_TABLE . ";";
-        if ($this->picks_db_conn->query($delete_all_users_cmd) === TRUE) {
-            return 0;
-        } else {
-            error_log("Could not clear user list\n", 3, $this->log_file);
-            return 6;
-        }
-    }
-
-    /*
-    * Deletes a specific user from the users list in database
-    * Returns success code int
-    *  0 : Success
-    *  2 : User doesn't exist
-    *  6 : Sql Deletion error
-    */
-    public function delete_user(string $user): int
-    {
-        if (!$this->user_exists($user)) {
-            return 2;
-        }
-        $delete_cmd = "DELETE FROM " . self::USER_TABLE . " WHERE ('username' = '" . $user . "');";
-        if ($this->picks_db_conn->query($delete_cmd) === TRUE) {
-            return 0;
-        } else {
-            error_log("Could not delete user\n", 3, $this->log_file);
-            return 6;
-        }
-    }
-
-    /*
-    * Deletes all picks from the picks list in database
-    * Returns success code int
-    *  0 : Success
-    *  6 : Sql Deletion error
-    */
-    public function clear_pick_table(): int
-    {
-        $delete_all_picks_cmd = "DELETE FROM " . self::PICKS_TABLE . ";";
-        if ($this->picks_db_conn->query($delete_all_picks_cmd) === TRUE) {
-            return 0;
-        } else {
-            error_log("Could not clear pick list\n", 3, $this->log_file);
-            return 6;
-        }
-    }
 
 
-    /*
-    * Closes this Access Controller's connections
-    */
-    public function disconnect()
-    {
-        $this->picks_db_conn->close();
-        $this->sql_conn->close();
-    }
+
+
 
     /*
     * Returns boolean indicating if the user exists in the users list
@@ -318,19 +229,6 @@ class SqlAccessController
     }
 
 
-    /*
-    * Returns team name of pick for a specific week and user. An empty string
-    * indicates that there is no matching pick in the database
-    */
-    public function get_user_pick_for_week(string $user, int $week): string
-    {
-        $users_picks = $this->get_user_all_picks($user);
-        if (array_key_exists($week, $users_picks)) {
-            return $users_picks[$week];
-        } else {
-            return "";
-        }
-    }
 
     /*
     * Returns associative array of users picks. Only populates key value pairs
@@ -351,4 +249,21 @@ class SqlAccessController
         }
         return $pick_array;
     }
+
+    /*
+    * Returns team name of pick for a specific week and user. An empty string
+    * indicates that there is no matching pick in the database.
+    *
+    * Private: only add_pick uses it, to decide between UPDATE and INSERT.
+    */
+    private function get_user_pick_for_week(string $user, int $week): string
+    {
+        $users_picks = $this->get_user_all_picks($user);
+        if (array_key_exists($week, $users_picks)) {
+            return $users_picks[$week];
+        } else {
+            return "";
+        }
+    }
+
 }
