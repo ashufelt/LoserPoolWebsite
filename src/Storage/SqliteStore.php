@@ -34,6 +34,7 @@ final class SqliteStore implements PoolStore
         $this->userTable = 'Users_' . $seasonSuffix;
         $this->picksTable = 'Picks_' . $seasonSuffix;
         $this->createTables();
+        $this->migratePlaintextPins();
     }
 
     /* Opens (and creates) a database file, or ':memory:' for tests. */
@@ -60,7 +61,7 @@ final class SqliteStore implements PoolStore
                 name TEXT NOT NULL,
                 email TEXT NOT NULL,
                 username TEXT NOT NULL UNIQUE COLLATE NOCASE,
-                pin INTEGER NOT NULL
+                pin_hash TEXT NOT NULL
             )"
         );
         $this->pdo->exec(
@@ -73,6 +74,43 @@ final class SqliteStore implements PoolStore
                 FOREIGN KEY (username) REFERENCES {$this->userTable}(username)
             )"
         );
+    }
+
+    /*
+     * Earlier versions stored the PIN itself, as an integer.
+     *
+     * Rebuilds such a table around a hash, re-hashing any rows already there.
+     * SQLite cannot change a column in place, so the table is recreated and
+     * copied -- the standard pattern, and cheap at this size.
+     */
+    private function migratePlaintextPins(): void
+    {
+        $columns = $this->pdo->query("PRAGMA table_info({$this->userTable})")->fetchAll(PDO::FETCH_ASSOC);
+        $names = array_column($columns, 'name');
+
+        if (!in_array('pin', $names, true) || in_array('pin_hash', $names, true)) {
+            return;
+        }
+
+        $existing = $this->pdo->query("SELECT * FROM {$this->userTable}")->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->pdo->exec("ALTER TABLE {$this->userTable} RENAME TO {$this->userTable}_old");
+        $this->createTables();
+
+        $insert = $this->pdo->prepare(
+            "INSERT INTO {$this->userTable} (id, name, email, username, pin_hash) VALUES (?, ?, ?, ?, ?)"
+        );
+        foreach ($existing as $row) {
+            $insert->execute([
+                $row['id'],
+                $row['name'],
+                $row['email'],
+                $row['username'],
+                password_hash((string) $row['pin'], PASSWORD_DEFAULT),
+            ]);
+        }
+
+        $this->pdo->exec("DROP TABLE {$this->userTable}_old");
     }
 
     public function allUsernames(): array
@@ -88,21 +126,26 @@ final class SqliteStore implements PoolStore
         return $stmt->fetchColumn() !== false;
     }
 
-    public function verifyPin(string $username, int $pin): bool
+    public function verifyPin(string $username, string $pin): bool
     {
-        $stmt = $this->pdo->prepare("SELECT pin FROM {$this->userTable} WHERE username = ?");
+        $stmt = $this->pdo->prepare("SELECT pin_hash FROM {$this->userTable} WHERE username = ?");
         $stmt->execute([$username]);
         $stored = $stmt->fetchColumn();
 
-        /* Unknown user: fail closed, and never let a missing row compare equal. */
+        /*
+         * Unknown user: fail closed. A dummy verify keeps the work done here
+         * roughly constant either way, so response time does not quietly
+         * report whether a username exists.
+         */
         if ($stored === false) {
+            password_verify($pin, '$2y$10$usesomesillystringforsalt0000000000000000000000000000000');
             return false;
         }
 
-        return (int) $stored === $pin;
+        return password_verify($pin, (string) $stored);
     }
 
-    public function addUser(string $name, string $email, string $username, int $pin): int
+    public function addUser(string $name, string $email, string $username, string $pin): int
     {
         if ($this->userExists($username)) {
             return self::USER_EXISTS;
@@ -110,9 +153,9 @@ final class SqliteStore implements PoolStore
 
         try {
             $stmt = $this->pdo->prepare(
-                "INSERT INTO {$this->userTable} (name, email, username, pin) VALUES (?, ?, ?, ?)"
+                "INSERT INTO {$this->userTable} (name, email, username, pin_hash) VALUES (?, ?, ?, ?)"
             );
-            $stmt->execute([$name, $email, $username, $pin]);
+            $stmt->execute([$name, $email, $username, password_hash($pin, PASSWORD_DEFAULT)]);
             return self::OK;
         } catch (PDOException $e) {
             /* Loses a race with a simultaneous registration of the same name. */

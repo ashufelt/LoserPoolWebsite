@@ -22,7 +22,17 @@ final class SqliteStoreTest extends TestCase
         $this->store = SqliteStore::open(':memory:', '26');
     }
 
-    private function register(string $username, int $pin = 1234): int
+    private function readColumn(string $column, string $username): string
+    {
+        $reflection = new \ReflectionProperty(SqliteStore::class, 'pdo');
+        $reflection->setAccessible(true);
+        $pdo = $reflection->getValue($this->store);
+        $stmt = $pdo->prepare('SELECT ' . $column . ' FROM Users_26 WHERE username = ?');
+        $stmt->execute([$username]);
+        return (string) $stmt->fetchColumn();
+    }
+
+    private function register(string $username, string $pin = '1234'): int
     {
         return $this->store->addUser('Real Name', 'player@example.com', $username, $pin);
     }
@@ -53,10 +63,47 @@ final class SqliteStoreTest extends TestCase
 
     public function testVerifiesTheCorrectPin(): void
     {
-        $this->register('joeg', 4321);
+        $this->register('joeg', '4321');
 
-        $this->assertTrue($this->store->verifyPin('joeg', 4321));
-        $this->assertFalse($this->store->verifyPin('joeg', 1111));
+        $this->assertTrue($this->store->verifyPin('joeg', '4321'));
+        $this->assertFalse($this->store->verifyPin('joeg', '1111'));
+    }
+
+    /*
+     * A dump of the database must not hand over working credentials.
+     * Four digits is only 10,000 possibilities, so hashing does not make a PIN
+     * strong -- it makes a stolen file useless without brute-forcing each one.
+     */
+    public function testThePinIsNotStoredInPlaintext(): void
+    {
+        $this->register('joeg', '4321');
+
+        $pdo = new \PDO('sqlite::memory:');
+        $stored = $this->readColumn('pin_hash', 'joeg');
+
+        $this->assertNotSame('4321', $stored);
+        $this->assertStringStartsWith('$2y$', $stored);
+        $this->assertTrue(password_verify('4321', $stored));
+    }
+
+    /*
+     * PINs are digit sequences, not numbers. Stored as integers, "0123" and
+     * "123" were the same PIN and a leading zero silently vanished.
+     */
+    public function testLeadingZeroesAreSignificant(): void
+    {
+        $this->register('joeg', '0123');
+
+        $this->assertTrue($this->store->verifyPin('joeg', '0123'));
+        $this->assertFalse($this->store->verifyPin('joeg', '123'));
+    }
+
+    public function testAllZeroPinStillWorks(): void
+    {
+        $this->register('joeg', '0000');
+
+        $this->assertTrue($this->store->verifyPin('joeg', '0000'));
+        $this->assertFalse($this->store->verifyPin('joeg', '1234'));
     }
 
     /*
@@ -69,9 +116,10 @@ final class SqliteStoreTest extends TestCase
      */
     public function testUnknownUserFailsEveryPinIncludingZero(): void
     {
-        $this->assertFalse($this->store->verifyPin('nobody', 0));
-        $this->assertFalse($this->store->verifyPin('nobody', 1234));
-        $this->assertFalse($this->store->verifyPin('', 0));
+        $this->assertFalse($this->store->verifyPin('nobody', '0'));
+        $this->assertFalse($this->store->verifyPin('nobody', '0000'));
+        $this->assertFalse($this->store->verifyPin('nobody', '1234'));
+        $this->assertFalse($this->store->verifyPin('', '0000'));
     }
 
     public function testRecordsAndReadsBackPicks(): void
@@ -151,6 +199,43 @@ final class SqliteStoreTest extends TestCase
         $this->register('newcomer');
 
         $this->assertSame([], $this->store->picksFor('newcomer'));
+    }
+
+    /*
+     * A database written before PINs were hashed must upgrade itself, keeping
+     * the players who are already in it able to log in.
+     */
+    public function testUpgradesADatabaseThatStoredPlaintextPins(): void
+    {
+        $pdo = new \PDO('sqlite::memory:', null, null, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        $pdo->exec('CREATE TABLE Users_26 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT, email TEXT, username TEXT, pin INTEGER)');
+        $pdo->exec("INSERT INTO Users_26 (name, email, username, pin)
+                    VALUES ('Old Timer', 'old@example.com', 'oldtimer', 4321)");
+
+        $store = new SqliteStore($pdo, '26');
+
+        $this->assertTrue($store->userExists('oldtimer'));
+        $this->assertTrue($store->verifyPin('oldtimer', '4321'), 'existing players must still get in');
+        $this->assertFalse($store->verifyPin('oldtimer', '1111'));
+
+        $columns = array_column($pdo->query('PRAGMA table_info(Users_26)')->fetchAll(\PDO::FETCH_ASSOC), 'name');
+        $this->assertContains('pin_hash', $columns);
+        $this->assertNotContains('pin', $columns, 'the plaintext column must be gone, not merely unused');
+    }
+
+    /* Migrating twice must not undo the first migration. */
+    public function testUpgradingIsIdempotent(): void
+    {
+        $this->register('joeg', '4321');
+
+        $reflection = new \ReflectionProperty(SqliteStore::class, 'pdo');
+        $reflection->setAccessible(true);
+        $again = new SqliteStore($reflection->getValue($this->store), '26');
+
+        $this->assertTrue($again->verifyPin('joeg', '4321'));
+        $this->assertCount(1, $again->allUsernames());
     }
 
     /* Season tables are separate, so last year's entries cannot leak in. */

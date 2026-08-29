@@ -12,7 +12,7 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
     $user = htmlspecialchars($userin);
     $week = get_current_week();
     $team = htmlspecialchars($teamin);
-    $pickpin = intval($pinin);
+    $pickpin = $pinin;
     if ($store->userExists($user) == false) {
         return "<h4>User does not exist</h4>";
     }
@@ -111,8 +111,7 @@ function ph_get_user_picks_html(string $user, string $pin)
 {
     $store = lp_store();
     $user = htmlspecialchars($user);
-    $pin_num = intval($pin);
-    if (!$store->verifyPin($user, $pin_num)) {
+    if (!$store->verifyPin($user, $pin)) {
         return "<h4>Username/PIN combo is not valid</h4>";
     }
 
