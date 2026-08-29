@@ -14,7 +14,9 @@ Live: <https://loser-pool-2026.fly.dev>
 - Teams on a bye cannot be picked.
 - Picks are open Tuesday through Saturday, and lock Sunday and Monday.
 - Other players' picks for the current week stay hidden until the slate starts.
-- **Buy back in: week 1 only.**
+- **Buy back in: week 1 only.** Recorded with `bin/buyback.php`, since an
+  eliminated player can still submit picks — continuing to play does not show
+  that anyone bought back.
 - **Final four or fewer may split the pot, by unanimous agreement.**
 
 The last two are run by the commissioner and are not enforced in code.
@@ -80,6 +82,8 @@ CLI tools:
 php bin/pool-status.php all      # every week's blocked teams
 php bin/espn-check.php           # can this machine reach ESPN?
 php bin/refresh-snapshots.php    # re-record the offline schedule data
+php bin/buyback.php <username>   # record a week 1 buy-back
+php bin/buyback.php --list       # who has bought back
 ```
 
 ## Deploying

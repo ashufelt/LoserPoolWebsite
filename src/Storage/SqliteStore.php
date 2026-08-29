@@ -26,6 +26,7 @@ final class SqliteStore implements PoolStore
     private PDO $pdo;
     private string $userTable;
     private string $picksTable;
+    private string $buybackTable;
 
     public function __construct(PDO $pdo, string $seasonSuffix)
     {
@@ -33,6 +34,7 @@ final class SqliteStore implements PoolStore
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->userTable = 'Users_' . $seasonSuffix;
         $this->picksTable = 'Picks_' . $seasonSuffix;
+        $this->buybackTable = 'Buybacks_' . $seasonSuffix;
         $this->createTables();
         $this->migratePlaintextPins();
     }
@@ -74,6 +76,12 @@ final class SqliteStore implements PoolStore
                 FOREIGN KEY (username) REFERENCES {$this->userTable}(username)
             )"
         );
+        $this->pdo->exec(
+            "CREATE TABLE IF NOT EXISTS {$this->buybackTable} (
+                username TEXT PRIMARY KEY COLLATE NOCASE,
+                FOREIGN KEY (username) REFERENCES {$this->userTable}(username)
+            )"
+        );
     }
 
     /*
@@ -111,6 +119,26 @@ final class SqliteStore implements PoolStore
         }
 
         $this->pdo->exec("DROP TABLE {$this->userTable}_old");
+    }
+
+    public function buybacks(): array
+    {
+        $rows = $this->pdo->query("SELECT username FROM {$this->buybackTable}")->fetchAll(PDO::FETCH_COLUMN);
+        return array_map('strval', $rows);
+    }
+
+    public function grantBuyback(string $username): int
+    {
+        if (!$this->userExists($username)) {
+            return self::NO_SUCH_USER;
+        }
+
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO {$this->buybackTable} (username) VALUES (?)
+             ON CONFLICT (username) DO NOTHING"
+        );
+        $stmt->execute([$username]);
+        return self::OK;
     }
 
     public function allUsernames(): array
