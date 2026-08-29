@@ -21,6 +21,12 @@ RUN printf '%s\n' 'date.timezone=America/Chicago' 'expose_php=Off' \
 COPY htdocs/ /var/www/html/
 COPY bin/ /var/www/bin/
 
+# COPY preserves the source file modes, and a restrictive local umask (077)
+# produces files Apache cannot read -- which fails as a blanket 403 with
+# "Permission denied", not as a config error. Normalise instead of trusting
+# whatever the build host happened to use.
+RUN chmod -R a+rX /var/www/html /var/www/bin
+
 # Directory listing off, and the class/data directories closed to the web.
 # Configured here rather than via .htaccess because AllowOverride is None in
 # the base image, which would silently ignore the .htaccess protections.
@@ -38,15 +44,37 @@ RUN printf '%s\n' \
       '</Directory>' \
       '<Directory /var/www/html/data>' \
       '    Require all denied' \
+      '    # get_week.php is a live HTMX endpoint; the rest of data/ is' \
+      '    # season source, the response cache and committed snapshots.' \
+      '    <Files "get_week.php">' \
+      '        Require all granted' \
+      '    </Files>' \
       '</Directory>' \
       'ServerTokens Prod' \
       'ServerSignature Off' \
     > /etc/apache2/conf-available/pool.conf \
  && a2enconf pool
 
-# The ESPN response cache is written at runtime; /data is the mounted volume.
-RUN mkdir -p /var/www/html/data/cache /data \
- && chown -R www-data:www-data /var/www/html/data /data
+# The ESPN response cache is written at runtime.
+RUN mkdir -p /var/www/html/data/cache \
+ && chown -R www-data:www-data /var/www/html/data
+
+# /data is a mounted volume, and a volume's root belongs to root at mount time.
+# Any ownership set here at build time is shadowed the moment it mounts, so the
+# database directory has to be prepared when the container starts instead --
+# otherwise Apache gets "unable to open database file" and nothing can be saved.
+RUN printf '%s\n' \
+      '#!/bin/sh' \
+      'set -e' \
+      'db_dir="$(dirname "${LP_SQLITE_PATH:-/data/pool.sqlite}")"' \
+      'mkdir -p "$db_dir"' \
+      'chown -R www-data:www-data "$db_dir"' \
+      'exec "$@"' \
+    > /usr/local/bin/pool-entrypoint.sh \
+ && chmod +x /usr/local/bin/pool-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/pool-entrypoint.sh"]
+CMD ["apache2-foreground"]
 
 ENV LP_STORE=sqlite \
     LP_SQLITE_PATH=/data/pool.sqlite
