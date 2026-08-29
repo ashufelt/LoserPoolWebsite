@@ -15,7 +15,7 @@ function uh_add_user(string $name, string $email, string $new_user, string $pin,
         return false;
     } else if (strlen($new_user) == 0) {
         return false;
-    } else if (0 == $store->addUser($name, $email, $new_user, intval($pin))) {
+    } else if (0 == $store->addUser($name, $email, $new_user, $pin)) {
         return true;
     } else {
         return false;

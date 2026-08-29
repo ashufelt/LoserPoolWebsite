@@ -10,11 +10,17 @@ namespace LoserPool\Storage;
  * layer testable at all, since it runs in memory in a test and needs no
  * server to deploy.
  *
- * Note there is no pin accessor. Reading a PIN out and comparing it at the
- * call site is how the old code worked, and it is a sharp edge: PHP's loose
- * comparison makes `0 != null` false, so a "no such user" sentinel of null
- * would authenticate a nonexistent user who guessed the PIN 0000. The check
- * belongs behind the interface where it can only be done one way.
+ * Note there is no pin accessor, and PINs are strings.
+ *
+ * Reading a PIN out and comparing it at the call site is how the old code
+ * worked, and it is a sharp edge: PHP's loose comparison makes `0 != null`
+ * false, so a "no such user" sentinel of null would authenticate a
+ * nonexistent user who guessed the PIN 0000. The check belongs behind the
+ * interface, where it can only be done one way -- and where the stored value
+ * can be a hash rather than the PIN itself.
+ *
+ * They are strings because they are digit sequences, not quantities: as
+ * integers, "0123" and "123" are the same PIN.
  */
 interface PoolStore
 {
@@ -28,10 +34,10 @@ interface PoolStore
 
     public function userExists(string $username): bool;
 
-    public function verifyPin(string $username, int $pin): bool;
+    public function verifyPin(string $username, string $pin): bool;
 
     /** @return int one of OK, ERROR, USER_EXISTS */
-    public function addUser(string $name, string $email, string $username, int $pin): int;
+    public function addUser(string $name, string $email, string $username, string $pin): int;
 
     /** @return array<int,string> week number => team picked */
     public function picksFor(string $username): array;
