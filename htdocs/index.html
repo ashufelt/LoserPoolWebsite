@@ -24,6 +24,7 @@
         })();
     </script>
     <script type="text/javascript" src="/htmx.js"></script>
+    <script defer src="/teampicker.js"></script>
 </head>
 
 <body>
@@ -64,14 +65,10 @@
 
                 <div class="field">
                     <label for="teams">Team you think will lose</label>
-                    <div class="select-with-crest">
-                        <img id="team-crest" class="team-crest team-crest-lg" src="" alt="" width="28"
-                            height="28" hidden>
-                        <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load"
-                            hx-target="this" hx-swap="outerHTML">
-                            <option value="">Loading…</option>
-                        </select>
-                    </div>
+                    <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load"
+                        hx-target="this" hx-swap="outerHTML">
+                        <option value="">Loading…</option>
+                    </select>
                 </div>
 
                 <div class="actions">
@@ -225,32 +222,6 @@
                 apply(current);
             });
 
-            /* Show the chosen team's crest beside the picker. The option
-               carries its own path, so there is no team map in the client. */
-            function syncCrest() {
-                var select = document.getElementById('teams');
-                var crest = document.getElementById('team-crest');
-                if (!select || !crest) {
-                    return;
-                }
-                var option = select.options[select.selectedIndex];
-                var logo = option && option.dataset ? option.dataset.logo : null;
-                if (logo) {
-                    crest.src = logo;
-                    crest.hidden = false;
-                } else {
-                    crest.hidden = true;
-                }
-            }
-
-            document.addEventListener('change', function (event) {
-                if (event.target && event.target.id === 'teams') {
-                    syncCrest();
-                }
-            });
-            /* The dropdown arrives via htmx after load. */
-            document.body.addEventListener('htmx:afterSwap', syncCrest);
-            syncCrest();
         })();
     </script>
 </body>

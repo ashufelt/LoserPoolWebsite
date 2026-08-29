@@ -78,6 +78,24 @@ Each of these passed a green test suite.
   username matched it inside a PHP stack trace and reported a broken write path
   as working.
 
+## Front end
+
+`htdocs/teampicker.js` upgrades the team `<select>` into a listbox that can
+show club crests, which a native select cannot do. It is progressive
+enhancement: the select stays in the DOM as the form control and the no-JS
+fallback, and the script re-runs on `htmx:afterSwap` because htmx replaces the
+select whenever the chosen username changes. Keep the native select updated on
+choice, or the form posts nothing.
+
+Crests and club colours are committed under `htdocs/img/teams/` and mapped in
+`Nfl\Teams`, so neither depends on a network call. Club colour is decorative
+only: several clubs share a near-identical primary, so it must never be the
+sole carrier of meaning.
+
+Do not put `overflow: hidden` on a card containing the picker. The popup is
+absolutely positioned and gets clipped at the card boundary; the accent bar on
+`.card-primary` carries its own border-radius for this reason.
+
 ## Testing
 
 `vendor/bin/phpunit`. Rules and storage are pure or in-memory, so the suite runs
