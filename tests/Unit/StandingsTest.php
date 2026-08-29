@@ -49,6 +49,47 @@ final class StandingsTest extends TestCase
         $this->assertSame(2, $standings['joeg']['outWeek'], 'the week they went out, not the last one played');
     }
 
+    /*
+     * Elimination is dated to the first failure, not the most recent one.
+     *
+     * Nothing stops an eliminated player from carrying on submitting picks, so
+     * a player can accumulate several failures. Reporting the last one would
+     * date their exit to whenever they lost interest rather than to the week
+     * they actually went out.
+     */
+    public function testEliminationIsDatedToTheFirstFailureNotTheLast(): void
+    {
+        $standings = Standings::build(
+            ['joeg' => [1 => 'Bears', 2 => 'Giants', 3 => 'Jets', 4 => 'Rams']],
+            $this->checker([
+                '1:Bears' => Rules::PICK_CORRECT,
+                '2:Giants' => Rules::PICK_INCORRECT,
+                '3:Jets' => Rules::PICK_INCORRECT,
+                '4:Rams' => Rules::PICK_INCORRECT,
+            ])
+        );
+
+        $this->assertSame(Standings::OUT, $standings['joeg']['status']);
+        $this->assertSame(2, $standings['joeg']['outWeek']);
+    }
+
+    /* Wins after elimination do not count towards anything. */
+    public function testPicksAfterEliminationDoNotChangeTheOutcome(): void
+    {
+        $standings = Standings::build(
+            ['joeg' => [1 => 'Bears', 2 => 'Giants', 3 => 'Jets']],
+            $this->checker([
+                '1:Bears' => Rules::PICK_INCORRECT,
+                '2:Giants' => Rules::PICK_CORRECT,
+                '3:Jets' => Rules::PICK_CORRECT,
+            ])
+        );
+
+        $this->assertSame(Standings::OUT, $standings['joeg']['status']);
+        $this->assertSame(1, $standings['joeg']['outWeek']);
+        $this->assertSame(0, $standings['joeg']['correct'], 'nothing after elimination is counted');
+    }
+
     /* Unplayed weeks decide nothing either way. */
     public function testUndecidedWeeksDoNotEliminate(): void
     {

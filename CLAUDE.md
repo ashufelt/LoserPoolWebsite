@@ -88,5 +88,16 @@ The clock is injectable (`lp_clock()`), the schedule source is injectable
 several rules are day-of-week dependent and would otherwise only be testable on
 the days they concern.
 
+`tests/SeasonBuilder.php` builds synthetic weeks so a whole season can be
+played through the real handlers, with named teams losing on cue. The recorded
+ESPN fixtures cannot do this: their results are whatever actually happened, so
+they cannot express "this player's team loses in week 3".
+
+Mutation testing is worth the ten minutes. Break a rule on purpose, run the
+suite, and confirm it fails. Doing this on the standings found a rule with no
+coverage at all: removing the `break` that stops at a player's first failed
+pick changed nothing, because every test had only one failure in it. A suite
+that passes against deliberately broken code is measuring nothing.
+
 Tests alone have not been sufficient here. Both of the worst defects above were
 outages that a green suite missed. Run the app.
