@@ -30,11 +30,10 @@
     <header class="banner">
         <div class="banner-inner">
             <h1>Pick the Loser! <span class="banner-year">2026</span></h1>
-            <div class="theme-toggle" role="group" aria-label="Colour theme">
-                <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
-                <button type="button" data-theme-choice="auto" aria-pressed="true">Auto</button>
-                <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
-            </div>
+            <button type="button" id="theme-toggle" class="theme-toggle" aria-live="polite">
+                <span class="theme-icon" aria-hidden="true"></span>
+                <span class="theme-label"></span>
+            </button>
         </div>
     </header>
 
@@ -65,10 +64,14 @@
 
                 <div class="field">
                     <label for="teams">Team you think will lose</label>
-                    <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load"
-                        hx-target="this" hx-swap="outerHTML">
-                        <option value="">Loading…</option>
-                    </select>
+                    <div class="select-with-crest">
+                        <img id="team-crest" class="team-crest team-crest-lg" src="" alt="" width="28"
+                            height="28" hidden>
+                        <select id="teams" name="team" hx-get="teams/all.php" hx-trigger="load"
+                            hx-target="this" hx-swap="outerHTML">
+                            <option value="">Loading…</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="actions">
@@ -114,10 +117,17 @@
             <section class="card" aria-labelledby="register-heading">
                 <h2 id="register-heading">New here?</h2>
                 <p class="hint">
-                    Register a username to join. Want more than one entry? Register again with
-                    <code>_2</code> on the end.
+                    Already playing? Just pick above. Registering takes a moment and you only do it
+                    once a season. Want a second entry? Register again with <code>_2</code> on the end.
                 </p>
 
+                <!--
+                  Collapsed by default. Most visits are returning players making
+                  a pick, and a six field form is a lot of page to scroll past
+                  to reach the thing they came for.
+                -->
+                <details class="register-disclosure">
+                    <summary class="btn btn-secondary">Register a username</summary>
                 <form class="register-form" hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
                     <div class="field">
                         <label for="name">Name</label>
@@ -156,6 +166,7 @@
                         <button type="submit" class="btn btn-primary">Register</button>
                     </div>
                 </form>
+                </details>
             </section>
         </div>
     </main>
@@ -168,7 +179,15 @@
 
     <script>
         (function () {
-            var buttons = document.querySelectorAll('[data-theme-choice]');
+            /* Auto first: following the device is the right default, so it is
+               both the starting point and where the cycle returns to. */
+            var ORDER = ['auto', 'light', 'dark'];
+            var LABEL = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+            var ICON = { auto: '◐', light: '☀', dark: '☾' };
+
+            var button = document.getElementById('theme-toggle');
+            var icon = button.querySelector('.theme-icon');
+            var label = button.querySelector('.theme-label');
 
             function apply(choice) {
                 if (choice === 'auto') {
@@ -176,9 +195,11 @@
                 } else {
                     document.documentElement.setAttribute('data-theme', choice);
                 }
-                buttons.forEach(function (button) {
-                    button.setAttribute('aria-pressed', String(button.dataset.themeChoice === choice));
-                });
+                icon.textContent = ICON[choice];
+                label.textContent = LABEL[choice];
+                var next = ORDER[(ORDER.indexOf(choice) + 1) % ORDER.length];
+                button.setAttribute('title', 'Theme: ' + LABEL[choice] + '. Click for ' + LABEL[next] + '.');
+                button.setAttribute('aria-label', 'Colour theme: ' + LABEL[choice] + '. Switch to ' + LABEL[next] + '.');
                 try {
                     if (choice === 'auto') {
                         localStorage.removeItem('lp-theme');
@@ -186,21 +207,50 @@
                         localStorage.setItem('lp-theme', choice);
                     }
                 } catch (e) {
-                    /* Choice still applies for this page view. */
+                    /* Still applies for this page view. */
                 }
             }
 
-            var stored = 'auto';
+            var current = 'auto';
             try {
-                stored = localStorage.getItem('lp-theme') || 'auto';
+                current = localStorage.getItem('lp-theme') || 'auto';
             } catch (e) { /* ignore */ }
-            apply(stored);
+            if (ORDER.indexOf(current) === -1) {
+                current = 'auto';
+            }
+            apply(current);
 
-            buttons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    apply(button.dataset.themeChoice);
-                });
+            button.addEventListener('click', function () {
+                current = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
+                apply(current);
             });
+
+            /* Show the chosen team's crest beside the picker. The option
+               carries its own path, so there is no team map in the client. */
+            function syncCrest() {
+                var select = document.getElementById('teams');
+                var crest = document.getElementById('team-crest');
+                if (!select || !crest) {
+                    return;
+                }
+                var option = select.options[select.selectedIndex];
+                var logo = option && option.dataset ? option.dataset.logo : null;
+                if (logo) {
+                    crest.src = logo;
+                    crest.hidden = false;
+                } else {
+                    crest.hidden = true;
+                }
+            }
+
+            document.addEventListener('change', function (event) {
+                if (event.target && event.target.id === 'teams') {
+                    syncCrest();
+                }
+            });
+            /* The dropdown arrives via htmx after load. */
+            document.body.addEventListener('htmx:afterSwap', syncCrest);
+            syncCrest();
         })();
     </script>
 </body>

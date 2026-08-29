@@ -226,38 +226,33 @@ code {
     font-weight: 400;
 }
 
-/* Segmented light / auto / dark control. */
+/*
+ * One button cycling auto -> light -> dark. Three buttons spent a lot of
+ * header on a setting almost nobody changes twice.
+ */
 .theme-toggle {
     display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.9rem;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
-}
-
-.theme-toggle button {
-    appearance: none;
-    border: 0;
-    background: transparent;
     color: var(--header-text);
     font: inherit;
     font-size: 0.8125rem;
-    padding: 0.35rem 0.8rem;
-    border-radius: 999px;
-    cursor: pointer;
-    opacity: 0.75;
-}
-
-.theme-toggle button:hover {
-    opacity: 1;
-}
-
-.theme-toggle button[aria-pressed="true"] {
-    background: var(--header-text);
-    color: var(--header-bg);
-    opacity: 1;
     font-weight: 600;
+    cursor: pointer;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.theme-icon {
+    font-size: 0.95rem;
+    line-height: 1;
 }
 
 /* ----------------------------------------------------------------- cards */
@@ -674,4 +669,103 @@ td.status-out {
 tr.player-out td.pickcolumn1 {
     color: var(--text-muted);
     font-weight: 600;
+}
+
+
+/* ------------------------------------------------------- registration */
+
+/*
+ * Registration is collapsed by default. Most visits are returning players
+ * making a pick, and an expanded six field form is a lot of page to scroll
+ * past to reach the thing they came for.
+ */
+.register-disclosure summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    user-select: none;
+}
+
+.register-disclosure summary::-webkit-details-marker {
+    display: none;
+}
+
+.register-disclosure summary::after {
+    content: " +";
+    font-weight: 700;
+}
+
+.register-disclosure[open] summary::after {
+    content: " \2212";
+}
+
+.register-disclosure[open] summary {
+    margin-bottom: var(--sp-4);
+}
+
+/* ------------------------------------------------------------- crests */
+
+.team-crest {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 0.4em;
+    flex: none;
+}
+
+.team-crest-lg {
+    width: 28px;
+    height: 28px;
+    margin-right: 0;
+}
+
+.team-name {
+    vertical-align: middle;
+}
+
+.select-with-crest {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+}
+
+/* --------------------------------------------------- spacing repairs */
+
+/*
+ * The stacked form read as a wall of identical rows. Grouping the label and
+ * its field tightly, and spacing the groups apart, gives the eye something
+ * to structure on.
+ */
+.field {
+    gap: 0.2rem;
+    margin-bottom: var(--sp-4);
+}
+
+.field-note {
+    margin-top: 0.1rem;
+    line-height: 1.35;
+}
+
+.register-form .field:last-of-type {
+    margin-bottom: var(--sp-2);
+}
+
+.card h2 {
+    margin-bottom: var(--sp-2);
+}
+
+.card h2 + .hint {
+    margin-top: 0;
+    margin-bottom: var(--sp-4);
+}
+
+.pick-form .hint {
+    margin-top: var(--sp-2);
+}
+
+/* Keep the crest from stretching the row on a narrow screen. */
+td.pick_team {
+    line-height: 1.3;
 }

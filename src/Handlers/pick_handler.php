@@ -5,6 +5,7 @@ namespace PickHandling;
 include_once __DIR__ . "/../bootstrap.php";
 include_once __DIR__ . "/../week_manager.php";
 
+use LoserPool\Nfl\Teams;
 use LoserPool\Pool\Standings;
 
 
@@ -39,6 +40,23 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
     } else {
         return "<h3>Pick added successfully</h3><br>";
     }
+}
+
+/*
+ * A team name with its crest.
+ *
+ * Falls back to the bare name when there is no crest: a pick stored under a
+ * franchise that has since been renamed must still render.
+ */
+function ph_team_label(string $team): string
+{
+    $logo = Teams::logoPath($team);
+    if ($logo === null) {
+        return $team;
+    }
+
+    return "<img class='team-crest' src='" . $logo . "' alt='' width='22' height='22' loading='lazy'>"
+        . "<span class='team-name'>" . $team . "</span>";
 }
 
 function ph_get_picks_html_table(): string
@@ -120,6 +138,7 @@ function ph_get_picks_html_table(): string
                      * cells are the entire point of the table.
                      */
                     $team_result = check_loser($i, $pick);
+                    $pick = ph_team_label($pick);
                     if ($team_result == -1) {
                         $result_class = " res-wrong";
                         $mark = "<span class='res-mark' aria-hidden='true'>&#10007;</span>";
@@ -162,7 +181,8 @@ function ph_get_user_picks_html(string $user, string $pin)
         }
         $picks_html_table .= "<tr class='users_picks'>
                                 <td class='users_picks'>" . $i . "</td>
-                                <td class='users_picks pick_team'>" . $pick . "</td></tr>";
+                                <td class='users_picks pick_team'>"
+                                . ($pick === "" ? "" : ph_team_label($pick)) . "</td></tr>";
     }
     $picks_html_table .= "</table>
                             <button hx-get='/picks/hide.php' hx-target='#one_set_of_picks' 
