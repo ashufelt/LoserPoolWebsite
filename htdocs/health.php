@@ -36,9 +36,21 @@ $source = reset($sources) ?: 'unavailable';
 
 $cacheTarget = is_dir($cacheDir) ? $cacheDir : dirname($cacheDir);
 $snapshots = glob($snapshotDir . '/*.json') ?: [];
-$snapshotAgeDays = $snapshots === []
-    ? null
-    : (int) floor((time() - max(array_map('filemtime', $snapshots))) / 86400);
+/*
+ * Age comes from the recorded generated_at, not the file's mtime: in a
+ * container every file is dated to the image build, which would report
+ * freshly deployed months-old snapshots as brand new.
+ */
+$snapshotAgeDays = null;
+if ($snapshots !== []) {
+    $recorded = json_decode((string) file_get_contents($snapshots[0]), true);
+    if (isset($recorded['generated_at'])) {
+        $generated = strtotime($recorded['generated_at']);
+        if ($generated !== false) {
+            $snapshotAgeDays = (int) floor((time() - $generated) / 86400);
+        }
+    }
+}
 
 $problems = [];
 if ($source !== 'live') {
