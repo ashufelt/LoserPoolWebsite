@@ -220,6 +220,34 @@ final class PickFlowTest extends TestCase
         $this->assertStringContainsString('Chicago Bears', get_team_options_html(''));
     }
 
+    /* The grid reports how many players are left, which the endgame depends on. */
+    public function testTheStandingsReportWhoIsStillIn(): void
+    {
+        $this->registerJoe();
+        uh_add_user('Sarah K', 'sarah@example.com', 'sarah_k', '2222', '2222');
+
+        $table = ph_get_picks_html_table();
+
+        $this->assertStringContainsString('still in', $table);
+        $this->assertStringContainsString('Still in', $table);
+        $this->assertStringContainsString('joeg', $table);
+        $this->assertStringContainsString('sarah_k', $table);
+    }
+
+    /* Buy-backs are recorded, not guessed, so the store has to carry them. */
+    public function testBuybacksAreRecordedAgainstRealPlayersOnly(): void
+    {
+        $this->registerJoe();
+
+        $this->assertSame(\LoserPool\Storage\PoolStore::OK, $this->store->grantBuyback('joeg'));
+        $this->assertSame(['joeg'], $this->store->buybacks());
+
+        $this->assertSame(
+            \LoserPool\Storage\PoolStore::NO_SUCH_USER,
+            $this->store->grantBuyback('ghost')
+        );
+    }
+
     /* You can always see your own picks, with your PIN. */
     public function testAPlayerCanSeeTheirOwnPicksWithTheirPin(): void
     {

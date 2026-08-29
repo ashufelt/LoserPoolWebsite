@@ -59,4 +59,17 @@ interface PoolStore
      * @return int one of OK, ERROR, NO_SUCH_USER
      */
     public function savePick(string $username, string $team, int $week): int;
+
+    /*
+     * Players who bought back in after week one.
+     *
+     * Recorded rather than inferred: an eliminated player can still submit
+     * picks, so continuing to play does not prove anyone bought back.
+     *
+     * @return string[]
+     */
+    public function buybacks(): array;
+
+    /** @return int one of OK, NO_SUCH_USER */
+    public function grantBuyback(string $username): int;
 }

@@ -5,6 +5,8 @@ namespace PickHandling;
 include_once __DIR__ . "/../bootstrap.php";
 include_once __DIR__ . "/../week_manager.php";
 
+use LoserPool\Pool\Standings;
+
 
 function ph_add_pick(string $userin, string $teamin, string $pinin): string
 {
@@ -53,24 +55,55 @@ function ph_get_picks_html_table(): string
         $end_week = $current_week;
     }
 
+    $users = $store->allUsernames();
+
+    /* One query for the whole grid rather than one per player. */
+    $all_picks = $store->allPicks();
+
+    $standings = Standings::build(
+        $all_picks,
+        'check_loser',
+        $store->buybacks(),
+        $users
+    );
+    $still_in = Standings::stillIn($standings);
+
+    /*
+     * Players still in come first. The pool's endgame is about who is left,
+     * and once half the table is eliminated an alphabetical list buries them.
+     */
+    $users = array_keys($standings);
+    usort($users, static function ($a, $b) use ($standings) {
+        $byStatus = ($standings[$a]['status'] === Standings::IN ? 0 : 1)
+            <=> ($standings[$b]['status'] === Standings::IN ? 0 : 1);
+        return $byStatus !== 0 ? $byStatus : strcasecmp($a, $b);
+    });
+
     $picks_html_table = "
         <div id='picks_table'>
+            <p class='standings-summary'><strong>" . $still_in . "</strong> still in"
+            . (count($standings) > 0 ? " of " . count($standings) : "") . "</p>
             <table class='pick_table'>
                 <tr class='pick_table'>
-                    <th class='pickcolumn1 pick_table'>Username</th>";
+                    <th class='pickcolumn1 pick_table'>Player</th>
+                    <th class='pickHeader pick_table'>Status</th>";
     for ($i = $start_week; $i <= $end_week; $i++) {
         $picks_html_table .= "<th class='pickHeader pick_table'>Week " . ($i) . "</th>";
     }
     $picks_html_table .= "</tr>";
 
-    $users = $store->allUsernames();
-    sort($users, SORT_NATURAL | SORT_FLAG_CASE);
-
-    /* One query for the whole grid rather than one per player. */
-    $all_picks = $store->allPicks();
-
     foreach ($users as $user) {
-        $picks_html_table .= "<tr class='pick_table'><td class='pickcolumn1 pick_table'>" . $user . "</td>";
+        $row_class = $standings[$user]['status'] === Standings::IN ? "" : " player-out";
+        $picks_html_table .= "<tr class='pick_table" . $row_class . "'>"
+            . "<td class='pickcolumn1 pick_table'>" . $user . "</td>";
+
+        if ($standings[$user]['status'] === Standings::IN) {
+            $picks_html_table .= "<td class='pick_table status-in'>Still in</td>";
+        } else {
+            $picks_html_table .= "<td class='pick_table status-out'>Out &middot; wk "
+                . $standings[$user]['outWeek'] . "</td>";
+        }
+
         $users_picks = $all_picks[$user] ?? [];
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
