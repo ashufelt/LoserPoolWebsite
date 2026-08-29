@@ -2,13 +2,12 @@
 
 namespace UserHandling;
 
-include_once __DIR__ . "/../SqlAccess/SqlAccessController.php";
+include_once __DIR__ . "/../bootstrap.php";
 
-use SqlAccess\SqlAccessController;
 
 function uh_add_user(string $name, string $email, string $new_user, string $pin, string $repin): bool
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $new_user = htmlspecialchars($new_user);
     $name = htmlspecialchars($name);
     $email = htmlspecialchars($email);
@@ -16,7 +15,7 @@ function uh_add_user(string $name, string $email, string $new_user, string $pin,
         return false;
     } else if (strlen($new_user) == 0) {
         return false;
-    } else if (0 == $controller->add_user($name, $email, $new_user, intval($pin))) {
+    } else if (0 == $store->addUser($name, $email, $new_user, intval($pin))) {
         return true;
     } else {
         return false;
@@ -25,10 +24,10 @@ function uh_add_user(string $name, string $email, string $new_user, string $pin,
 
 function uh_get_user_option_list_html(): string
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $option_list = '';
 
-    $users = $controller->get_user_table();
+    $users = $store->allUsernames();
     sort($users, SORT_NATURAL | SORT_FLAG_CASE);
     $option_list .= "";
     if (is_countable($users)) {

@@ -2,32 +2,30 @@
 
 namespace PickHandling;
 
-include_once __DIR__ . "/../SqlAccess/SqlAccessController.php";
+include_once __DIR__ . "/../bootstrap.php";
 include_once __DIR__ . "/../data/week_manager.php";
 
-use SqlAccess\SqlAccessController;
 
 function ph_add_pick(string $userin, string $teamin, string $pinin): string
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($userin);
     $week = get_current_week();
     $team = htmlspecialchars($teamin);
     $pickpin = intval($pinin);
-    if ($controller->user_exists($user) == false) {
+    if ($store->userExists($user) == false) {
         return "<h4>User does not exist</h4>";
     }
-    $correctpin = $controller->get_user_pin($user);
     $week_number = intval($week);
-    $users_picks = $controller->get_user_all_picks($user);
+    $users_picks = $store->picksFor($user);
     $create_ecode = 0;
-    if ($pickpin != $correctpin) {
+    if (!$store->verifyPin($user, $pickpin)) {
         return "<h4>Username/PIN combo is not valid</h4>";
     } else if (in_array($team, $users_picks, true)) {
         return "<h4>Cannot repeat a choice</h4>";
     } else if (lp_picks_are_locked()) {
        return "<h4>Can't make a pick on Sunday or Monday</h4>";
-    } else if (0 != ($create_ecode = $controller->add_pick($user, $team, $week_number))) {
+    } else if (0 != ($create_ecode = $store->savePick($user, $team, $week_number))) {
         if ($create_ecode == 2) {
             return "<h4>Invalid username</h4>";
         } else if ($create_ecode == 1) {
@@ -43,7 +41,7 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
 
 function ph_get_picks_html_table(): string
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $show_weeks_count = 8;
     $hide_picks = lp_picks_are_hidden();
     $current_week = get_current_week();
@@ -65,11 +63,11 @@ function ph_get_picks_html_table(): string
     }
     $picks_html_table .= "</tr>";
 
-    $users = $controller->get_user_table();
+    $users = $store->allUsernames();
     sort($users, SORT_NATURAL | SORT_FLAG_CASE);
     foreach ($users as $user) {
         $picks_html_table .= "<tr class='pick_table'><td class='pickcolumn1 pick_table'>" . $user . "</td>";
-        $users_picks = $controller->get_user_all_picks($user);
+        $users_picks = $store->picksFor($user);
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
             $result_bg_styling = "";
@@ -97,10 +95,10 @@ function ph_get_picks_html_table(): string
 
 function ph_get_user_picks_html(string $user, string $pin)
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($user);
     $pin_num = intval($pin);
-    if ($pin_num != $controller->get_user_pin($user)) {
+    if (!$store->verifyPin($user, $pin_num)) {
         return "<h4>Username/PIN combo is not valid</h4>";
     }
 
@@ -110,7 +108,7 @@ function ph_get_user_picks_html(string $user, string $pin)
                                 <th class='users_picks'>Week</th>
                                 <th class='users_picks'>Pick</th>";
 
-    $users_picks = $controller->get_user_all_picks($user);
+    $users_picks = $store->picksFor($user);
     for ($i = 1; $i <= get_current_week(); $i++) {
         $pick = "";
         if (array_key_exists($i, $users_picks)) {
@@ -136,7 +134,7 @@ function ph_get_user_picks_html(string $user, string $pin)
 */
 function ph_get_user_picks_list(string $user)
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($user);
-    return $controller->get_user_all_picks($user);
+    return $store->picksFor($user);
 }
