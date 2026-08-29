@@ -3,6 +3,7 @@
 namespace LoserPool\Nfl;
 
 use DateTimeZone;
+use LoserPool\Pool\SeasonConfig;
 
 /*
  * Reads NFL schedules and results from ESPN's public scoreboard API.
@@ -25,6 +26,7 @@ final class EspnClient implements ScheduleSource
     private const BASE_URL = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
     private const REGULAR_SEASON = 2;
 
+
     private string $cacheDir;
     private ?string $snapshotDir;
     private DateTimeZone $timezone;
@@ -33,6 +35,10 @@ final class EspnClient implements ScheduleSource
 
     /** @var callable(string):?string */
     private $httpGet;
+
+    /* Where each lookup's data actually came from, for bin/espn-check.php. */
+    private array $sources = [];
+    private ?int $lastHttpStatus = null;
 
     /**
      * @param callable(string):?string|null $httpGet Injectable transport, so tests
@@ -89,6 +95,7 @@ final class EspnClient implements ScheduleSource
     {
         $cached = $this->readCache($key);
         if ($cached !== null && $this->isFresh($cached, $canBeFinal)) {
+            $this->sources[$key] = 'cache';
             return $cached['payload'];
         }
 
@@ -97,16 +104,20 @@ final class EspnClient implements ScheduleSource
             $decoded = json_decode($raw, true);
             if (is_array($decoded) && isset($decoded['events'])) {
                 $this->writeCache($key, $decoded, $canBeFinal && $this->allEventsComplete($decoded));
+                $this->sources[$key] = 'live';
                 return $decoded;
             }
         }
 
         /* Live fetch failed. Anything we already had beats showing nothing. */
         if ($cached !== null) {
+            $this->sources[$key] = 'stale-cache';
             return $cached['payload'];
         }
 
-        return $this->readSnapshot($key);
+        $snapshot = $this->readSnapshot($key);
+        $this->sources[$key] = $snapshot === null ? 'unavailable' : 'snapshot';
+        return $snapshot;
     }
 
     private function isFresh(array $envelope, bool $canBeFinal): bool
@@ -190,6 +201,22 @@ final class EspnClient implements ScheduleSource
         return is_array($decoded) ? $decoded : null;
     }
 
+    /*
+     * How the most recent lookups were satisfied, keyed by cache key:
+     * live, cache, stale-cache, snapshot or unavailable.
+     *
+     * @return array<string,string>
+     */
+    public function sources(): array
+    {
+        return $this->sources;
+    }
+
+    public function lastHttpStatus(): ?int
+    {
+        return $this->lastHttpStatus;
+    }
+
     private function fetchOverHttp(string $url): ?string
     {
         if (function_exists('curl_init')) {
@@ -199,17 +226,18 @@ final class EspnClient implements ScheduleSource
                 CURLOPT_TIMEOUT => $this->timeoutSeconds,
                 CURLOPT_CONNECTTIMEOUT => $this->timeoutSeconds,
                 CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_USERAGENT => 'LoserPool/1.0',
+                CURLOPT_USERAGENT => SeasonConfig::USER_AGENT,
             ]);
             $body = curl_exec($handle);
             $status = (int) curl_getinfo($handle, CURLINFO_HTTP_CODE);
             curl_close($handle);
+            $this->lastHttpStatus = $status;
             return ($body !== false && $status >= 200 && $status < 300) ? (string) $body : null;
         }
 
         $context = stream_context_create(['http' => [
             'timeout' => $this->timeoutSeconds,
-            'header' => "User-Agent: LoserPool/1.0\r\n",
+            'header' => "User-Agent: " . SeasonConfig::USER_AGENT . "\r\n",
         ]]);
         $body = @file_get_contents($url, false, $context);
         return $body === false ? null : (string) $body;

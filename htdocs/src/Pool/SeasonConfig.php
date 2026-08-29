@@ -43,6 +43,15 @@ final class SeasonConfig
     /* Give up on ESPN quickly; a slow page is worse than a stale one. */
     public const HTTP_TIMEOUT_SECONDS = 5;
 
+    /*
+     * ESPN answers 403 to some user agents -- a bare product token like
+     * "LoserPool/1.0" is rejected, and so is a plain copied browser string.
+     * This "Mozilla/5.0 (compatible; ...)" form is accepted. The failure is
+     * invisible from the site (a 403 just falls through to cached or snapshot
+     * data), so bin/espn-check.php exists to surface it.
+     */
+    public const USER_AGENT = 'Mozilla/5.0 (compatible; LoserPool/1.0; +https://github.com/ashufelt/LoserPoolWebsite)';
+
     public static function timezone(): DateTimeZone
     {
         return new DateTimeZone(self::TIMEZONE);

@@ -9,7 +9,17 @@
  * correct. They hold schedule data, not live results, so a stale snapshot
  * costs accuracy in the results grid but never breaks picking.
  *
- * Run once before the season, and again if the NFL flexes games:
+ * They go stale in two ways, so refresh them periodically:
+ *
+ *   - Late-season kickoff times are provisional. Weeks 16-18 currently carry
+ *     placeholder times (every Saturday game at 23:00Z), and the NFL flexes
+ *     games into their real slots during the season. Week 18 in particular is
+ *     effectively TBD until close to the date.
+ *   - Snapshots record no results. They can only ever answer "who plays when",
+ *     never "who won", so on a host with no outbound network the results grid
+ *     stays blank however fresh they are.
+ *
+ * Run once before the season, and again whenever the schedule firms up:
  *
  *     php bin/refresh-snapshots.php [season]
  */
@@ -32,7 +42,7 @@ for ($week = 1; $week <= SeasonConfig::REGULAR_SEASON_WEEKS; $week++) {
         . http_build_query(['dates' => $season, 'seasontype' => 2, 'week' => $week]);
 
     $body = @file_get_contents($url, false, stream_context_create([
-        'http' => ['timeout' => 20, 'header' => "User-Agent: LoserPool/1.0\r\n"],
+        'http' => ['timeout' => 20, 'header' => "User-Agent: " . SeasonConfig::USER_AGENT . "\r\n"],
     ]));
 
     $payload = is_string($body) ? json_decode($body, true) : null;
@@ -43,7 +53,12 @@ for ($week = 1; $week <= SeasonConfig::REGULAR_SEASON_WEEKS; $week++) {
     }
 
     /* Keep only what Schedule actually parses, so diffs stay reviewable. */
-    $trimmed = ['season' => $payload['season'] ?? null, 'week' => $payload['week'] ?? null, 'events' => []];
+    $trimmed = [
+        'generated_at' => gmdate('c'),
+        'season' => $payload['season'] ?? null,
+        'week' => $payload['week'] ?? null,
+        'events' => [],
+    ];
     foreach ($payload['events'] as $event) {
         if (!isset($event['competitions'][0]['competitors'])) {
             continue;

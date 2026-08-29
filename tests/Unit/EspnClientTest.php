@@ -164,6 +164,56 @@ final class EspnClientTest extends TestCase
         ];
     }
 
+    /*
+     * Where the data came from has to be inspectable.
+     *
+     * The ladder is deliberately silent -- a 403 or a blocked host still
+     * renders a working page from snapshots. That is right for players and
+     * wrong for whoever is maintaining it, who otherwise cannot tell "results
+     * haven't happened yet" from "we have not reached ESPN since August".
+     * bin/espn-check.php reports these.
+     */
+    public function testReportsWhereEachLookupCameFrom(): void
+    {
+        $client = $this->client([FixtureLoader::raw('2026-w01')]);
+        $client->weekSchedule(2026, 1);
+        $this->assertSame(['nfl-2026-w01' => 'live'], $client->sources());
+
+        $client->weekSchedule(2026, 1);
+        $this->assertSame(['nfl-2026-w01' => 'cache'], $client->sources());
+    }
+
+    public function testReportsStaleCacheAndSnapshotFallbacks(): void
+    {
+        $stale = $this->client([FixtureLoader::raw('2026-w01'), null], 0);
+        $stale->weekSchedule(2026, 1);
+        $stale->weekSchedule(2026, 1);
+        $this->assertSame(['nfl-2026-w01' => 'stale-cache'], $stale->sources());
+
+        file_put_contents($this->snapshotDir . '/nfl-2026-w02.json', FixtureLoader::raw('2026-w01'));
+        $snapshot = $this->client([null]);
+        $snapshot->weekSchedule(2026, 2);
+        $this->assertSame(['nfl-2026-w02' => 'snapshot'], $snapshot->sources());
+
+        $nothing = $this->client([null]);
+        $nothing->weekSchedule(2026, 9);
+        $this->assertSame(['nfl-2026-w09' => 'unavailable'], $nothing->sources());
+    }
+
+    /*
+     * Regression guard on a bug that hid behind the fallback ladder.
+     *
+     * ESPN answers 403 to a bare product token such as "LoserPool/1.0" (and to
+     * a plain copied browser string). With that user agent every live fetch
+     * failed and the site ran entirely on committed snapshots -- which carry no
+     * scores, so the results grid would have stayed blank all season while
+     * looking completely healthy.
+     */
+    public function testUserAgentIsAFormEspnAccepts(): void
+    {
+        $this->assertStringStartsWith('Mozilla/5.0 (compatible;', SeasonConfig::USER_AGENT);
+    }
+
     public function testReadsTheCurrentSeasonAndWeek(): void
     {
         $client = $this->client(['{"season":{"type":2,"year":2026},"week":{"number":5},"events":[]}']);

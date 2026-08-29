@@ -1,491 +1,492 @@
 {
- "events": [
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Los Angeles Chargers"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "San Francisco 49ers"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-18T01:15Z",
-   "id": "401873124"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Philadelphia Eagles"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Seattle Seahawks"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-19T22:00Z",
-   "id": "401873125"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Buffalo Bills"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Chicago Bears"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T01:20Z",
-   "id": "401873126"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Green Bay Packers"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Miami Dolphins"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873133"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Tennessee Titans"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Indianapolis Colts"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873131"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "New York Giants"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Cleveland Browns"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873130"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Pittsburgh Steelers"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Baltimore Ravens"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873128"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Tampa Bay Buccaneers"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "New Orleans Saints"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873134"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Washington Commanders"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Atlanta Falcons"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873127"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Carolina Panthers"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Cincinnati Bengals"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873129"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Houston Texans"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Jacksonville Jaguars"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T18:00Z",
-   "id": "401873132"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Arizona Cardinals"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "New York Jets"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T21:05Z",
-   "id": "401873135"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Las Vegas Raiders"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Denver Broncos"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T21:25Z",
-   "id": "401873137"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Los Angeles Rams"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Dallas Cowboys"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-20T21:25Z",
-   "id": "401873136"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Minnesota Vikings"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Detroit Lions"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-21T01:20Z",
-   "id": "401873138"
-  },
-  {
-   "competitions": [
-    {
-     "competitors": [
-      {
-       "score": "0",
-       "team": {
-        "displayName": "Kansas City Chiefs"
-       },
-       "winner": null
-      },
-      {
-       "score": "0",
-       "team": {
-        "displayName": "New England Patriots"
-       },
-       "winner": null
-      }
-     ],
-     "status": {
-      "type": {
-       "completed": false,
-       "name": "STATUS_SCHEDULED"
-      }
-     }
-    }
-   ],
-   "date": "2026-12-22T01:15Z",
-   "id": "401873139"
-  }
- ],
- "season": {
-  "type": 2,
-  "year": 2026
- },
- "week": {
-  "number": 15
- }
+    "generated_at": "2026-08-29T03:55:31+00:00",
+    "season": {
+        "type": 2,
+        "year": 2026
+    },
+    "week": {
+        "number": 15
+    },
+    "events": [
+        {
+            "id": "401873124",
+            "date": "2026-12-18T01:15Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Los Angeles Chargers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "San Francisco 49ers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873125",
+            "date": "2026-12-19T22:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Philadelphia Eagles"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Seattle Seahawks"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873126",
+            "date": "2026-12-20T01:20Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Buffalo Bills"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Chicago Bears"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873133",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Green Bay Packers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Miami Dolphins"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873131",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Tennessee Titans"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Indianapolis Colts"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873130",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "New York Giants"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Cleveland Browns"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873128",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Pittsburgh Steelers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Baltimore Ravens"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873134",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Tampa Bay Buccaneers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "New Orleans Saints"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873127",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Washington Commanders"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Atlanta Falcons"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873129",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Carolina Panthers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Cincinnati Bengals"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873132",
+            "date": "2026-12-20T18:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Houston Texans"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Jacksonville Jaguars"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873135",
+            "date": "2026-12-20T21:05Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Arizona Cardinals"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "New York Jets"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873137",
+            "date": "2026-12-20T21:25Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Las Vegas Raiders"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Denver Broncos"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873136",
+            "date": "2026-12-20T21:25Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Los Angeles Rams"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Dallas Cowboys"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873138",
+            "date": "2026-12-21T01:20Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Minnesota Vikings"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Detroit Lions"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401873139",
+            "date": "2026-12-22T01:15Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Kansas City Chiefs"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "New England Patriots"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
