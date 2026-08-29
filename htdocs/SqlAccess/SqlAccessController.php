@@ -2,7 +2,7 @@
 
 namespace SqlAccess;
 
-include_once "conn_info.php";
+include_once __DIR__ . "/conn_info.php";
 
 use mysqli;
 use function ConnectionInfo\get_host;
@@ -28,7 +28,7 @@ class SqlAccessController
     */
     public function __construct()
     {
-        $this->log_file = "./sql_interface_errors.log";
+        $this->log_file = __DIR__ . "/sql_interface_errors.log";
 
         $this->sql_conn = new mysqli(get_host(), get_user(), get_pass());
 
