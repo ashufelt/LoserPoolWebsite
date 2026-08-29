@@ -60,6 +60,60 @@ final class Rules
     }
 
     /*
+     * Why each unavailable team is unavailable, as a team => reason map.
+     *
+     * ineligibleTeams() answers whether a pick is allowed. This answers what to
+     * tell the player, which is a different question: a team missing from the
+     * list is indistinguishable from a team that never existed, and someone
+     * hunting for a team they cannot find has no way to know whether it is on a
+     * bye, playing Thursday, or one they already used.
+     *
+     * @param string[] $allTeams
+     * @param string[] $blockedKickoffDays
+     * @return array<string,string> team => human readable reason
+     */
+    public static function unavailabilityReasons(Schedule $schedule, array $allTeams, array $blockedKickoffDays): array
+    {
+        if ($schedule->isEmpty()) {
+            return [];
+        }
+
+        $reasons = [];
+
+        foreach (array_diff($allTeams, $schedule->teamsPlaying()) as $team) {
+            $reasons[$team] = 'Bye week';
+        }
+
+        foreach ($schedule->games() as $game) {
+            $day = $game->kickoffDay();
+            if (!in_array($day, $blockedKickoffDays, true)) {
+                continue;
+            }
+            foreach ($game->teams() as $team) {
+                /* Naming the day is more useful than "plays too early". */
+                $reasons[$team] = 'Plays ' . self::dayName($day);
+            }
+        }
+
+        return $reasons;
+    }
+
+    private static function dayName(string $abbreviation): string
+    {
+        $names = [
+            'Mon' => 'Monday',
+            'Tue' => 'Tuesday',
+            'Wed' => 'Wednesday',
+            'Thu' => 'Thursday',
+            'Fri' => 'Friday',
+            'Sat' => 'Saturday',
+            'Sun' => 'Sunday',
+        ];
+
+        return $names[$abbreviation] ?? $abbreviation;
+    }
+
+    /*
      * Did this pick come in? Returns one of the PICK_* constants.
      *
      * A tie eliminates the player. You are picking a team to lose, and a team

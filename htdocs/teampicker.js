@@ -104,6 +104,17 @@
                     item.style.setProperty('--club', option.dataset.color);
                 }
 
+                /*
+                 * Unavailable teams stay listed but cannot be chosen. Removing
+                 * them entirely makes a team the player is hunting for simply
+                 * absent, with no way to tell whether it is on a bye, playing
+                 * before the deadline, or one they already used.
+                 */
+                if (option.disabled) {
+                    item.classList.add('is-unavailable');
+                    item.setAttribute('aria-disabled', 'true');
+                }
+
                 if (option.dataset.logo) {
                     var crest = document.createElement('img');
                     crest.src = option.dataset.logo;
@@ -116,8 +127,17 @@
                 }
 
                 var text = document.createElement('span');
+                text.className = 'teampicker-option-name';
                 text.textContent = name;
                 item.appendChild(text);
+
+                if (option.disabled && option.dataset.reason) {
+                    var reason = document.createElement('span');
+                    reason.className = 'teampicker-reason';
+                    reason.textContent = option.dataset.reason;
+                    item.appendChild(reason);
+                }
+
                 list.appendChild(item);
             });
 
@@ -133,18 +153,41 @@
             return Array.prototype.slice.call(list.querySelectorAll('.teampicker-option'));
         }
 
-        function highlight(position) {
-            var items = visibleItems();
-            items.forEach(function (item) {
-                item.classList.remove('is-active');
+        /* Arrow keys move between teams that can actually be picked. */
+        function selectableItems() {
+            return visibleItems().filter(function (item) {
+                return !item.classList.contains('is-unavailable');
             });
+        }
+
+        function moveHighlight(direction) {
+            var items = selectableItems();
             if (!items.length) {
-                active = -1;
                 return;
             }
-            active = Math.max(0, Math.min(position, items.length - 1));
-            items[active].classList.add('is-active');
-            items[active].scrollIntoView({ block: 'nearest' });
+            var current = items.findIndex(function (item) {
+                return item.classList.contains('is-active');
+            });
+            var next = current === -1
+                ? 0
+                : (current + direction + items.length) % items.length;
+            highlightItem(items[next]);
+        }
+
+        function highlightItem(item) {
+            visibleItems().forEach(function (other) {
+                other.classList.remove('is-active');
+            });
+            if (!item) {
+                return;
+            }
+            item.classList.add('is-active');
+            item.scrollIntoView({ block: 'nearest' });
+            active = visibleItems().indexOf(item);
+        }
+
+        function highlightFirstSelectable() {
+            highlightItem(selectableItems()[0]);
         }
 
         function open() {
@@ -152,10 +195,14 @@
             popup.hidden = false;
             button.setAttribute('aria-expanded', 'true');
             search.value = '';
-            var chosen = visibleItems().findIndex(function (item) {
+            var chosen = selectableItems().find(function (item) {
                 return item.getAttribute('aria-selected') === 'true';
             });
-            highlight(chosen === -1 ? 0 : chosen);
+            if (chosen) {
+                highlightItem(chosen);
+            } else {
+                highlightFirstSelectable();
+            }
             search.focus();
         }
 
@@ -168,7 +215,7 @@
         }
 
         function choose(item) {
-            if (!item) {
+            if (!item || item.classList.contains('is-unavailable')) {
                 return;
             }
             select.selectedIndex = options[Number(item.dataset.index)].index;
@@ -188,16 +235,16 @@
 
         search.addEventListener('input', function () {
             buildList(search.value);
-            highlight(0);
+            highlightFirstSelectable();
         });
 
         search.addEventListener('keydown', function (event) {
             if (event.key === 'ArrowDown') {
                 event.preventDefault();
-                highlight(active + 1);
+                moveHighlight(1);
             } else if (event.key === 'ArrowUp') {
                 event.preventDefault();
-                highlight(active - 1);
+                moveHighlight(-1);
             } else if (event.key === 'Enter') {
                 event.preventDefault();
                 choose(visibleItems()[active]);
@@ -206,10 +253,11 @@
                 close(true);
             } else if (event.key === 'Home') {
                 event.preventDefault();
-                highlight(0);
+                highlightFirstSelectable();
             } else if (event.key === 'End') {
                 event.preventDefault();
-                highlight(visibleItems().length - 1);
+                var items = selectableItems();
+                highlightItem(items[items.length - 1]);
             }
         });
 

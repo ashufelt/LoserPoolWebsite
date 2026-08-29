@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use LoserPool\Storage\SqliteStore;
 use LoserPool\Tests\FakeScheduleSource;
+use LoserPool\Tests\AssertsTeamOptions;
 use LoserPool\Tests\FixtureLoader;
 use PHPUnit\Framework\TestCase;
 
@@ -35,6 +36,8 @@ use function TeamHandler\get_team_options_html;
  */
 final class PickFlowTest extends TestCase
 {
+    use AssertsTeamOptions;
+
     private const IN_SEASON_TUESDAY = '2026-09-22 10:00:00';
     private const IN_SEASON_SUNDAY = '2026-09-27 13:00:00';
 
@@ -188,20 +191,27 @@ final class PickFlowTest extends TestCase
         $this->assertStringContainsString('Kansas City Chiefs', $options);
     }
 
-    public function testTheDropdownHidesTeamsPlayingBeforeTheDeadline(): void
+    /*
+     * Unavailable teams are listed but unselectable, with the reason. Omitting
+     * them left a player unable to tell a team they had already used from one
+     * on a bye, or from one that does not exist.
+     */
+    public function testTeamsPlayingBeforeTheDeadlineAreShownButUnselectable(): void
     {
         $this->registerJoe();
 
         $options = get_team_options_html('joeg');
 
-        /* Week 1 2026: Wednesday and Thursday openers. */
-        $this->assertStringNotContainsString('Seattle Seahawks', $options);
-        $this->assertStringNotContainsString('New England Patriots', $options);
-        $this->assertStringNotContainsString('Los Angeles Rams', $options);
-        $this->assertStringNotContainsString('San Francisco 49ers', $options);
+        /* Week 1 2026: a Wednesday opener and a Thursday game. */
+        $this->assertTeamUnavailable($options, 'Seattle Seahawks', 'Plays Wednesday');
+        $this->assertTeamUnavailable($options, 'New England Patriots', 'Plays Wednesday');
+        $this->assertTeamUnavailable($options, 'Los Angeles Rams', 'Plays Thursday');
+        $this->assertTeamUnavailable($options, 'San Francisco 49ers', 'Plays Thursday');
+
+        $this->assertTeamSelectable($options, 'Kansas City Chiefs');
     }
 
-    public function testTheDropdownHidesTeamsYouAlreadyPicked(): void
+    public function testTeamsYouAlreadyUsedAreShownWithTheWeekYouUsedThem(): void
     {
         $this->registerJoe();
         ph_add_pick('joeg', 'Chicago Bears', '1234');
@@ -211,7 +221,36 @@ final class PickFlowTest extends TestCase
             ['year' => 2026, 'seasonType' => 2, 'week' => 4]
         ));
 
-        $this->assertStringNotContainsString('Chicago Bears', get_team_options_html('joeg'));
+        $this->assertTeamUnavailable(get_team_options_html('joeg'), 'Chicago Bears', 'Used in week 3');
+    }
+
+    /* A bye is a different reason from an early kickoff, and says so. */
+    public function testTeamsOnByeAreShownWithTheirOwnReason(): void
+    {
+        $this->registerJoe();
+
+        lp_schedule_source(new FakeScheduleSource(
+            [6 => FixtureLoader::schedule('2026-w06')],
+            ['year' => 2026, 'seasonType' => 2, 'week' => 6]
+        ));
+
+        $options = get_team_options_html('joeg');
+
+        /* 2026 week 6: four teams on bye, plus a Thursday game. */
+        $this->assertTeamUnavailable($options, 'Cincinnati Bengals', 'Bye week');
+        $this->assertTeamUnavailable($options, 'Detroit Lions', 'Bye week');
+        $this->assertTeamUnavailable($options, 'Seattle Seahawks', 'Plays Thursday');
+        $this->assertTeamSelectable($options, 'Chicago Bears');
+    }
+
+    /* Every team is listed, whether or not it can be picked. */
+    public function testAllTeamsAreListedRegardlessOfAvailability(): void
+    {
+        $this->registerJoe();
+
+        $options = get_team_options_html('joeg');
+
+        $this->assertSame(32, substr_count($options, '<option'));
     }
 
     /* An unknown player still gets a usable list rather than an error. */

@@ -525,6 +525,46 @@ select:focus-visible {
     background: color-mix(in srgb, var(--munsell) 16%, transparent);
 }
 
+.teampicker-option-name {
+    flex: 1;
+}
+
+/*
+ * Unavailable teams stay listed rather than disappearing, so the reason is
+ * visible. Dimmed and non-interactive, with the club colour edge dropped so
+ * they read as inactive at a glance.
+ */
+.teampicker-option.is-unavailable {
+    cursor: not-allowed;
+    border-left-color: transparent;
+    background: transparent;
+}
+
+.teampicker-option.is-unavailable .teampicker-option-name,
+.teampicker-option.is-unavailable .team-crest {
+    opacity: 0.42;
+}
+
+.teampicker-option.is-unavailable:hover {
+    background: transparent;
+}
+
+.teampicker-reason {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    white-space: nowrap;
+}
+
+/* The native control, for anyone without the enhanced picker. */
+select option:disabled {
+    color: var(--text-muted);
+}
+
 .teampicker-empty {
     list-style: none;
     padding: var(--sp-3);
@@ -547,12 +587,13 @@ select:focus-visible {
 }
 
 .register-disclosure summary::after {
-    content: " +";
+    content: "+";
     font-weight: 700;
+    margin-left: 0.5em;
 }
 
 .register-disclosure[open] summary::after {
-    content: " \2212";
+    content: "\2212";
 }
 
 .register-disclosure[open] summary {
