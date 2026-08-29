@@ -5,6 +5,7 @@ namespace LoserPool\Tests\Unit;
 use LoserPool\Nfl\EspnClient;
 use LoserPool\Pool\SeasonConfig;
 use LoserPool\Tests\FixtureLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /*
@@ -142,6 +143,7 @@ final class EspnClientTest extends TestCase
     }
 
     /** @dataProvider unusableResponses */
+    #[DataProvider('unusableResponses')]
     public function testUnusableResponsesAreNotCached(?string $response): void
     {
         $client = $this->client([$response]);

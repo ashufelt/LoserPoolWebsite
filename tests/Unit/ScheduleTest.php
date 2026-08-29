@@ -5,6 +5,7 @@ namespace LoserPool\Tests\Unit;
 use LoserPool\Nfl\Schedule;
 use LoserPool\Pool\SeasonConfig;
 use LoserPool\Tests\FixtureLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /*
@@ -89,6 +90,7 @@ final class ScheduleTest extends TestCase
      *
      * @dataProvider malformedPayloads
      */
+    #[DataProvider('malformedPayloads')]
     public function testMalformedPayloadsYieldAnEmptySchedule(?array $payload): void
     {
         $schedule = Schedule::fromEspnPayload($payload, SeasonConfig::timezone());
