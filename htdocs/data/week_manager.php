@@ -74,9 +74,30 @@ function lp_week_schedule(int $week, bool $reset = false): Schedule
     return $schedules[$week];
 }
 
+/*
+ * The clock, in one place and overridable.
+ *
+ * Everything time-dependent here -- the pick lock, whether picks are hidden,
+ * the offline week fallback -- reads this. Without an override those rules
+ * could only be tested on the days of the week they happen to concern, which
+ * is how the January day-of-year bug survived as long as it did.
+ */
+function lp_clock(?DateTimeImmutable $freezeAt = null, bool $release = false): ?DateTimeImmutable
+{
+    static $frozen = null;
+
+    if ($release) {
+        $frozen = null;
+    } elseif ($freezeAt !== null) {
+        $frozen = $freezeAt;
+    }
+
+    return $frozen;
+}
+
 function lp_now(): DateTimeImmutable
 {
-    return new DateTimeImmutable('now', SeasonConfig::timezone());
+    return lp_clock() ?? new DateTimeImmutable('now', SeasonConfig::timezone());
 }
 
 function get_current_week(bool $reset = false): int

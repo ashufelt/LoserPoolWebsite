@@ -1,0 +1,45 @@
+<?php
+
+namespace LoserPool\Storage;
+
+/*
+ * Everything the pool needs to persist: six operations over users and picks.
+ *
+ * Extracted so the storage engine is a deployment choice rather than a
+ * rewrite. MySQL is what the current host runs; SQLite is what makes the
+ * layer testable at all, since it runs in memory in a test and needs no
+ * server to deploy.
+ *
+ * Note there is no pin accessor. Reading a PIN out and comparing it at the
+ * call site is how the old code worked, and it is a sharp edge: PHP's loose
+ * comparison makes `0 != null` false, so a "no such user" sentinel of null
+ * would authenticate a nonexistent user who guessed the PIN 0000. The check
+ * belongs behind the interface where it can only be done one way.
+ */
+interface PoolStore
+{
+    public const OK = 0;
+    public const ERROR = 1;
+    public const NO_SUCH_USER = 2;
+    public const USER_EXISTS = 4;
+
+    /** @return string[] every registered username */
+    public function allUsernames(): array;
+
+    public function userExists(string $username): bool;
+
+    public function verifyPin(string $username, int $pin): bool;
+
+    /** @return int one of OK, ERROR, USER_EXISTS */
+    public function addUser(string $name, string $email, string $username, int $pin): int;
+
+    /** @return array<int,string> week number => team picked */
+    public function picksFor(string $username): array;
+
+    /*
+     * Records a pick, replacing any existing pick for that week.
+     *
+     * @return int one of OK, ERROR, NO_SUCH_USER
+     */
+    public function savePick(string $username, string $team, int $week): int;
+}
