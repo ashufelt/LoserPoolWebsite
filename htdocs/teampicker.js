@@ -13,9 +13,32 @@
     'use strict';
 
     function enhance(select) {
-        if (!select || select.dataset.enhanced === 'true') {
+        if (!select) {
             return;
         }
+
+        var stale = select.closest('.teampicker');
+
+        /* Already enhanced, and still inside its own wrapper. Nothing to do.
+           afterSwap fires for every htmx swap on the page, including the picks
+           table, so this is the common case and must not rebuild the picker. */
+        if (select.dataset.enhanced === 'true' && stale) {
+            return;
+        }
+
+        /*
+         * htmx replaces the <select> itself when the chosen username changes,
+         * so a new, unflagged select arrives inside the previous wrapper. The
+         * flag alone does not catch that: enhancing again inserted a second
+         * wrapper inside the first, and the page grew another button bar on
+         * every username change. Unwrap the stale one first, which also drops
+         * its listeners along with the removed nodes.
+         */
+        if (stale) {
+            stale.parentNode.insertBefore(select, stale);
+            stale.parentNode.removeChild(stale);
+        }
+
         select.dataset.enhanced = 'true';
 
         var wrapper = document.createElement('div');
