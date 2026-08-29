@@ -11,12 +11,14 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../htdocs/picks/pick_handler.php';
 require_once __DIR__ . '/../../htdocs/users/user_handler.php';
+require_once __DIR__ . '/../../htdocs/teams/team_handler.php';
 
 use function PickHandling\ph_add_pick;
 use function PickHandling\ph_get_picks_html_table;
 use function PickHandling\ph_get_user_picks_html;
 use function UserHandling\uh_add_user;
 use function UserHandling\uh_get_user_option_list_html;
+use function TeamHandler\get_team_options_html;
 
 /*
  * The path players actually take: register, pick, change your mind, get
@@ -168,6 +170,54 @@ final class PickFlowTest extends TestCase
         $this->freeze(self::IN_SEASON_SUNDAY);
 
         $this->assertStringContainsString('Chicago Bears', ph_get_picks_html_table());
+    }
+
+    /*
+     * The dropdown is what enforces the rules in the interface, and it is the
+     * one surface a reference sweep missed: deleting the function behind it
+     * left every page rendering fine while /teams/all.php returned a fatal
+     * error, so nobody could pick at all and CI stayed green.
+     */
+    public function testTheTeamDropdownOffersEligibleTeams(): void
+    {
+        $this->registerJoe();
+
+        $options = get_team_options_html('joeg');
+
+        $this->assertStringContainsString('Chicago Bears', $options);
+        $this->assertStringContainsString('Kansas City Chiefs', $options);
+    }
+
+    public function testTheDropdownHidesTeamsPlayingBeforeTheDeadline(): void
+    {
+        $this->registerJoe();
+
+        $options = get_team_options_html('joeg');
+
+        /* Week 1 2026: Wednesday and Thursday openers. */
+        $this->assertStringNotContainsString('Seattle Seahawks', $options);
+        $this->assertStringNotContainsString('New England Patriots', $options);
+        $this->assertStringNotContainsString('Los Angeles Rams', $options);
+        $this->assertStringNotContainsString('San Francisco 49ers', $options);
+    }
+
+    public function testTheDropdownHidesTeamsYouAlreadyPicked(): void
+    {
+        $this->registerJoe();
+        ph_add_pick('joeg', 'Chicago Bears', '1234');
+
+        lp_schedule_source(new FakeScheduleSource(
+            [4 => FixtureLoader::schedule('2026-w01')],
+            ['year' => 2026, 'seasonType' => 2, 'week' => 4]
+        ));
+
+        $this->assertStringNotContainsString('Chicago Bears', get_team_options_html('joeg'));
+    }
+
+    /* An unknown player still gets a usable list rather than an error. */
+    public function testTheDropdownWorksForAnUnknownUser(): void
+    {
+        $this->assertStringContainsString('Chicago Bears', get_team_options_html(''));
     }
 
     /* You can always see your own picks, with your PIN. */

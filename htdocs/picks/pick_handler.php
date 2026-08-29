@@ -134,7 +134,7 @@ function ph_get_user_picks_html(string $user, string $pin)
 */
 function ph_get_user_picks_list(string $user)
 {
-    $controller = new SqlAccessController();
+    $store = lp_store();
     $user = htmlspecialchars($user);
-    return $controller->get_user_all_picks($user);
+    return $store->picksFor($user);
 }
