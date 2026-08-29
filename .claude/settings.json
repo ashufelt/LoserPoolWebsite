@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vendor/bin/phpunit:*)",
+      "Bash(php bin/pool-status.php:*)",
+      "Bash(php bin/espn-check.php:*)",
+      "Bash(php -l:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)"
+    ]
+  }
+}
