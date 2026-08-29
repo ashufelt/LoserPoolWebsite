@@ -164,6 +164,19 @@ function get_INELIGIBLE_teams($week): array
     );
 }
 
+/*
+ * Why each unavailable team is unavailable this week, as team => reason.
+ * Used to explain the greyed out entries rather than silently omitting them.
+ */
+function get_INELIGIBLE_reasons($week): array
+{
+    return Rules::unavailabilityReasons(
+        lp_week_schedule((int) $week),
+        Teams::all(),
+        SeasonConfig::BLOCKED_KICKOFF_DAYS
+    );
+}
+
 /* 1 if the pick came in (team lost), -1 if it did not, 0 if undecided. */
 function check_loser($week, $team): int
 {

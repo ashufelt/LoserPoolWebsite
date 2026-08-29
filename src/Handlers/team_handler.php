@@ -12,7 +12,7 @@ use function PickHandling\ph_get_user_picks_list;
  * Each option carries its own crest and club colour, so the enhanced picker
  * needs no second copy of the team map on the client.
  */
-function ph_team_option(string $team): string
+function ph_team_option(string $team, ?string $unavailableBecause = null): string
 {
     $attributes = "";
 
@@ -24,6 +24,12 @@ function ph_team_option(string $team): string
     $color = Teams::color($team);
     if ($color !== null) {
         $attributes .= " data-color='" . $color . "'";
+    }
+
+    if ($unavailableBecause !== null) {
+        /* disabled keeps it unselectable in the native control too, not just
+           in the enhanced picker, so the rule holds without JavaScript. */
+        $attributes .= " disabled data-reason='" . htmlspecialchars($unavailableBecause) . "'";
     }
 
     return "<option" . $attributes . ">" . $team . "</option>";
@@ -40,14 +46,31 @@ function get_team_options_html($user = ""): string
         $users_picks = ph_get_user_picks_list($user);
     }
 
+    /*
+     * Every team is listed. Unavailable ones are shown greyed out and
+     * unselectable, with the reason, rather than omitted: a team that is simply
+     * missing is indistinguishable from one that never existed, and a player
+     * hunting for it cannot tell whether it is on a bye, playing before the
+     * deadline, or one they already used.
+     */
+    $week = get_current_week();
+    $reasons = get_INELIGIBLE_reasons($week);
+    $this_weeks_pick = $users_picks[$week] ?? null;
+
     foreach (Teams::all() as $team) {
-        if (!in_array($team, get_INELIGIBLE_teams(get_current_week())) && !in_array($team, $users_picks)) {
+        /* This week's own pick stays selectable, so the current choice shows. */
+        if ($team === $this_weeks_pick) {
             $options_list .= ph_team_option($team);
-        } else if (in_array($team, $users_picks) && (array_key_exists(get_current_week(), $users_picks))) {
-            if ($team == $users_picks[get_current_week()]) {
-                $options_list .= ph_team_option($team);
-            }
+            continue;
         }
+
+        $used_in = array_search($team, $users_picks, true);
+        if ($used_in !== false) {
+            $options_list .= ph_team_option($team, 'Used in week ' . $used_in);
+            continue;
+        }
+
+        $options_list .= ph_team_option($team, $reasons[$team] ?? null);
     }
     $options_list .= "</select>";
     return $options_list;

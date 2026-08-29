@@ -4,6 +4,7 @@ namespace LoserPool\Tests\Integration;
 
 use LoserPool\Nfl\Teams;
 use LoserPool\Storage\SqliteStore;
+use LoserPool\Tests\AssertsTeamOptions;
 use LoserPool\Tests\FakeScheduleSource;
 use LoserPool\Tests\SeasonBuilder;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +30,8 @@ use function TeamHandler\get_team_options_html;
  */
 final class SeasonSimulationTest extends TestCase
 {
+    use AssertsTeamOptions;
+
     private const PIN = '1234';
 
     private SqliteStore $store;
@@ -149,8 +152,8 @@ final class SeasonSimulationTest extends TestCase
         $this->openWeek(2);
         $this->assertStringContainsString('Cannot repeat', $this->pick('alice', $teams[0]));
 
-        /* And the dropdown stops offering it at all. */
-        $this->assertStringNotContainsString($teams[0], get_team_options_html('alice'));
+        /* And the dropdown shows it greyed out, naming the week it was used. */
+        $this->assertTeamUnavailable(get_team_options_html('alice'), $teams[0], 'Used in week 1');
     }
 
     /* A tie ends a season, because a team that tied did not lose. */
@@ -250,9 +253,9 @@ final class SeasonSimulationTest extends TestCase
         $this->openWeek(7, [$teams[0], $teams[1]]);
         $options = get_team_options_html('alice');
 
-        $this->assertStringNotContainsString($teams[0], $options);
-        $this->assertStringNotContainsString($teams[1], $options);
-        $this->assertStringContainsString($teams[2], $options);
+        $this->assertTeamUnavailable($options, $teams[0], 'Plays Thursday');
+        $this->assertTeamUnavailable($options, $teams[1], 'Plays Thursday');
+        $this->assertTeamSelectable($options, $teams[2]);
     }
 
     /*

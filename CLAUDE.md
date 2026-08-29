@@ -92,6 +92,11 @@ Crests and club colours are committed under `htdocs/img/teams/` and mapped in
 only: several clubs share a near-identical primary, so it must never be the
 sole carrier of meaning.
 
+Unavailable teams are listed and disabled, never omitted. A team missing from
+the list is indistinguishable from one that never existed, and the search box
+makes it worse: hunting for a team you already used returns "No teams match",
+which reads as a bug. `Rules::unavailabilityReasons()` supplies the wording.
+
 Do not put `overflow: hidden` on a card containing the picker. The popup is
 absolutely positioned and gets clipped at the card boundary; the accent bar on
 `.card-primary` carries its own border-radius for this reason.
