@@ -2,8 +2,8 @@
 
 namespace TeamHandler;
 
-include_once __DIR__ . "/../data/week_manager.php";
-include_once __DIR__ . "/../picks/pick_handler.php";
+include_once __DIR__ . "/../week_manager.php";
+include_once __DIR__ . "/pick_handler.php";
 
 use LoserPool\Nfl\Teams;
 use function PickHandling\ph_get_user_picks_list;

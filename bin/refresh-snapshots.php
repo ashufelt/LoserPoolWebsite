@@ -24,12 +24,12 @@
  *     php bin/refresh-snapshots.php [season]
  */
 
-require_once __DIR__ . '/../htdocs/src/autoload.php';
+require_once __DIR__ . '/../src/autoload.php';
 
 use LoserPool\Pool\SeasonConfig;
 
 $season = isset($argv[1]) ? (int) $argv[1] : SeasonConfig::YEAR;
-$target = __DIR__ . '/../htdocs/data/snapshots';
+$target = SeasonConfig::snapshotDir();
 
 if (!is_dir($target) && !mkdir($target, 0775, true) && !is_dir($target)) {
     fwrite(STDERR, "Cannot create $target\n");

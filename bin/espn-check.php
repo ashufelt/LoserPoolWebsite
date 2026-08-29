@@ -17,13 +17,13 @@
  * Exit status is 0 only if live data was actually fetched.
  */
 
-require_once __DIR__ . '/../htdocs/src/autoload.php';
+require_once __DIR__ . '/../src/autoload.php';
 
 use LoserPool\Nfl\EspnClient;
 use LoserPool\Pool\SeasonConfig;
 
-$cacheDir = __DIR__ . '/../htdocs/data/cache';
-$snapshotDir = __DIR__ . '/../htdocs/data/snapshots';
+$cacheDir = SeasonConfig::cacheDir();
+$snapshotDir = SeasonConfig::snapshotDir();
 
 /* TTL 0 so this always attempts the network rather than answering from cache. */
 $client = new EspnClient($cacheDir, SeasonConfig::timezone(), $snapshotDir, 0, SeasonConfig::HTTP_TIMEOUT_SECONDS);

@@ -52,6 +52,29 @@ final class SeasonConfig
      */
     public const USER_AGENT = 'Mozilla/5.0 (compatible; LoserPool/1.0; +https://github.com/ashufelt/LoserPoolWebsite)';
 
+    /* Project root: one level above src/. */
+    private static function root(): string
+    {
+        return dirname(__DIR__, 2);
+    }
+
+    /*
+     * Written at runtime, so it lives outside the docroot and outside git.
+     * On the container this is ephemeral, which is fine -- a cold start just
+     * re-fetches.
+     */
+    public static function cacheDir(): string
+    {
+        $configured = getenv('LP_CACHE_DIR');
+        return $configured !== false && $configured !== '' ? $configured : self::root() . '/var/cache';
+    }
+
+    /* Committed schedule data: the offline fallback if ESPN is unreachable. */
+    public static function snapshotDir(): string
+    {
+        return self::root() . '/data/snapshots';
+    }
+
     public static function timezone(): DateTimeZone
     {
         return new DateTimeZone(self::TIMEZONE);

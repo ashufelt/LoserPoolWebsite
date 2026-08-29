@@ -16,7 +16,7 @@
  * cache that would become a burst of HTTP requests on every page view.
  */
 
-require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/autoload.php';
 
 use LoserPool\Nfl\EspnClient;
 use LoserPool\Nfl\Schedule;
@@ -41,9 +41,9 @@ function lp_schedule_source(?ScheduleSource $override = null): ScheduleSource
 
     if ($source === null) {
         $source = new EspnClient(
-            __DIR__ . '/cache',
+            SeasonConfig::cacheDir(),
             SeasonConfig::timezone(),
-            __DIR__ . '/snapshots',
+            SeasonConfig::snapshotDir(),
             SeasonConfig::LIVE_CACHE_TTL_SECONDS,
             SeasonConfig::HTTP_TIMEOUT_SECONDS
         );

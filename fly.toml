@@ -12,8 +12,8 @@ primary_region = "ord"          # Chicago: the pool's timezone, and most players
   dockerfile = "Dockerfile"
 
 [env]
-  LP_STORE = "sqlite"
   LP_SQLITE_PATH = "/data/pool.sqlite"
+  LP_CACHE_DIR = "/var/www/var/cache"
 
 [[mounts]]
   source = "pool_data"

@@ -16,8 +16,8 @@
  * never update, because only live data carries scores.
  */
 
-require_once __DIR__ . '/src/autoload.php';
-require_once __DIR__ . '/data/week_manager.php';
+require_once __DIR__ . '/../src/autoload.php';
+require_once __DIR__ . '/../src/week_manager.php';
 
 use LoserPool\Nfl\EspnClient;
 use LoserPool\Pool\SeasonConfig;
@@ -25,8 +25,8 @@ use LoserPool\Pool\SeasonConfig;
 header('Content-Type: text/plain; charset=utf-8');
 header('Cache-Control: no-store');
 
-$cacheDir = __DIR__ . '/data/cache';
-$snapshotDir = __DIR__ . '/data/snapshots';
+$cacheDir = SeasonConfig::cacheDir();
+$snapshotDir = SeasonConfig::snapshotDir();
 
 /* TTL 0: always attempt the network, so this reflects reality rather than cache. */
 $client = new EspnClient($cacheDir, SeasonConfig::timezone(), $snapshotDir, 0, SeasonConfig::HTTP_TIMEOUT_SECONDS);

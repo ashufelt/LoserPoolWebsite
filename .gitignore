@@ -3,4 +3,4 @@
 vendor/
 composer.lock
 .phpunit.result.cache
-htdocs/data/cache/
+var/

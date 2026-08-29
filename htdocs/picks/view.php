@@ -1,6 +1,6 @@
 <?php
 
-include(__DIR__ . "/pick_handler.php");
+include(__DIR__ . "/../../src/Handlers/pick_handler.php");
 
 use function PickHandling\ph_get_user_picks_html;
 

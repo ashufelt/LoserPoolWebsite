@@ -3,7 +3,7 @@
 namespace PickHandling;
 
 include_once __DIR__ . "/../bootstrap.php";
-include_once __DIR__ . "/../data/week_manager.php";
+include_once __DIR__ . "/../week_manager.php";
 
 
 function ph_add_pick(string $userin, string $teamin, string $pinin): string
@@ -65,9 +65,13 @@ function ph_get_picks_html_table(): string
 
     $users = $store->allUsernames();
     sort($users, SORT_NATURAL | SORT_FLAG_CASE);
+
+    /* One query for the whole grid rather than one per player. */
+    $all_picks = $store->allPicks();
+
     foreach ($users as $user) {
         $picks_html_table .= "<tr class='pick_table'><td class='pickcolumn1 pick_table'>" . $user . "</td>";
-        $users_picks = $store->picksFor($user);
+        $users_picks = $all_picks[$user] ?? [];
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
             $result_bg_styling = "";

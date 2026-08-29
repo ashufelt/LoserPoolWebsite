@@ -9,9 +9,9 @@ use LoserPool\Tests\FakeScheduleSource;
 use LoserPool\Tests\FixtureLoader;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../htdocs/picks/pick_handler.php';
-require_once __DIR__ . '/../../htdocs/users/user_handler.php';
-require_once __DIR__ . '/../../htdocs/teams/team_handler.php';
+require_once __DIR__ . '/../../src/Handlers/pick_handler.php';
+require_once __DIR__ . '/../../src/Handlers/user_handler.php';
+require_once __DIR__ . '/../../src/Handlers/team_handler.php';
 
 use function PickHandling\ph_add_pick;
 use function PickHandling\ph_get_picks_html_table;

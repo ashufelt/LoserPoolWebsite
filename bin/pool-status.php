@@ -10,7 +10,7 @@
  *     php bin/pool-status.php all      # every week of the season
  */
 
-require_once __DIR__ . '/../htdocs/data/week_manager.php';
+require_once __DIR__ . '/../src/week_manager.php';
 
 use LoserPool\Pool\SeasonConfig;
 

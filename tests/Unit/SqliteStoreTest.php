@@ -130,6 +130,22 @@ final class SqliteStoreTest extends TestCase
         $this->assertSame([1 => 'Las Vegas Raiders'], $this->store->picksFor('sarah_k'));
     }
 
+    /* The standings grid reads every player's picks in one go. */
+    public function testReadsEveryPlayersPicksAtOnce(): void
+    {
+        $this->register('joeg');
+        $this->register('sarah_k');
+        $this->register('nopicks');
+        $this->store->savePick('joeg', 'Chicago Bears', 1);
+        $this->store->savePick('joeg', 'New York Giants', 2);
+        $this->store->savePick('sarah_k', 'Las Vegas Raiders', 1);
+
+        $this->assertSame([
+            'joeg' => [1 => 'Chicago Bears', 2 => 'New York Giants'],
+            'sarah_k' => [1 => 'Las Vegas Raiders'],
+        ], $this->store->allPicks());
+    }
+
     public function testANewPlayerHasNoPicks(): void
     {
         $this->register('newcomer');

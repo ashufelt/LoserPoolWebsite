@@ -37,6 +37,17 @@ interface PoolStore
     public function picksFor(string $username): array;
 
     /*
+     * Every player's picks in one query.
+     *
+     * The standings table renders every player against every week, and asking
+     * per player made a page load run one query per entrant. Cheap against a
+     * local file, but it is the pattern that gets copied forward.
+     *
+     * @return array<string,array<int,string>> username => (week => team)
+     */
+    public function allPicks(): array;
+
+    /*
      * Records a pick, replacing any existing pick for that week.
      *
      * @return int one of OK, ERROR, NO_SUCH_USER

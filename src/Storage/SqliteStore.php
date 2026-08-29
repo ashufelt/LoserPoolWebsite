@@ -134,6 +134,19 @@ final class SqliteStore implements PoolStore
         return $picks;
     }
 
+    public function allPicks(): array
+    {
+        $rows = $this->pdo
+            ->query("SELECT username, week_number, pick FROM {$this->picksTable}")
+            ->fetchAll(PDO::FETCH_ASSOC);
+
+        $picks = [];
+        foreach ($rows as $row) {
+            $picks[(string) $row['username']][(int) $row['week_number']] = (string) $row['pick'];
+        }
+        return $picks;
+    }
+
     public function savePick(string $username, string $team, int $week): int
     {
         if (!$this->userExists($username)) {

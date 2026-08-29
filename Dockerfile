@@ -17,15 +17,19 @@ RUN docker-php-ext-enable opcache \
 RUN printf '%s\n' 'date.timezone=America/Chicago' 'expose_php=Off' \
     > /usr/local/etc/php/conf.d/pool.ini
 
-# The repo keeps the docroot in htdocs/. bin/ and the source live outside it.
+# Only htdocs/ is served. Application code, schedule data and the CLI tools
+# live beside the docroot, not inside it, so they are unreachable over HTTP by
+# layout rather than by an Apache rule that could be misconfigured.
 COPY htdocs/ /var/www/html/
+COPY src/ /var/www/src/
+COPY data/ /var/www/data/
 COPY bin/ /var/www/bin/
 
 # COPY preserves the source file modes, and a restrictive local umask (077)
 # produces files Apache cannot read -- which fails as a blanket 403 with
 # "Permission denied", not as a config error. Normalise instead of trusting
 # whatever the build host happened to use.
-RUN chmod -R a+rX /var/www/html /var/www/bin
+RUN chmod -R a+rX /var/www/html /var/www/src /var/www/data /var/www/bin
 
 # Directory listing off, and the class/data directories closed to the web.
 # Configured here rather than via .htaccess because AllowOverride is None in
@@ -36,28 +40,14 @@ RUN printf '%s\n' \
       '    AllowOverride None' \
       '    Require all granted' \
       '</Directory>' \
-      '<Directory /var/www/html/src>' \
-      '    Require all denied' \
-      '</Directory>' \
-      '<Directory /var/www/html/SqlAccess>' \
-      '    Require all denied' \
-      '</Directory>' \
-      '<Directory /var/www/html/data>' \
-      '    Require all denied' \
-      '    # get_week.php is a live HTMX endpoint; the rest of data/ is' \
-      '    # season source, the response cache and committed snapshots.' \
-      '    <Files "get_week.php">' \
-      '        Require all granted' \
-      '    </Files>' \
-      '</Directory>' \
       'ServerTokens Prod' \
       'ServerSignature Off' \
     > /etc/apache2/conf-available/pool.conf \
  && a2enconf pool
 
-# The ESPN response cache is written at runtime.
-RUN mkdir -p /var/www/html/data/cache \
- && chown -R www-data:www-data /var/www/html/data
+# The ESPN response cache is written at runtime, outside the docroot.
+RUN mkdir -p /var/www/var/cache \
+ && chown -R www-data:www-data /var/www/var
 
 # /data is a mounted volume, and a volume's root belongs to root at mount time.
 # Any ownership set here at build time is shadowed the moment it mounts, so the
@@ -76,7 +66,7 @@ RUN printf '%s\n' \
 ENTRYPOINT ["/usr/local/bin/pool-entrypoint.sh"]
 CMD ["apache2-foreground"]
 
-ENV LP_STORE=sqlite \
-    LP_SQLITE_PATH=/data/pool.sqlite
+ENV LP_SQLITE_PATH=/data/pool.sqlite \
+    LP_CACHE_DIR=/var/www/var/cache
 
 EXPOSE 80
