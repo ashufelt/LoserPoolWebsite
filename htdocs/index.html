@@ -87,40 +87,6 @@
                 Changed your mind? Submit again, and your latest pick for the week replaces the last one.
             </p>
 
-            <!--
-              Collapsed, and last. Forgetting a PIN is rare and the form above
-              is why anyone is on this page; this should not compete with it.
-            -->
-            <!-- Outside the disclosure, so the answer survives it collapsing. -->
-            <div id="reset-status" role="status" aria-live="polite"></div>
-
-            <details class="reset-disclosure">
-                <summary>Forgot your PIN?</summary>
-                <form class="reset-form" hx-post="/users/reset-pin.php" hx-target="#reset-status"
-                    hx-swap="innerHTML"
-                    hx-on:lp-pin-reset="this.reset(); this.closest('details').open = false">
-                    <p class="hint">
-                        A PIN cannot be looked up, only replaced: the site stores a scrambled copy it
-                        cannot read back. Give your username and the email you registered with, and a
-                        new PIN is sent to that address.
-                    </p>
-                    <div class="field-row">
-                        <div class="field">
-                            <label for="resetuser">Username</label>
-                            <input type="text" id="resetuser" name="resetuser" required
-                                pattern="\w{3,20}" autocomplete="username">
-                        </div>
-                        <div class="field">
-                            <label for="resetemail">Email you registered with</label>
-                            <input type="email" id="resetemail" name="resetemail" required
-                                autocomplete="email">
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button type="submit" class="btn btn-secondary">Email me a new PIN</button>
-                    </div>
-                </form>
-            </details>
         </section>
 
         <div id="both_tables_of_picks">
