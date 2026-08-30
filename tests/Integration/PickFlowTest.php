@@ -154,6 +154,50 @@ final class PickFlowTest extends TestCase
         $this->assertStringContainsString('successfully', ph_add_pick('joeg', 'Chicago Bears', '1234'));
     }
 
+    /*
+     * The dropdown disables these, which stops a person clicking one and is
+     * worth nothing against a request that did not come from the dropdown.
+     * The rule that decides who survives a week has to hold at the handler.
+     */
+    public function testATeamPlayingBeforeTheDeadlineIsRejectedOnSubmit(): void
+    {
+        $this->registerJoe();
+
+        /* Week 1 2026 opens on a Wednesday, and Seattle plays in it. */
+        $result = ph_add_pick('joeg', 'Seattle Seahawks', '1234');
+
+        $this->assertStringContainsString('cannot be picked this week', $result);
+        $this->assertStringContainsString('Plays Wednesday', $result);
+        $this->assertSame([], lp_store()->picksFor('joeg'), 'nothing was stored');
+    }
+
+    public function testATeamOnByeIsRejectedOnSubmit(): void
+    {
+        $this->registerJoe();
+
+        lp_schedule_source(new FakeScheduleSource(
+            [6 => FixtureLoader::schedule('2026-w06')],
+            ['year' => 2026, 'seasonType' => 2, 'week' => 6]
+        ));
+
+        $result = ph_add_pick('joeg', 'Cincinnati Bengals', '1234');
+
+        $this->assertStringContainsString('Bye week', $result);
+        $this->assertSame([], lp_store()->picksFor('joeg'), 'nothing was stored');
+    }
+
+    /* A name nobody plays under would be stored and then scored forever as
+       undecided, because no schedule will ever contain it. */
+    public function testANameThatIsNotATeamIsRejectedOnSubmit(): void
+    {
+        $this->registerJoe();
+
+        $result = ph_add_pick('joeg', 'Chicago Bears ', '1234');
+
+        $this->assertStringContainsString('Not a team in this league', $result);
+        $this->assertSame([], lp_store()->picksFor('joeg'), 'nothing was stored');
+    }
+
     /* Other players' current-week picks are concealed until the slate starts. */
     public function testOtherPlayersPicksAreHiddenUntilLock(): void
     {

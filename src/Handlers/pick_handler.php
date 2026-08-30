@@ -21,11 +21,28 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
     }
     $week_number = intval($week);
     $users_picks = $store->picksFor($user);
+    $ineligible = get_INELIGIBLE_reasons($week_number);
     $create_ecode = 0;
     if (!$store->verifyPin($user, $pickpin)) {
         return "<h4>Username/PIN combo is not valid</h4>";
     } else if (in_array($team, $users_picks, true)) {
         return "<h4>Cannot repeat a choice</h4>";
+    } else if (!in_array($team, Teams::all(), true)) {
+        /*
+         * Nothing above this line established that $team is a team. The
+         * dropdown can only offer real ones, but the dropdown is not the only
+         * way to reach this function, and an unrecognised name would be stored
+         * and then scored against a schedule that has never heard of it.
+         */
+        return "<h4>Not a team in this league</h4>";
+    } else if (isset($ineligible[$team])) {
+        /*
+         * The rule that keeps the pool honest, enforced where it counts. The
+         * option is disabled in the dropdown, which stops a person clicking it
+         * and is worth nothing against a request that did not come from the
+         * dropdown. The reason is the same wording the list shows.
+         */
+        return "<h4>" . htmlspecialchars($ineligible[$team]) . ", so it cannot be picked this week</h4>";
     } else if (lp_picks_are_locked()) {
        return "<h4>Can't make a pick on Sunday or Monday</h4>";
     } else if (0 != ($create_ecode = $store->savePick($user, $team, $week_number))) {
