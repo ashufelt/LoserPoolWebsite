@@ -110,6 +110,54 @@ flyctl deploy --remote-only
 One machine with SQLite on a mounted volume. **SQLite pins this to a single
 machine** - a volume attaches to one machine, so do not scale past one.
 
+### Backups
+
+Two layers, because they fail differently.
+
+**Daily copy on the volume.** `.github/workflows/backup.yml` runs
+`bin/backup.php` at 09:00 UTC, which writes `/data/backups/pool-<timestamp>.sqlite`
+and keeps the last 14. It uses `VACUUM INTO` rather than a file copy: Apache is
+serving the database while this runs, and copying a live SQLite file can catch
+it mid-write and produce something that will not open. The tool reopens what it
+wrote and counts rows before rotating anything away, and the workflow fails if
+that line is missing -- a backup job that goes quietly wrong is worse than none,
+because it gets believed.
+
+This is the layer that survives a mistake: a bad `bin/` command, a delete that
+took more than it should.
+
+**Fly volume snapshots.** Scheduled, 30 day retention. This is the layer that
+survives losing the volume, which the daily copy cannot, because the daily copy
+is on the volume.
+
+```
+fly volumes snapshots list vol_vly92gyq5n7owp84    # what exists
+fly volumes snapshots create vol_vly92gyq5n7owp84  # one now, before something risky
+```
+
+Backups are deliberately not workflow artifacts. This repository is public and
+the database holds every player's email address and PIN hash.
+
+**To restore a daily copy**, over the live database:
+
+```
+fly ssh console --app loser-pool-2026 -C "php bin/backup.php --list"
+fly ssh console --app loser-pool-2026
+  cp /data/backups/pool-<timestamp>.sqlite /data/pool.sqlite
+  chown www-data:www-data /data/pool.sqlite
+```
+
+**To restore a snapshot**, `fly volumes fork <snapshot-id>` creates a new volume
+from it, which then has to be attached in place of the current one. That is a
+bigger operation and loses anything written since; reach for the daily copy
+first.
+
+**To pull one off Fly entirely**, before something risky:
+
+```
+fly ssh sftp get /data/pool.sqlite ./pool-$(date +%F).sqlite --app loser-pool-2026
+```
+
 ## Rolling over to a new season
 
 Edit `src/Pool/SeasonConfig.php`: `YEAR`, `TABLE_SUFFIX` (the last two digits
