@@ -1,0 +1,492 @@
+{
+    "generated_at": "2026-08-29T03:55:25+00:00",
+    "season": {
+        "type": 2,
+        "year": 2026
+    },
+    "week": {
+        "number": 1
+    },
+    "events": [
+        {
+            "id": "401872656",
+            "date": "2026-09-10T00:20Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Seattle Seahawks"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "New England Patriots"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872657",
+            "date": "2026-09-11T00:35Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Los Angeles Rams"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "San Francisco 49ers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872925",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Cincinnati Bengals"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Tampa Bay Buccaneers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872923",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Detroit Lions"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "New Orleans Saints"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872924",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Tennessee Titans"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "New York Jets"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872659",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Indianapolis Colts"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Baltimore Ravens"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872658",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Pittsburgh Steelers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Atlanta Falcons"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872661",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Carolina Panthers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Chicago Bears"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872922",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Jacksonville Jaguars"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Cleveland Browns"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872660",
+            "date": "2026-09-13T17:00Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Houston Texans"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Buffalo Bills"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872928",
+            "date": "2026-09-13T20:25Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Las Vegas Raiders"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Miami Dolphins"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872927",
+            "date": "2026-09-13T20:25Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Minnesota Vikings"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Green Bay Packers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872929",
+            "date": "2026-09-13T20:25Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Philadelphia Eagles"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Washington Commanders"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872926",
+            "date": "2026-09-13T20:25Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Los Angeles Chargers"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Arizona Cardinals"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872930",
+            "date": "2026-09-14T00:20Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "New York Giants"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Dallas Cowboys"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "401872931",
+            "date": "2026-09-15T00:15Z",
+            "competitions": [
+                {
+                    "status": {
+                        "type": {
+                            "name": "STATUS_SCHEDULED",
+                            "completed": false
+                        }
+                    },
+                    "competitors": [
+                        {
+                            "team": {
+                                "displayName": "Kansas City Chiefs"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        },
+                        {
+                            "team": {
+                                "displayName": "Denver Broncos"
+                            },
+                            "winner": null,
+                            "score": "0"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

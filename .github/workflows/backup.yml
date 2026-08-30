@@ -1,0 +1,44 @@
+name: backup
+
+# A daily copy of the pool database, kept on the volume beside it.
+#
+# This is the layer that survives a mistake: a bad bin/ command, a delete that
+# took more than it should. It does not survive losing the volume, because it
+# lives on the volume -- Fly's scheduled snapshots are the layer for that, and
+# the two are meant to be held together.
+#
+# Deliberately not a workflow artifact. This repository is public, and the
+# database holds every player's email address and PIN hash.
+on:
+  schedule:
+    # 09:00 UTC, which is before anyone is picking on a Tuesday morning.
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # The app scales to zero, and `fly ssh console` cannot reach a stopped
+      # machine. A request wakes it; without this the job fails on any day
+      # nobody happened to visit the site first.
+      - name: Wake the machine
+        run: curl -sS --max-time 60 -o /dev/null https://loser-pool-2026.fly.dev/health.php
+
+      - name: Write a backup
+        run: flyctl ssh console --app loser-pool-2026 -C "php /var/www/bin/backup.php" | tee out.txt
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      # bin/backup.php reopens what it wrote and counts rows, so a line here
+      # means a file that is a database rather than zero bytes with the right
+      # name. Fail loudly: a backup job that goes quietly wrong is worse than
+      # no backup job, because it is believed.
+      - name: Confirm it wrote something readable
+        run: grep -qE 'pool-[0-9-]+\.sqlite +[0-9,]+ bytes +[0-9]+ user' out.txt

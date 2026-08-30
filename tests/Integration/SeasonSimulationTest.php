@@ -1,0 +1,381 @@
+<?php
+
+namespace LoserPool\Tests\Integration;
+
+use LoserPool\Nfl\Teams;
+use LoserPool\Storage\SqliteStore;
+use LoserPool\Tests\AssertsTeamOptions;
+use LoserPool\Tests\FakeScheduleSource;
+use LoserPool\Tests\SeasonBuilder;
+use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/../../src/Handlers/pick_handler.php';
+require_once __DIR__ . '/../../src/Handlers/user_handler.php';
+require_once __DIR__ . '/../../src/Handlers/team_handler.php';
+
+use function PickHandling\ph_add_pick;
+use function PickHandling\ph_get_picks_html_table;
+use function UserHandling\uh_get_user_option_list_html;
+use function UserHandling\uh_add_user;
+use function TeamHandler\get_team_options_html;
+
+/*
+ * Plays a season through the real handlers, week by week.
+ *
+ * Every other test looks at one rule in isolation. This one asks whether the
+ * rules behave when they interact and the calendar moves: players accumulate
+ * picks, weeks finish, the field thins, and what the page renders has to keep
+ * up. Nothing here is stubbed except the clock, the schedule and the database.
+ *
+ * It is the closest thing to watching a season happen without waiting for one.
+ */
+final class SeasonSimulationTest extends TestCase
+{
+    use AssertsTeamOptions;
+
+    private const PIN = '1234';
+
+    private SqliteStore $store;
+
+    /** @var array<int,\LoserPool\Nfl\Schedule> */
+    private array $weeks = [];
+
+    protected function setUp(): void
+    {
+        $this->store = SqliteStore::open(':memory:', '26');
+        lp_store($this->store);
+        $this->weeks = [];
+    }
+
+    protected function tearDown(): void
+    {
+        lp_clock(null, true);
+    }
+
+    /* Move to a week, with the schedules of every week so far still known. */
+    private function enterWeek(int $week, string $dayOfWeek = 'tuesday'): void
+    {
+        $when = $dayOfWeek === 'sunday' ? SeasonBuilder::sunday($week) : SeasonBuilder::tuesday($week);
+        lp_clock($when->setTime(10, 0));
+
+        lp_schedule_source(new FakeScheduleSource(
+            $this->weeks,
+            ['year' => 2026, 'seasonType' => 2, 'week' => $week]
+        ));
+    }
+
+    /* Record how a week finished, then re-enter so results are visible. */
+    private function settleWeek(int $week, array $losers, int $nowWeek): void
+    {
+        $this->weeks[$week] = SeasonBuilder::week($week, $losers, true);
+        $this->enterWeek($nowWeek);
+    }
+
+    private function openWeek(int $week, array $thursdayTeams = []): void
+    {
+        $this->weeks[$week] = SeasonBuilder::week($week, [], false, $thursdayTeams);
+        $this->enterWeek($week);
+    }
+
+    private function register(string $username): void
+    {
+        uh_add_user('Player', $username . '@example.com', $username, self::PIN, self::PIN);
+    }
+
+    private function pick(string $username, string $team): string
+    {
+        return ph_add_pick($username, $team, self::PIN);
+    }
+
+    private function survivors(): int
+    {
+        $table = ph_get_picks_html_table();
+        preg_match('/<strong>(\d+)<\/strong> still in/', $table, $matches);
+        return (int) ($matches[1] ?? -1);
+    }
+
+    /*
+     * Four players, four weeks, the field thinning as picks fail.
+     *
+     * The point is the interaction: eliminations must follow from results
+     * alone, with nobody marking anyone out.
+     */
+    public function testAFieldThinsOutOverASeasonWithNoIntervention(): void
+    {
+        $teams = Teams::all();
+        [$aTeam, $bTeam, $cTeam, $dTeam] = [$teams[0], $teams[2], $teams[4], $teams[6]];
+
+        foreach (['alice', 'bob', 'carol', 'dave'] as $player) {
+            $this->register($player);
+        }
+
+        /* Week 1: everyone picks a different team. */
+        $this->openWeek(1);
+        $this->pick('alice', $aTeam);
+        $this->pick('bob', $bTeam);
+        $this->pick('carol', $cTeam);
+        $this->pick('dave', $dTeam);
+        $this->assertSame(4, $this->survivors(), 'nothing has been played yet');
+
+        /* Alice and Bob picked losers, so they survive. Carol and Dave did not. */
+        $this->settleWeek(1, [$aTeam, $bTeam], 2);
+        $this->assertSame(2, $this->survivors());
+
+        /* Week 2: the two survivors pick again. */
+        $this->openWeek(2);
+        $this->pick('alice', $teams[8]);
+        $this->pick('bob', $teams[10]);
+        $this->settleWeek(2, [$teams[8]], 3);
+        $this->assertSame(1, $this->survivors(), 'Bob backed a winner and is out');
+
+        /* Week 3: Alice alone, and she keeps going. */
+        $this->openWeek(3);
+        $this->pick('alice', $teams[12]);
+        $this->settleWeek(3, [$teams[12]], 4);
+        $this->assertSame(1, $this->survivors());
+
+        $standings = ph_get_picks_html_table();
+        $this->assertStringContainsString('Still in', $standings);
+        $this->assertStringContainsString('Out &middot; wk 1', $standings, 'carol and dave went out in week 1');
+        $this->assertStringContainsString('Out &middot; wk 2', $standings, 'bob went out in week 2');
+    }
+
+    /*
+     * The username list leads with the players who are still in. Eliminated
+     * players stay on it, labelled: removing them reads as a lost
+     * registration, and a week-one buy-back is recorded by hand afterwards, so
+     * removal would lock a player who has paid to stay in out of picking until
+     * the commissioner got round to it.
+     */
+    public function testTheUsernameListPutsEliminatedPlayersLastAndLabelsThem(): void
+    {
+        $teams = Teams::all();
+
+        $this->register('alice');
+        $this->register('zeb');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->pick('zeb', $teams[2]);
+        /* Zeb backed a winner, so he is out despite sorting last already. */
+        $this->settleWeek(1, [$teams[0]], 2);
+
+        $options = uh_get_user_option_list_html();
+
+        $this->assertStringContainsString('zeb (out', $options);
+        $this->assertStringNotContainsString('alice (out', $options);
+        $this->assertLessThan(
+            strpos($options, 'zeb'),
+            strpos($options, 'alice'),
+            'players still in come first'
+        );
+    }
+
+    /*
+     * Nothing stops an eliminated player from picking again, and people do.
+     * Scoring those picks put a row of green survival ticks next to a status
+     * of "Out", which reads as though the player is still alive.
+     */
+    public function testPicksMadeAfterEliminationAreNotScored(): void
+    {
+        $teams = Teams::all();
+
+        $this->register('alice');
+        $this->register('bob');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->pick('bob', $teams[2]);
+        /* Bob backed a winner in week 1 and did not buy back, so he is out. */
+        $this->settleWeek(1, [$teams[0]], 2);
+        $this->assertSame(1, $this->survivors());
+
+        /* Both pick a loser in week 2. Only Alice's counts. */
+        $this->openWeek(2);
+        $this->pick('alice', $teams[4]);
+        $this->pick('bob', $teams[6]);
+        $this->settleWeek(2, [$teams[4], $teams[6]], 3);
+
+        $table = ph_get_picks_html_table();
+
+        $this->assertStringContainsString('pick-void', $table, "Bob's week 2 pick is shown but not scored");
+        $this->assertSame(2, substr_count($table, 'res-correct'), 'only alice scores in weeks 1 and 2');
+        $this->assertStringContainsString($teams[6], $table, 'the pick itself is still listed');
+        $this->assertSame(1, $this->survivors(), 'a later pick cannot bring an eliminated player back');
+    }
+
+    /* The no-repeat rule has to hold across the whole season, not one week. */
+    public function testATeamCannotBeReusedLaterInTheSeason(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->settleWeek(1, [$teams[0]], 2);
+
+        $this->openWeek(2);
+        $this->assertStringContainsString('Cannot repeat', $this->pick('alice', $teams[0]));
+
+        /* And the dropdown shows it greyed out, naming the week it was used. */
+        $this->assertTeamUnavailable(get_team_options_html('alice'), $teams[0], 'Used in week 1');
+    }
+
+    /* A tie ends a season, because a team that tied did not lose. */
+    public function testATieEliminatesMidSeason(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+
+        $this->weeks[1] = SeasonBuilder::weekWithTie(1, $teams[0], $teams[1]);
+        $this->enterWeek(2);
+
+        $this->assertSame(0, $this->survivors());
+        $this->assertStringContainsString('Out &middot; wk 1', ph_get_picks_html_table());
+    }
+
+    /*
+     * A week 1 buy-back brings a player back, and only for week 1.
+     */
+    public function testABuybackRestoresAPlayerForWeekOneOnly(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->settleWeek(1, [$teams[1]], 2);
+        $this->assertSame(0, $this->survivors(), 'her team won, so she is out');
+
+        $this->store->grantBuyback('alice');
+        $this->assertSame(1, $this->survivors(), 'and back in after buying back');
+
+        /* Week 2 is not forgiven. */
+        $this->openWeek(2);
+        $this->pick('alice', $teams[2]);
+        $this->settleWeek(2, [$teams[3]], 3);
+        $this->assertSame(0, $this->survivors());
+        $this->assertStringContainsString('Out &middot; wk 2', ph_get_picks_html_table());
+    }
+
+    /* Results colour in as weeks finish, and only for weeks that finished. */
+    public function testResultsAppearOnlyOnceAWeekHasFinished(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+
+        /* Before the slate, other players' picks are concealed entirely. */
+        $this->assertStringContainsString('Submitted', ph_get_picks_html_table());
+
+        $this->settleWeek(1, [$teams[0]], 2);
+        $table = ph_get_picks_html_table();
+        $this->assertStringContainsString('res-correct', $table);
+        $this->assertStringNotContainsString('res-wrong', $table);
+
+        /* Week 2 is picked but unplayed, so it stays uncoloured. */
+        $this->openWeek(2);
+        $this->pick('alice', $teams[2]);
+        $this->enterWeek(2, 'sunday');
+        $table = ph_get_picks_html_table();
+        $this->assertSame(1, substr_count($table, 'res-correct'), 'only week 1 has a result');
+    }
+
+    /* Picks lock on Sunday, in every week of the season including January. */
+    public function testPicksLockOnSundayThroughoutTheSeason(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        foreach ([1, 10, 18] as $index => $week) {
+            $this->openWeek($week);
+            $this->assertStringContainsString(
+                'Pick recorded',
+                $this->pick('alice', $teams[$index * 2]),
+                "week $week should accept a pick on Tuesday"
+            );
+
+            $this->enterWeek($week, 'sunday');
+            $this->assertStringContainsString(
+                "Picks are locked",
+                $this->pick('alice', $teams[$index * 2 + 1]),
+                "week $week should be locked on Sunday"
+            );
+        }
+    }
+
+    /* Teams playing before the deadline stay out of the dropdown all season. */
+    public function testEarlyKickoffTeamsAreBlockedInAnyWeek(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(7, [$teams[0], $teams[1]]);
+        $options = get_team_options_html('alice');
+
+        $this->assertTeamUnavailable($options, $teams[0], 'Plays Thursday');
+        $this->assertTeamUnavailable($options, $teams[1], 'Plays Thursday');
+        $this->assertTeamSelectable($options, $teams[2]);
+    }
+
+    /*
+     * The endgame the pot-split rule depends on: the count has to be right
+     * when it reaches four.
+     */
+    public function testTheSurvivorCountIsCorrectWhenTheFieldReachesFour(): void
+    {
+        $teams = Teams::all();
+        /* Three characters minimum: the same rule the registration form states. */
+        $players = ['pl1', 'pl2', 'pl3', 'pl4', 'pl5', 'pl6'];
+        foreach ($players as $player) {
+            $this->register($player);
+        }
+
+        $this->openWeek(1);
+        foreach ($players as $index => $player) {
+            $this->pick($player, $teams[$index * 2]);
+        }
+
+        /* The first four picked losers; the last two did not. */
+        $this->settleWeek(1, [$teams[0], $teams[2], $teams[4], $teams[6]], 2);
+
+        $this->assertSame(4, $this->survivors());
+        $this->assertStringContainsString('<strong>4</strong> still in of 6', ph_get_picks_html_table());
+    }
+
+    /*
+     * The table showed a sliding window of the last eight weeks, so from week
+     * nine onwards the early season fell off the left edge: the week 1 column
+     * went first, taking with it the pick that eliminated most of the field.
+     * Both things this asserts were invisible on the deployed page in week 9.
+     */
+    public function testTheTableStillShowsWeekOneLateInTheSeason(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->settleWeek(1, [$teams[0]], 2);
+
+        /* Play on until the old eight week window would have dropped week 1. */
+        for ($week = 2; $week <= 10; $week++) {
+            $this->openWeek($week);
+            $this->pick('alice', $teams[$week * 2]);
+            $this->settleWeek($week, [$teams[$week * 2]], $week + 1);
+        }
+
+        $this->enterWeek(11);
+        $table = ph_get_picks_html_table();
+
+        $this->assertStringContainsString('Week 1<', $table, 'week 1 column');
+        $this->assertStringContainsString('Week 11<', $table, 'the current week');
+        $this->assertStringNotContainsString('Week 12<', $table, 'weeks not yet played');
+        $this->assertStringContainsString($teams[0], $table, "alice's week 1 pick");
+    }
+}

@@ -1,215 +1,1052 @@
 /*
- * Color palette
- * #040707 : Basically black
- * #od2a2e : Gunmetal green
- * #0d4851 : Midnight Green
- * #4590A1 : Blue (Munsell)
- * #8abecf : Sky Blue
- * #bcdde8 : Light Blue 
- * #e3e5e6 : Platinum
+ * Loser Pool.
+ *
+ * Mobile first: the base rules describe a phone, one breakpoint at 48em adds
+ * the wider layout. Most visits are somebody on a phone making one pick.
+ *
+ * Theming has three states. An explicit choice sets data-theme on the root;
+ * the default sets nothing and follows prefers-color-scheme. So every colour is
+ * defined once on bare :root, then redefined in the media query (guarded so an
+ * explicit light choice still wins) and again under [data-theme="dark"].
  */
 
+/* ---------------------------------------------------------------- tokens */
+
 :root {
-    --text-black: #040707;
-    --text-green: #0d2a2e;
-    --banner-bg:  #0d4851;
-    --munsell-bl: #4590a1;
-    --row-hvr: #8abecf;
-    --row-hl: #a3bbbf;
-    --plat-bg: #e3e5e6;
+    --midnight: #0d4851;
+    --gunmetal: #0d2a2e;
+    --munsell: #4590a1;
+
+    --page-bg: #eef1f2;
+    --page-tint: #dfe6e8;
+    --surface: #ffffff;
+    --surface-sunken: #f4f7f8;
+    --surface-raised: #ffffff;
+    --border: #d7e0e2;
+    --border-strong: #b3c3c7;
+
+    --text: #0e1a1d;
+    --text-muted: #536367;
+    --header-text: #eef6f7;
+
+    --header-from: #0d4851;
+    --header-to: #123037;
+
+    --accent: #0d4851;
+    --accent-text: #f2f9fa;
+    --accent-hover: #16606d;
+
+    --ok-bg: #d9f0de;
+    --ok-text: #14532d;
+    --ok-border: #7cc294;
+    --bad-bg: #fadedd;
+    --bad-text: #7f1d1d;
+    --bad-border: #e09b9b;
+
+    --shadow-sm: 0 1px 2px rgba(13, 42, 46, 0.06);
+    --shadow: 0 1px 3px rgba(13, 42, 46, 0.07), 0 8px 24px -12px rgba(13, 42, 46, 0.18);
+    --shadow-pop: 0 12px 40px -8px rgba(13, 42, 46, 0.35);
+
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-5: 1.5rem;
+    --sp-6: 2rem;
+    --sp-7: 3rem;
+
+    --radius: 16px;
+    --radius-sm: 10px;
+    --tap: 2.75rem;
+    /*
+     * One height for every control on the pick form. The username select, the
+     * PIN box and the team picker button sit side by side, and each was sizing
+     * itself: 44px, 46px and 44px, which is enough to make three labels sit on
+     * three baselines and read as three unrelated widgets.
+     */
+    --control-h: 2.75rem;
+}
+
+/*
+ * Dark is not an inversion. Surfaces stay a desaturated teal so the pool keeps
+ * its identity, and the result colours are chosen again rather than reused:
+ * the light tints are far too bright against a dark ground.
+ */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --page-bg: #0a1315;
+        --page-tint: #0d1a1d;
+        --surface: #142327;
+        --surface-sunken: #101d20;
+        --surface-raised: #1a2f34;
+        --border: #23383d;
+        --border-strong: #334c52;
+
+        --text: #e8f0f2;
+        --text-muted: #9cb0b5;
+        --header-text: #e8f0f2;
+
+        --header-from: #102a30;
+        --header-to: #0a1719;
+
+        --accent: #57a3b4;
+        --accent-text: #05161a;
+        --accent-hover: #74bccc;
+
+        --ok-bg: #143520;
+        --ok-text: #a9e2ba;
+        --ok-border: #2d6d41;
+        --bad-bg: #3c1717;
+        --bad-text: #f4b3b3;
+        --bad-border: #7c3030;
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+        --shadow-pop: 0 12px 40px -8px rgba(0, 0, 0, 0.8);
+    }
+}
+
+:root[data-theme="dark"] {
+    --page-bg: #0a1315;
+    --page-tint: #0d1a1d;
+    --surface: #142327;
+    --surface-sunken: #101d20;
+    --surface-raised: #1a2f34;
+    --border: #23383d;
+    --border-strong: #334c52;
+
+    --text: #e8f0f2;
+    --text-muted: #9cb0b5;
+    --header-text: #e8f0f2;
+
+    --header-from: #102a30;
+    --header-to: #0a1719;
+
+    --accent: #57a3b4;
+    --accent-text: #05161a;
+    --accent-hover: #74bccc;
+
+    --ok-bg: #143520;
+    --ok-text: #a9e2ba;
+    --ok-border: #2d6d41;
+    --bad-bg: #3c1717;
+    --bad-text: #f4b3b3;
+    --bad-border: #7c3030;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+    --shadow-pop: 0 12px 40px -8px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------------------------------------------------------------- basics */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 * {
-    margin:0px;
+    margin: 0;
 }
 
-html { 
-    font-family: helvetica, arial, sans-serif;
+html {
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
     font-size: 16px;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-    box-sizing: border-box;
-    background-color: var(--plat-bg);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    border: 10px solid var(--text-green);
+    color: var(--text);
+    line-height: 1.55;
+    /* A faint wash rather than a flat fill, so the cards sit on something. */
+    background:
+        radial-gradient(1200px 600px at 50% -10%, var(--page-tint), transparent 70%),
+        var(--page-bg);
+    background-attachment: fixed;
 }
 
 main {
-    color: var(--text-black);
-    padding: 1em;
-    height: auto;
+    flex: 1;
+    width: 100%;
+    max-width: 66rem;
+    margin: 0 auto;
+    padding: var(--sp-5) var(--sp-4) var(--sp-7);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
 }
 
 h1 {
-    font-size: 3em;
-    color: var(--text-black);
+    font-size: clamp(1.45rem, 4.5vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 800;
 }
 
 h2 {
-    font-size: 2em;
+    font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    font-weight: 700;
 }
 
-h3, h4 {
-    font-size: 1.5em;
-    padding-bottom: 0.25em;
+a {
+    color: var(--accent);
 }
 
-p {
-    font-size: 1em;
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.875em;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.08em 0.4em;
 }
 
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
+:focus-visible {
+    outline: 2px solid var(--munsell);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
 }
 
-td, th {
-    text-align: left;
-    padding: 0.25em;
+/* ---------------------------------------------------------------- header */
+
+.banner {
+    background: linear-gradient(135deg, var(--header-from), var(--header-to));
+    color: var(--header-text);
+    padding: var(--sp-4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-div.banner {
-    background-color: var(--banner-bg);
-    text-align: center;
-    color: var(--plat-bg);
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-div.banner > h1 {
-    color: var(--plat-bg);
-}
-
-div.pick_adding{
-    margin-bottom: 0.5em;
-}
-
-div.pick_adding > form{
-    display: inline-block;
-    vertical-align: baseline;
-}
-
-footer { 
-    margin-top: auto;
-    background-color: var(--banner-bg);
-    color: var(--plat-bg);
-    min-height: 10%;
-    text-align: center;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
+.banner-inner {
+    max-width: 66rem;
+    margin: 0 auto;
     display: flex;
-    justify-content:space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
 }
 
-footer > p {
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+.banner h1 {
+    color: var(--header-text);
 }
 
-table.user_adding {
-    font-family: arial, sans-serif;
-    border: none;
+.banner-year {
+    opacity: 0.55;
+    font-weight: 500;
 }
 
-td.user_adding {
-    width: 13em;
-    border:none;
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    color: var(--header-text);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-p.user_adding {
-    font-size: 12px;
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.cell_display_right {
-    text-align: right;
+.theme-icon {
+    font-size: 0.95rem;
+    line-height: 1;
 }
 
-.cell_display_left {
-    text-align: left;
+/* ----------------------------------------------------------------- cards */
+
+.card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--sp-5);
 }
 
-table.pick_table {
-    margin-top: 0.5em;
-    width: auto;
-    border: 2px solid var(--text-green);
+/*
+ * The pick form is why people are here, so it gets the accent edge.
+ *
+ * Deliberately not `overflow: hidden` to clip that bar to the rounded corners:
+ * this card contains the team picker, whose popup is absolutely positioned and
+ * would be cut off at the card boundary. The bar carries its own radius
+ * instead.
+ */
+.card-primary {
+    position: relative;
 }
 
-tr.pickcolumn1 {
-    border-left: 2px solid var(--text-green);
-    border-right: 2px solid var(--text-green);
+.card-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: linear-gradient(90deg, var(--accent), var(--munsell));
 }
 
-th.pickHeader {
-    text-align:center;
-    width:12em;
-    border:2px solid var(--text-green);
-    font-weight: bold;
+.card h2 {
+    margin-bottom: var(--sp-2);
 }
 
-th.pickcolumn1 {
-    width:8em;
-    border:2px solid var(--text-green);
-    font-weight: bold;
+.card h2 + .hint {
+    margin-top: 0;
+    margin-bottom: var(--sp-5);
 }
 
-td.pickcolumn1 {
-    font-weight: bold;
+.grid-two {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
 }
 
-tr.pick_table:nth-child(even) {
-    background-color: var(--row-hl);
-}
+/* ----------------------------------------------------------------- forms */
 
-tr.pick_table:hover {
-    background-color: var(--row-hvr);
-}
-
-th.pick_table, td.pick_table {
-    border: 1px solid var(--text-green);
-}
-
-div.users_picks {
-    margin-top:0.5em;
+.field {
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-5);
+}
+
+.field-row {
+    display: flex;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+}
+
+.field-row .field {
+    flex: 1 1 8rem;
+}
+
+label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.field-note,
+.hint {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+.hint {
+    margin-top: var(--sp-4);
+}
+
+/* 16px is not stylistic: iOS zooms the viewport on a smaller focused input. */
+input,
+select,
+button {
+    font: inherit;
+    font-size: 16px;
+    max-width: 100%;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    height: var(--control-h);
+    padding: 0.6rem var(--sp-3);
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/*
+ * The username control is a real <select>, and the team control is the
+ * enhanced picker drawn over one. Left alone they render as an OS widget next
+ * to a bespoke one. Dropping the platform appearance and drawing the same
+ * chevron in .select-shell below makes the pair read as one control family;
+ * the select is still a select, so it keeps its native popup and keyboard.
+ */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    font-weight: 600;
+    padding-right: var(--sp-6);
+}
+
+/* The chevron lives on the wrapper because htmx replaces the select itself. */
+.select-shell {
+    position: relative;
+}
+
+.select-shell::after {
+    content: "\25BE";
+    position: absolute;
+    top: 50%;
+    right: var(--sp-3);
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+input:hover,
+select:hover {
+    border-color: var(--munsell);
+}
+
+input:focus-visible,
+select:focus-visible {
+    border-color: var(--munsell);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--munsell) 25%, transparent);
+}
+
+.field-narrow input {
+    max-width: 7.5rem;
+    letter-spacing: 0.3em;
+    font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Where a form says what happened. Both states carry a word as well as a
+ * colour, and the panel only exists once there is something to say, so an
+ * empty status region takes up no room.
+ */
+.form-status {
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    margin-bottom: var(--sp-4);
+}
+
+.form-status-ok {
+    background: var(--ok-bg);
+    border-color: var(--ok-border);
+    color: var(--ok-text);
+}
+
+.form-status-bad {
+    background: var(--bad-bg);
+    border-color: var(--bad-border);
+    color: var(--bad-text);
+}
+
+#register-status:not(:empty) {
+    margin-bottom: var(--sp-4);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+}
+
+.btn {
+    min-height: var(--tap);
+    padding: 0.6rem var(--sp-5);
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.06s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--accent);
+    border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+    background-color: var(--surface-sunken);
+    border-color: var(--munsell);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* --------------------------------------------------------- team picker */
+
+/*
+ * A native select cannot render images in its options, and a crest is the
+ * fastest way to recognise a team. The select stays in the DOM as the form
+ * control and the no-JS fallback; teampicker.js draws this over it.
+ */
+.teampicker {
+    position: relative;
+}
+
+.teampicker-button {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    width: 100%;
+    height: var(--control-h);
+    padding: 0.5rem var(--sp-3);
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.teampicker-button:hover {
+    border-color: var(--munsell);
+}
+
+.teampicker-button[aria-expanded="true"] {
+    border-color: var(--munsell);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--munsell) 25%, transparent);
+}
+
+.teampicker-value {
+    flex: 1;
+    font-weight: 600;
+}
+
+.teampicker-chevron {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/*
+ * display:flex beats the browser's [hidden] rule, so the popup was painted at
+ * all times: a permanently open panel holding an empty search box, sitting
+ * under the button and reading as a second, broken dropdown. It must lose to
+ * [hidden].
+ */
+.teampicker-popup[hidden] {
+    display: none;
+}
+
+.teampicker-popup {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-pop);
+    padding: var(--sp-2);
+    max-height: 20rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+}
+
+.teampicker-search {
+    height: 2.5rem;
+}
+
+.teampicker-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.teampicker-option {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: 0.5rem var(--sp-3);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 550;
+    /* Club colour as a leading edge. Decorative only: several clubs share a
+       near-identical primary, so it never carries meaning by itself. */
+    border-left: 3px solid var(--club, transparent);
+}
+
+.teampicker-option:hover,
+.teampicker-option.is-active {
+    background: var(--surface-sunken);
+}
+
+.teampicker-option[aria-selected="true"] {
+    background: color-mix(in srgb, var(--munsell) 16%, transparent);
+}
+
+.teampicker-option-name {
+    flex: 1;
+}
+
+/*
+ * Unavailable teams stay listed rather than disappearing, so the reason is
+ * visible. Dimmed and non-interactive, with the club colour edge dropped so
+ * they read as inactive at a glance.
+ */
+.teampicker-option.is-unavailable {
+    cursor: not-allowed;
+    border-left-color: transparent;
+    background: transparent;
+}
+
+.teampicker-option.is-unavailable .teampicker-option-name,
+.teampicker-option.is-unavailable .team-crest {
+    opacity: 0.42;
+}
+
+.teampicker-option.is-unavailable:hover {
+    background: transparent;
+}
+
+.teampicker-reason {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    white-space: nowrap;
+}
+
+/* The native control, for anyone without the enhanced picker. */
+select option:disabled {
+    color: var(--text-muted);
+}
+
+/*
+ * Eliminated players. Honoured on the desktop browsers that style options at
+ * all and ignored on iOS, which is why the grouping does the real work.
+ */
+select option[data-out] {
+    color: var(--text-muted);
+}
+
+.teampicker-empty {
+    list-style: none;
+    padding: var(--sp-3);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* ------------------------------------------------------- registration */
+
+.register-disclosure summary {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    list-style: none;
+    user-select: none;
 }
 
-table.users_picks {
-    border : 2px solid var(--text-green);
+.register-disclosure summary::-webkit-details-marker {
+    display: none;
 }
 
-th.users_picks, td.users_picks{
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid var(--text-green);
-}
-
-.hidepicks {
+.register-disclosure summary::after {
+    content: "+";
+    font-weight: 700;
     margin-left: 0.5em;
 }
 
-.grid-container-upper {
-    display:grid;
-    grid-template-columns: 50% 50%;
+.register-disclosure[open] summary::after {
+    content: "\2212";
 }
 
- grid-container-right-upper {
-    display:grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 2em auto;
- }
+.register-disclosure[open] summary {
+    margin-bottom: var(--sp-5);
+}
 
- p.instruction {
-    font-weight: bold;
-    margin: 0.2em;
- }
+/* ----------------------------------------------------------------- rules */
 
- .instruction-bullets { 
-    margin: 0.2em;
- }
+.rules {
+    padding-left: 1.1rem;
+    font-size: 0.9375rem;
+}
+
+.rules li + li {
+    margin-top: var(--sp-3);
+}
+
+.rules li::marker {
+    color: var(--munsell);
+}
+
+/* ------------------------------------------------------------- crests */
+
+.team-crest {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 0.45em;
+    flex: none;
+}
+
+.teampicker .team-crest {
+    margin-right: 0;
+}
+
+.team-name {
+    vertical-align: middle;
+}
+
+/* ---------------------------------------------------------- standings */
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+td,
+th {
+    text-align: left;
+    padding: 0.7rem var(--sp-3);
+}
+
+#picks_table {
+    overflow-x: auto;
+    /*
+     * Explicitly not auto. Leaving the vertical axis scrollable makes the
+     * table a nested scrollport that takes the vertical drag on a phone and
+     * answers it by sliding sideways, which is most of what "the page jitters
+     * while I scroll" is. It has no vertical overflow to show anyway.
+     */
+    overflow-y: hidden;
+    /* A horizontal fling that reaches the end stays here rather than turning
+       into a page scroll or a back-navigation gesture. */
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    /*
+     * Positioned so it is the containing block for the absolutely positioned
+     * .visually-hidden labels in the result cells. Without this they resolve
+     * against the page instead, so a table far wider than the phone leaves
+     * 1px boxes hundreds of pixels off screen that the scroll container
+     * cannot clip. The page then scrolls sideways and drifts under a thumb.
+     */
+    position: relative;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.standings-summary {
+    padding: var(--sp-4) var(--sp-5) var(--sp-2);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.standings-summary strong {
+    color: var(--text);
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+table.pick_table {
+    width: 100%;
+    font-variant-numeric: tabular-nums;
+}
+
+th.pickHeader,
+th.pickcolumn1 {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-strong);
+    background: var(--surface);
+}
+
+th.pickHeader {
+    text-align: center;
+    min-width: 7.5rem;
+}
+
+/*
+ * The player column is pinned: scrolling the weeks sideways without it means
+ * losing track of whose row you are reading.
+ */
+th.pickcolumn1,
+td.pickcolumn1 {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: var(--surface);
+    min-width: 8.5rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-strong);
+}
+
+tr.pick_table:nth-child(even) td,
+tr.pick_table:nth-child(even) td.pickcolumn1 {
+    background-color: var(--surface-sunken);
+}
+
+td.pick_table {
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    line-height: 1.35;
+}
+
+/*
+ * Results carry a glyph as well as a colour: colour alone excludes colour
+ * blind players, and these cells are the whole point of the table.
+ */
+.res-correct {
+    background-color: var(--ok-bg) !important;
+    color: var(--ok-text);
+    box-shadow: inset 3px 0 0 var(--ok-border);
+}
+
+.res-wrong {
+    background-color: var(--bad-bg) !important;
+    color: var(--bad-text);
+    box-shadow: inset 3px 0 0 var(--bad-border);
+}
+
+.res-mark {
+    font-weight: 800;
+    margin-right: 0.3em;
+}
+
+.pick-pending {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Nobody has picked here yet. Distinct from an empty cell, which used to mean
+   the same thing and looked like missing data. */
+.pick-none {
+    color: var(--text-muted);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.users_picks_heading {
+    width: 100%;
+    margin: 0 0 var(--sp-3);
+    font-size: 1.0625rem;
+}
+
+/* Shown, but not scored: this player was already out when they picked it. */
+.pick-void {
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+
+td.status-in {
+    color: var(--ok-text);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+td.status-out {
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+tr.player-out td.pickcolumn1 {
+    color: var(--text-muted);
+}
+
+/* A player's own picks, after "View my picks". */
+div.users_picks {
+    margin-bottom: var(--sp-5);
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    /* Same containing-block reason as #picks_table above. */
+    position: relative;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--sp-5);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--sp-4);
+}
+
+table.users_picks {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+th.users_picks,
+td.users_picks {
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th.users_picks {
+    color: var(--text-muted);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.hidepicks {
+    min-height: var(--tap);
+    padding: 0.6rem var(--sp-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--accent);
+    font-weight: 650;
+    cursor: pointer;
+}
+
+/* ------------------------------------------------------ status messages */
+
+/*
+ * The handlers return bare <h3>/<h4> strings as their only feedback channel,
+ * so they are styled as banners rather than headings.
+ */
+#both_tables_of_picks > h3,
+#both_tables_of_picks > h4,
+#picks_table > h4 {
+    font-size: 0.9375rem;
+    font-weight: 650;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--sp-4);
+    border: 1px solid var(--bad-border);
+    background-color: var(--bad-bg);
+    color: var(--bad-text);
+}
+
+#both_tables_of_picks > h3 {
+    border-color: var(--ok-border);
+    background-color: var(--ok-bg);
+    color: var(--ok-text);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+footer {
+    margin-top: auto;
+    background: linear-gradient(135deg, var(--header-from), var(--header-to));
+    color: var(--header-text);
+    padding: var(--sp-5) var(--sp-4);
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+footer a {
+    color: var(--header-text);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ------------------------------------------------------- wider screens */
+
+@media (min-width: 48em) {
+    main {
+        padding: var(--sp-6) var(--sp-5) var(--sp-7);
+        gap: var(--sp-6);
+    }
+
+    .card {
+        padding: var(--sp-6);
+    }
+
+    /* The rules are the long card, so they get the wider column. */
+    .grid-two {
+        grid-template-columns: 1.4fr 1fr;
+        gap: var(--sp-6);
+        align-items: start;
+    }
+
+    .pick-form {
+        display: grid;
+        grid-template-columns: 1fr 7rem 1.2fr;
+        gap: var(--sp-5);
+        align-items: end;
+    }
+
+    .pick-form .field {
+        margin-bottom: 0;
+    }
+
+    .pick-form .actions {
+        grid-column: 1 / -1;
+        margin-top: var(--sp-2);
+    }
+}
+
+/*
+ * Two short cards side by side, not one tall card beside a stub. The rules
+ * list is the tallest thing on the page and the card next to it is a single
+ * paragraph and a button, which left a column of dead space the height of a
+ * screen. Splitting the list in two once there is room to do it evens them up.
+ */
+@media (min-width: 75em) {
+    .rules {
+        columns: 2;
+        column-gap: var(--sp-6);
+    }
+
+    .rules li {
+        break-inside: avoid;
+    }
+
+    .rules li + li {
+        margin-top: 0;
+        margin-bottom: var(--sp-3);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+
+    .btn:active {
+        transform: none;
+    }
+}

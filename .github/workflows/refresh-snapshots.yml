@@ -1,0 +1,68 @@
+name: refresh snapshots
+
+# Committed snapshots are the offline fallback: if the host ever cannot reach
+# ESPN, they are what keeps byes and kickoff times correct. They go stale,
+# because late-season kickoff times are provisional -- weeks 16 to 18 carry
+# placeholder times and the NFL flexes games during the season, with week 18
+# effectively TBD until close to the date.
+#
+# Tuesday morning: after Monday night football, before picks open.
+on:
+  schedule:
+    - cron: '0 13 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-snapshots
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: json, curl
+          coverage: none
+
+      - name: Re-record the schedule from ESPN
+        run: php bin/refresh-snapshots.php
+
+      # Nothing changes most weeks, and an empty commit every Tuesday would
+      # bury the real history and trigger a pointless deploy each time.
+      - name: Commit only if the schedule actually moved
+        run: |
+          # Every run rewrites generated_at, so a plain diff is always dirty.
+          # Only a change to the schedule itself is worth a commit -- otherwise
+          # this buries real history under a weekly no-op and redeploys for
+          # nothing.
+          real_changes=$(git diff -U0 -- data/snapshots \
+            | grep -E '^[+-]' \
+            | grep -vE '^(\+\+\+|---)' \
+            | grep -v 'generated_at' \
+            | head -c 1)
+
+          if [ -z "$real_changes" ]; then
+            echo "Schedule unchanged; discarding timestamp-only churn."
+            git checkout -- data/snapshots
+            exit 0
+          fi
+
+          echo "Schedule changed:"
+          git diff --stat -- data/snapshots
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/snapshots
+          git commit -m "Refresh schedule snapshots
+
+          Kickoff times and byes re-recorded from ESPN. Late-season games get
+          flexed, so the committed offline fallback drifts from the real
+          schedule if it is left alone."
+          git push

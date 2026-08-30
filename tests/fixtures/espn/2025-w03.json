@@ -1,0 +1,491 @@
+{
+ "events": [
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "31",
+       "team": {
+        "displayName": "Buffalo Bills"
+       },
+       "winner": true
+      },
+      {
+       "score": "21",
+       "team": {
+        "displayName": "Miami Dolphins"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-19T00:15Z",
+   "id": "401772937"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "13",
+       "team": {
+        "displayName": "Cleveland Browns"
+       },
+       "winner": true
+      },
+      {
+       "score": "10",
+       "team": {
+        "displayName": "Green Bay Packers"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772842"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "20",
+       "team": {
+        "displayName": "Tennessee Titans"
+       },
+       "winner": false
+      },
+      {
+       "score": "41",
+       "team": {
+        "displayName": "Indianapolis Colts"
+       },
+       "winner": true
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772733"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "48",
+       "team": {
+        "displayName": "Minnesota Vikings"
+       },
+       "winner": true
+      },
+      {
+       "score": "10",
+       "team": {
+        "displayName": "Cincinnati Bengals"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772731"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "14",
+       "team": {
+        "displayName": "New England Patriots"
+       },
+       "winner": false
+      },
+      {
+       "score": "21",
+       "team": {
+        "displayName": "Pittsburgh Steelers"
+       },
+       "winner": true
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772732"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "33",
+       "team": {
+        "displayName": "Philadelphia Eagles"
+       },
+       "winner": true
+      },
+      {
+       "score": "26",
+       "team": {
+        "displayName": "Los Angeles Rams"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772839"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "29",
+       "team": {
+        "displayName": "Tampa Bay Buccaneers"
+       },
+       "winner": true
+      },
+      {
+       "score": "27",
+       "team": {
+        "displayName": "New York Jets"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772840"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "41",
+       "team": {
+        "displayName": "Washington Commanders"
+       },
+       "winner": true
+      },
+      {
+       "score": "24",
+       "team": {
+        "displayName": "Las Vegas Raiders"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772841"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "30",
+       "team": {
+        "displayName": "Carolina Panthers"
+       },
+       "winner": true
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Atlanta Falcons"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772838"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "17",
+       "team": {
+        "displayName": "Jacksonville Jaguars"
+       },
+       "winner": true
+      },
+      {
+       "score": "10",
+       "team": {
+        "displayName": "Houston Texans"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T17:00Z",
+   "id": "401772734"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "23",
+       "team": {
+        "displayName": "Los Angeles Chargers"
+       },
+       "winner": true
+      },
+      {
+       "score": "20",
+       "team": {
+        "displayName": "Denver Broncos"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T20:05Z",
+   "id": "401772735"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "44",
+       "team": {
+        "displayName": "Seattle Seahawks"
+       },
+       "winner": true
+      },
+      {
+       "score": "13",
+       "team": {
+        "displayName": "New Orleans Saints"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T20:05Z",
+   "id": "401772736"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "31",
+       "team": {
+        "displayName": "Chicago Bears"
+       },
+       "winner": true
+      },
+      {
+       "score": "14",
+       "team": {
+        "displayName": "Dallas Cowboys"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T20:25Z",
+   "id": "401772844"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "16",
+       "team": {
+        "displayName": "San Francisco 49ers"
+       },
+       "winner": true
+      },
+      {
+       "score": "15",
+       "team": {
+        "displayName": "Arizona Cardinals"
+       },
+       "winner": false
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-21T20:25Z",
+   "id": "401772843"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "9",
+       "team": {
+        "displayName": "New York Giants"
+       },
+       "winner": false
+      },
+      {
+       "score": "22",
+       "team": {
+        "displayName": "Kansas City Chiefs"
+       },
+       "winner": true
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-22T00:20Z",
+   "id": "401772920"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "30",
+       "team": {
+        "displayName": "Baltimore Ravens"
+       },
+       "winner": false
+      },
+      {
+       "score": "38",
+       "team": {
+        "displayName": "Detroit Lions"
+       },
+       "winner": true
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": true,
+       "name": "STATUS_FINAL"
+      }
+     }
+    }
+   ],
+   "date": "2025-09-23T00:15Z",
+   "id": "401772812"
+  }
+ ],
+ "season": {
+  "type": 2,
+  "year": 2025
+ },
+ "week": {
+  "number": 3
+ }
+}
