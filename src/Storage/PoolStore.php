@@ -39,6 +39,24 @@ interface PoolStore
     /** @return int one of OK, ERROR, USER_EXISTS */
     public function addUser(string $name, string $email, string $username, string $pin): int;
 
+    /*
+     * The address a player registered with, or null if there is no such
+     * player. Used only to check a PIN reset request against the registration;
+     * it is never rendered, because players were promised their address is not
+     * shown to anyone else.
+     */
+    public function emailFor(string $username): ?string;
+
+    /*
+     * Replaces a player's PIN.
+     *
+     * A reset rather than a reminder: PINs are stored as bcrypt hashes, so
+     * there is nothing to remind anyone of.
+     *
+     * @return int one of OK, ERROR, NO_SUCH_USER
+     */
+    public function setPin(string $username, string $pin): int;
+
     /** @return array<int,string> week number => team picked */
     public function picksFor(string $username): array;
 

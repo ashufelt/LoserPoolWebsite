@@ -99,7 +99,32 @@ flyctl deploy --remote-only
 ```
 
 One machine with SQLite on a mounted volume. **SQLite pins this to a single
-machine** — a volume attaches to one machine, so do not scale past one.
+machine** - a volume attaches to one machine, so do not scale past one.
+
+### Sending mail
+
+Only one thing sends mail: the "Forgot your PIN?" form, which mails a
+replacement. It is off unless both of these are set, and the form says so
+plainly rather than promising an email that will never arrive.
+
+```
+fly secrets set LP_RESEND_API_KEY=re_...
+fly secrets set LP_MAIL_FROM='Loser Pool <pool@your-domain>'
+```
+
+Resend over HTTPS rather than SMTP, for two reasons: Fly blocks outbound port
+25, and Composer is dev-only here, so there is no PHPMailer to lean on.
+
+`LP_MAIL_FROM` has to be an address Resend will send as. Their
+`onboarding@resend.dev` works with no DNS at all, but only delivers to the
+address that owns the Resend account, which makes it useful for checking the
+plumbing and useless for the pool. Sending to players needs a domain verified
+in Resend.
+
+A PIN cannot be mailed back to anyone, because PINs are stored as bcrypt
+hashes. The form replaces the PIN instead, and only after the provider has
+accepted the message: if mail is down the player keeps the PIN they already
+have rather than being locked out holding one that never arrived.
 
 ## Rolling over to a new season
 

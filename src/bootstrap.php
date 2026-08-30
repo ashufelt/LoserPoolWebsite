@@ -11,6 +11,9 @@
 
 require_once __DIR__ . '/autoload.php';
 
+use LoserPool\Mail\Mailer;
+use LoserPool\Mail\ResendMailer;
+use LoserPool\Mail\UnconfiguredMailer;
 use LoserPool\Storage\PoolStore;
 use LoserPool\Storage\StoreFactory;
 
@@ -27,4 +30,30 @@ function lp_store(?PoolStore $override = null): PoolStore
     }
 
     return $store;
+}
+
+/*
+ * The mailer, on the same terms as the store: one per request, overridable.
+ *
+ * Unconfigured is the normal state of a fresh deployment, not an error. The
+ * pool has always worked with no mail at all, so a missing key degrades to a
+ * mailer that says so rather than to a page that fails.
+ */
+function lp_mailer(?Mailer $override = null): Mailer
+{
+    static $mailer = null;
+
+    if ($override !== null) {
+        $mailer = $override;
+    }
+
+    if ($mailer === null) {
+        $key = (string) getenv('LP_RESEND_API_KEY');
+        $from = (string) getenv('LP_MAIL_FROM');
+        $mailer = ($key !== '' && $from !== '')
+            ? new ResendMailer($key, $from)
+            : new UnconfiguredMailer();
+    }
+
+    return $mailer;
 }

@@ -684,6 +684,39 @@ select option[data-out] {
     margin-bottom: var(--sp-5);
 }
 
+/* --------------------------------------------------------- pin reset */
+
+.reset-disclosure {
+    margin-top: var(--sp-4);
+    border-top: 1px solid var(--border);
+    padding-top: var(--sp-3);
+}
+
+.reset-disclosure summary {
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    width: fit-content;
+}
+
+.reset-disclosure summary:hover {
+    color: var(--accent);
+}
+
+.reset-disclosure[open] summary {
+    margin-bottom: var(--sp-4);
+}
+
+.reset-form .hint {
+    margin-top: 0;
+    margin-bottom: var(--sp-4);
+}
+
+.reset-form .actions {
+    margin-top: var(--sp-4);
+}
+
 /* ----------------------------------------------------------------- rules */
 
 .rules {
