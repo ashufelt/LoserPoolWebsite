@@ -22,6 +22,10 @@ Live: <https://loser-pool-2026.fly.dev>
   carry no losses and stand level with a player who has survived three weeks.
   `bin/register.php` is the way past it, for the one case that recurs -- a
   player who paid on time and never entered themselves.
+- A forgotten PIN is a message to the commissioner and `bin/reset-pin.php`.
+  PINs are bcrypt hashes, so there is nothing to look up and send back; the
+  tool prints the address the player registered with, so the person asking can
+  be checked against the person who registered.
 - **Final four or fewer may split the pot, by unanimous agreement.**
 
 The pot split is run by the commissioner and is not enforced in code.
@@ -105,31 +109,6 @@ flyctl deploy --remote-only
 
 One machine with SQLite on a mounted volume. **SQLite pins this to a single
 machine** - a volume attaches to one machine, so do not scale past one.
-
-### Sending mail
-
-Only one thing sends mail: the "Forgot your PIN?" form, which mails a
-replacement. It is off unless both of these are set, and the form says so
-plainly rather than promising an email that will never arrive.
-
-```
-fly secrets set LP_RESEND_API_KEY=re_...
-fly secrets set LP_MAIL_FROM='Loser Pool <pool@your-domain>'
-```
-
-Resend over HTTPS rather than SMTP, for two reasons: Fly blocks outbound port
-25, and Composer is dev-only here, so there is no PHPMailer to lean on.
-
-`LP_MAIL_FROM` has to be an address Resend will send as. Their
-`onboarding@resend.dev` works with no DNS at all, but only delivers to the
-address that owns the Resend account, which makes it useful for checking the
-plumbing and useless for the pool. Sending to players needs a domain verified
-in Resend.
-
-A PIN cannot be mailed back to anyone, because PINs are stored as bcrypt
-hashes. The form replaces the PIN instead, and only after the provider has
-accepted the message: if mail is down the player keeps the PIN they already
-have rather than being locked out holding one that never arrived.
 
 ## Rolling over to a new season
 
