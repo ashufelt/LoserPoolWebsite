@@ -649,6 +649,14 @@ th {
 #picks_table {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    /*
+     * Positioned so it is the containing block for the absolutely positioned
+     * .visually-hidden labels in the result cells. Without this they resolve
+     * against the page instead, so a table far wider than the phone leaves
+     * 1px boxes hundreds of pixels off screen that the scroll container
+     * cannot clip. The page then scrolls sideways and drifts under a thumb.
+     */
+    position: relative;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -763,6 +771,8 @@ div.users_picks {
     margin-bottom: var(--sp-5);
     max-width: 100%;
     overflow-x: auto;
+    /* Same containing-block reason as #picks_table above. */
+    position: relative;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
