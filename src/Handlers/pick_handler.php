@@ -76,7 +76,12 @@ function ph_team_label(string $team): string
         . "<span class='team-name'>" . $team . "</span>";
 }
 
-function ph_get_picks_html_table(): string
+/*
+ * $out_of_band marks the table for an htmx out-of-band swap, so a response
+ * whose main target is somewhere else entirely can still refresh it. It is a
+ * flag rather than a rewrite at the call site because the id lives here.
+ */
+function ph_get_picks_html_table(bool $out_of_band = false): string
 {
     $store = lp_store();
     $show_weeks_count = 8;
@@ -114,8 +119,9 @@ function ph_get_picks_html_table(): string
         return $byStatus !== 0 ? $byStatus : strcasecmp($a, $b);
     });
 
+    $oob = $out_of_band ? " hx-swap-oob='true'" : "";
     $picks_html_table = "
-        <div id='picks_table'>
+        <div id='picks_table'" . $oob . ">
             <p class='standings-summary'><strong>" . $still_in . "</strong> still in"
             . (count($standings) > 0 ? " of " . count($standings) : "") . "</p>
             <table class='pick_table'>

@@ -421,6 +421,35 @@ select:focus-visible {
     font-variant-numeric: tabular-nums;
 }
 
+/*
+ * Where a form says what happened. Both states carry a word as well as a
+ * colour, and the panel only exists once there is something to say, so an
+ * empty status region takes up no room.
+ */
+.form-status {
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    margin-bottom: var(--sp-4);
+}
+
+.form-status-ok {
+    background: var(--ok-bg);
+    border-color: var(--ok-border);
+    color: var(--ok-text);
+}
+
+.form-status-bad {
+    background: var(--bad-bg);
+    border-color: var(--bad-border);
+    color: var(--bad-text);
+}
+
+#register-status:not(:empty) {
+    margin-bottom: var(--sp-4);
+}
+
 .actions {
     display: flex;
     flex-wrap: wrap;

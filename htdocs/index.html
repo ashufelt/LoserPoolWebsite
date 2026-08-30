@@ -126,9 +126,18 @@
                   a pick, and a six field form is a lot of page to scroll past
                   to reach the thing they came for.
                 -->
+                <!--
+                  Registration reports here. It sits outside the disclosure so
+                  the result is still on screen after the form collapses, and
+                  next to the button that opens it again.
+                -->
+                <div id="register-status" role="status" aria-live="polite"></div>
+
                 <details class="register-disclosure">
                     <summary class="btn btn-secondary">Register a username</summary>
-                <form class="register-form" hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
+                <form class="register-form" hx-post="/users/add.php" hx-target="#register-status"
+                    hx-swap="innerHTML"
+                    hx-on:lp-registered="this.reset(); this.closest('details').open = false">
                     <div class="field">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}"
