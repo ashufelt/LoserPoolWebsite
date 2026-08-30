@@ -648,7 +648,25 @@ th {
 
 #picks_table {
     overflow-x: auto;
+    /*
+     * Explicitly not auto. Leaving the vertical axis scrollable makes the
+     * table a nested scrollport that takes the vertical drag on a phone and
+     * answers it by sliding sideways, which is most of what "the page jitters
+     * while I scroll" is. It has no vertical overflow to show anyway.
+     */
+    overflow-y: hidden;
+    /* A horizontal fling that reaches the end stays here rather than turning
+       into a page scroll or a back-navigation gesture. */
+    overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    /*
+     * Positioned so it is the containing block for the absolutely positioned
+     * .visually-hidden labels in the result cells. Without this they resolve
+     * against the page instead, so a table far wider than the phone leaves
+     * 1px boxes hundreds of pixels off screen that the scroll container
+     * cannot clip. The page then scrolls sideways and drifts under a thumb.
+     */
+    position: relative;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -763,6 +781,10 @@ div.users_picks {
     margin-bottom: var(--sp-5);
     max-width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    /* Same containing-block reason as #picks_table above. */
+    position: relative;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
