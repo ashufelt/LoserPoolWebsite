@@ -17,9 +17,14 @@ Live: <https://loser-pool-2026.fly.dev>
 - **Buy back in: week 1 only.** Recorded with `bin/buyback.php`, since an
   eliminated player can still submit picks — continuing to play does not show
   that anyone bought back.
+- **Registration closes when week one locks**, and does not reopen. Nobody
+  joins a pool that is already running: an entrant arriving in week three would
+  carry no losses and stand level with a player who has survived three weeks.
+  `bin/register.php` is the way past it, for the one case that recurs -- a
+  player who paid on time and never entered themselves.
 - **Final four or fewer may split the pot, by unanimous agreement.**
 
-The last two are run by the commissioner and are not enforced in code.
+The pot split is run by the commissioner and is not enforced in code.
 
 ## How it works
 

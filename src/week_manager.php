@@ -152,6 +152,27 @@ function lp_picks_are_hidden(): bool
 }
 
 /*
+ * Registration closes when week one locks, and does not reopen.
+ *
+ * A survivor pool cannot take entrants once it is running: a player joining in
+ * week three would carry no losses and be level with someone who has survived
+ * three weeks, and the buy-back rule -- week one only -- exists precisely
+ * because week one is the boundary the pool is willing to move.
+ *
+ * Deliberately a one-way gate rather than lp_picks_are_locked(), which is true
+ * on Sunday and Monday of every week and false again on Tuesday. Registration
+ * shuts on the first Sunday and stays shut for the season.
+ */
+function lp_registration_is_open(): bool
+{
+    if (!lp_season_in_progress()) {
+        return true;
+    }
+
+    return get_current_week() === 1 && !lp_picks_are_locked();
+}
+
+/*
  * Teams that cannot be picked this week: byes, plus teams playing before the
  * deadline (Wed/Thu/Fri). Saturday games are pickable.
  */

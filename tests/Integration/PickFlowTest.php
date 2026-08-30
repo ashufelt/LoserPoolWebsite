@@ -38,6 +38,7 @@ final class PickFlowTest extends TestCase
 {
     use AssertsTeamOptions;
 
+    private const PRESEASON = '2026-09-01 10:00:00';
     private const IN_SEASON_TUESDAY = '2026-09-22 10:00:00';
     private const IN_SEASON_SUNDAY = '2026-09-27 13:00:00';
 
@@ -66,9 +67,36 @@ final class PickFlowTest extends TestCase
         lp_clock(new DateTimeImmutable($when, new DateTimeZone('America/Chicago')));
     }
 
+    /*
+     * Registration closes when week one locks, and most of these tests run in
+     * a later week, so registering happens where a player would actually have
+     * done it: before the season started. The clock is put back afterwards.
+     */
     private function registerJoe(string $pin = '1234'): bool
     {
-        return uh_add_user('Joe G', 'joe@example.com', 'joeg', $pin, $pin);
+        return $this->registerBeforeKickoff('Joe G', 'joe@example.com', 'joeg', $pin);
+    }
+
+    /* Point the season at a given week and moment. */
+    private function withWeek(int $week, string $when): void
+    {
+        lp_schedule_source(new FakeScheduleSource(
+            [$week => FixtureLoader::schedule('2026-w01')],
+            ['year' => 2026, 'seasonType' => 2, 'week' => $week]
+        ));
+        $this->freeze($when);
+        get_current_week(true);
+    }
+
+    private function registerBeforeKickoff(string $name, string $email, string $username, string $pin): bool
+    {
+        $now = lp_clock();
+        $this->freeze(self::PRESEASON);
+        $registered = uh_add_user($name, $email, $username, $pin, $pin);
+        lp_clock($now);
+        get_current_week(true);
+
+        return $registered;
     }
 
     public function testTheWholeHappyPath(): void
@@ -231,11 +259,51 @@ final class PickFlowTest extends TestCase
     }
 
     /*
+     * A survivor pool cannot take entrants once it is running. Joining in week
+     * three would put a player with no losses level with someone who has
+     * survived three weeks.
+     */
+    public function testRegistrationClosesWhenWeekOneLocksAndStaysClosed(): void
+    {
+        $this->freeze(self::PRESEASON);
+        $this->assertTrue(lp_registration_is_open(), 'open before the season starts');
+
+        /* Tuesday of week 1: the pool is open for business. */
+        $this->withWeek(1, '2026-09-08 10:00:00');
+        $this->assertTrue(lp_registration_is_open(), 'open in week 1 while picks are open');
+
+        /* Sunday of week 1, when picks lock. */
+        $this->withWeek(1, '2026-09-13 13:00:00');
+        $this->assertFalse(lp_registration_is_open(), 'closed once week 1 locks');
+
+        /*
+         * Tuesday of week 2. Picks are open again, which is why this cannot
+         * just ask whether picks are locked: that is true on Sunday and Monday
+         * of every week and false again the next day.
+         */
+        $this->withWeek(2, '2026-09-15 10:00:00');
+        $this->assertFalse(lp_picks_are_locked(), 'picks have reopened');
+        $this->assertFalse(lp_registration_is_open(), 'registration has not');
+    }
+
+    public function testARegistrationAfterWeekOneIsRefusedWithTheReason(): void
+    {
+        $this->withWeek(2, '2026-09-15 10:00:00');
+
+        $problem = null;
+        $this->assertFalse(uh_add_user('Late', 'late@example.com', 'latecomer', '1234', '1234', $problem));
+        $this->assertStringContainsString('closed when week 1 locked', (string) $problem);
+        $this->assertFalse(lp_store()->userExists('latecomer'), 'nothing was created');
+    }
+
+    /*
      * A refusal has to say which rule it broke. Every one of these used to
      * produce the same sentence listing everything that might have been wrong.
      */
     public function testARefusedRegistrationSaysWhichRuleItBroke(): void
     {
+        $this->freeze(self::PRESEASON);
+
         $cases = [
             'mismatched PINs' => [['Joe', 'joe@example.com', 'joeg', '1234', '9999'], 'do not match'],
             'a PIN that is not four digits' => [['Joe', 'joe@example.com', 'joeg', '12', '12'], 'four digits'],
@@ -256,6 +324,7 @@ final class PickFlowTest extends TestCase
     /* A name is displayed, never used as a key, so punctuation in it is fine. */
     public function testANameWithPunctuationCanRegister(): void
     {
+        $this->freeze(self::PRESEASON);
         $problem = null;
 
         $this->assertTrue(
@@ -267,6 +336,7 @@ final class PickFlowTest extends TestCase
     public function testATakenUsernameSaysSoRatherThanListingEveryRule(): void
     {
         $this->registerJoe();
+        $this->freeze(self::PRESEASON);
         $problem = null;
 
         $this->assertFalse(uh_add_user('Joe', 'other@example.com', 'joeg', '1234', '1234', $problem));
@@ -452,7 +522,7 @@ final class PickFlowTest extends TestCase
     public function testTheStandingsReportWhoIsStillIn(): void
     {
         $this->registerJoe();
-        uh_add_user('Sarah K', 'sarah@example.com', 'sarah_k', '2222', '2222');
+        $this->registerBeforeKickoff('Sarah K', 'sarah@example.com', 'sarah_k', '2222');
 
         $table = ph_get_picks_html_table();
 
