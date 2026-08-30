@@ -263,14 +263,14 @@ final class SeasonSimulationTest extends TestCase
         foreach ([1, 10, 18] as $index => $week) {
             $this->openWeek($week);
             $this->assertStringContainsString(
-                'successfully',
+                'Pick recorded',
                 $this->pick('alice', $teams[$index * 2]),
                 "week $week should accept a pick on Tuesday"
             );
 
             $this->enterWeek($week, 'sunday');
             $this->assertStringContainsString(
-                "Can't make a pick",
+                "Picks are locked",
                 $this->pick('alice', $teams[$index * 2 + 1]),
                 "week $week should be locked on Sunday"
             );

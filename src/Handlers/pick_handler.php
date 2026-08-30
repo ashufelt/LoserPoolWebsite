@@ -9,6 +9,21 @@ use LoserPool\Nfl\Teams;
 use LoserPool\Pool\Standings;
 
 
+/*
+ * The handlers' only channel back to the player. These used to be bare <h4>
+ * elements, which rendered as headings in the middle of the page and looked
+ * like a section title rather than an answer to what had just been done.
+ */
+function ph_status_ok(string $message): string
+{
+    return "<p class='form-status form-status-ok' role='status'>" . $message . "</p>";
+}
+
+function ph_status_bad(string $message): string
+{
+    return "<p class='form-status form-status-bad' role='status'>" . $message . "</p>";
+}
+
 function ph_add_pick(string $userin, string $teamin, string $pinin): string
 {
     $store = lp_store();
@@ -17,16 +32,16 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
     $team = htmlspecialchars($teamin);
     $pickpin = $pinin;
     if ($store->userExists($user) == false) {
-        return "<h4>User does not exist</h4>";
+        return ph_status_bad("That username does not exist.");
     }
     $week_number = intval($week);
     $users_picks = $store->picksFor($user);
     $ineligible = get_INELIGIBLE_reasons($week_number);
     $create_ecode = 0;
     if (!$store->verifyPin($user, $pickpin)) {
-        return "<h4>Username/PIN combo is not valid</h4>";
+        return ph_status_bad("Username/PIN combo is not valid.");
     } else if (in_array($team, $users_picks, true)) {
-        return "<h4>Cannot repeat a choice</h4>";
+        return ph_status_bad("Cannot repeat a choice. " . $team . " has already been used this season.");
     } else if (!in_array($team, Teams::all(), true)) {
         /*
          * Nothing above this line established that $team is a team. The
@@ -34,7 +49,7 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
          * way to reach this function, and an unrecognised name would be stored
          * and then scored against a schedule that has never heard of it.
          */
-        return "<h4>Not a team in this league</h4>";
+        return ph_status_bad("Not a team in this league.");
     } else if (isset($ineligible[$team])) {
         /*
          * The rule that keeps the pool honest, enforced where it counts. The
@@ -42,20 +57,22 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
          * and is worth nothing against a request that did not come from the
          * dropdown. The reason is the same wording the list shows.
          */
-        return "<h4>" . htmlspecialchars($ineligible[$team]) . ", so it cannot be picked this week</h4>";
+        return ph_status_bad(htmlspecialchars($ineligible[$team]) . ", so it cannot be picked this week.");
     } else if (lp_picks_are_locked()) {
-       return "<h4>Can't make a pick on Sunday or Monday</h4>";
+       return ph_status_bad("Picks are locked on Sunday and Monday.");
     } else if (0 != ($create_ecode = $store->savePick($user, $team, $week_number))) {
         if ($create_ecode == 2) {
-            return "<h4>Invalid username</h4>";
+            return ph_status_bad("Invalid username.");
         } else if ($create_ecode == 1) {
-            return "<h4>Database error. Try viewing your pick or submitting again.</h4>
-                  <p>If you aren't able to verify your pick with 'View my picks', 
-                    email adam.shufelt.official@gmail.com to ensure that your 
-                    pick is received. I do not expect this message to ever appear.</p>";
+            return ph_status_bad("Database error. Try viewing your pick, or submitting again.")
+                . "<p class='hint'>If 'View my picks' does not show it, email "
+                . "adamshufelt.official@gmail.com so the pick is not lost.</p>";
         }
     } else {
-        return "<h3>Pick added successfully</h3><br>";
+        return ph_status_ok(
+                "Pick recorded for week " . $week_number . ": <strong>" . $team . "</strong>."
+                . " Submitting again before Sunday replaces it."
+            );
     }
 }
 
@@ -182,6 +199,19 @@ function ph_get_picks_html_table(bool $out_of_band = false): string
                         $pick = "<span class='visually-hidden'>Survived: </span>" . $pick;
                     }
                 }
+            } elseif ($i == $current_week && $standings[$user]['status'] === Standings::IN) {
+                /*
+                 * An empty cell said nothing: a player who had not picked yet
+                 * looked exactly like a column with no data in it, so the one
+                 * question worth asking before the deadline -- who still has
+                 * to get their pick in -- could not be answered from the table
+                 * at all. Only for the current week, and only for players who
+                 * are still in: a blank week for someone already out is not an
+                 * outstanding pick.
+                 */
+                $pick = $hide_picks
+                    ? "<span class='pick-none'>Not in yet</span>"
+                    : "<span class='pick-none'>No pick</span>";
             }
             $picks_html_table .= "<td class='pick_table pick_team" . $result_class . "'>" . $mark . $pick . "</td>";
         }
@@ -197,10 +227,17 @@ function ph_get_user_picks_html(string $user, string $pin)
     $store = lp_store();
     $user = htmlspecialchars($user);
     if (!$store->verifyPin($user, $pin)) {
-        return "<h4>Username/PIN combo is not valid</h4>";
+        return ph_status_bad("Username/PIN combo is not valid.");
     }
 
+    /*
+     * Named, because this table is the only place a player can see their own
+     * current-week pick: the standings hide it behind "Submitted" until the
+     * slate starts, and that is the point of hiding it. Without a heading it
+     * is one more grid on a page that already has one.
+     */
     $picks_html_table = "<div class=users_picks>
+                         <h3 class='users_picks_heading'>" . $user . "'s picks</h3>
                          <table class='users_picks'>
                             <tr class='users_picks'>
                                 <th class='users_picks'>Week</th>
@@ -210,12 +247,13 @@ function ph_get_user_picks_html(string $user, string $pin)
     for ($i = 1; $i <= get_current_week(); $i++) {
         $pick = "";
         if (array_key_exists($i, $users_picks)) {
-            $pick = $users_picks[$i];
+            $pick = ph_team_label($users_picks[$i]);
+        } elseif ($i == get_current_week()) {
+            $pick = "<span class='pick-none'>Not picked yet</span>";
         }
         $picks_html_table .= "<tr class='users_picks'>
                                 <td class='users_picks'>" . $i . "</td>
-                                <td class='users_picks pick_team'>"
-                                . ($pick === "" ? "" : ph_team_label($pick)) . "</td></tr>";
+                                <td class='users_picks pick_team'>" . $pick . "</td></tr>";
     }
     $picks_html_table .= "</table>
                             <button hx-get='/picks/hide.php' hx-target='#one_set_of_picks' 

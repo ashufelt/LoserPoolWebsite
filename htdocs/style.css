@@ -838,6 +838,20 @@ td.pick_table {
     font-style: italic;
 }
 
+/* Nobody has picked here yet. Distinct from an empty cell, which used to mean
+   the same thing and looked like missing data. */
+.pick-none {
+    color: var(--text-muted);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.users_picks_heading {
+    width: 100%;
+    margin: 0 0 var(--sp-3);
+    font-size: 1.0625rem;
+}
+
 /* Shown, but not scored: this player was already out when they picked it. */
 .pick-void {
     color: var(--text-muted);

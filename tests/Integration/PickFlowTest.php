@@ -76,7 +76,7 @@ final class PickFlowTest extends TestCase
         $this->assertTrue($this->registerJoe());
         $this->assertStringContainsString('joeg', uh_get_user_option_list_html());
 
-        $this->assertStringContainsString('successfully', ph_add_pick('joeg', 'Chicago Bears', '1234'));
+        $this->assertStringContainsString('Chicago Bears', ph_add_pick('joeg', 'Chicago Bears', '1234'));
         $this->assertSame([3 => 'Chicago Bears'], $this->store->picksFor('joeg'));
     }
 
@@ -120,7 +120,7 @@ final class PickFlowTest extends TestCase
         $this->registerJoe();
         ph_add_pick('joeg', 'Chicago Bears', '1234');
 
-        $this->assertStringContainsString('successfully', ph_add_pick('joeg', 'Carolina Panthers', '1234'));
+        $this->assertStringContainsString('Carolina Panthers', ph_add_pick('joeg', 'Carolina Panthers', '1234'));
         $this->assertSame([3 => 'Carolina Panthers'], $this->store->picksFor('joeg'));
     }
 
@@ -129,7 +129,7 @@ final class PickFlowTest extends TestCase
         $this->registerJoe();
         $this->freeze(self::IN_SEASON_SUNDAY);
 
-        $this->assertStringContainsString("Can't make a pick", ph_add_pick('joeg', 'Chicago Bears', '1234'));
+        $this->assertStringContainsString("Picks are locked", ph_add_pick('joeg', 'Chicago Bears', '1234'));
         $this->assertSame([], $this->store->picksFor('joeg'));
     }
 
@@ -143,7 +143,7 @@ final class PickFlowTest extends TestCase
         $this->registerJoe();
         $this->freeze('2027-01-03 13:00:00'); // a Sunday, day-of-year 2
 
-        $this->assertStringContainsString("Can't make a pick", ph_add_pick('joeg', 'Chicago Bears', '1234'));
+        $this->assertStringContainsString("Picks are locked", ph_add_pick('joeg', 'Chicago Bears', '1234'));
     }
 
     public function testPicksCanBeMadeBeforeTheSeasonStarts(): void
@@ -151,7 +151,7 @@ final class PickFlowTest extends TestCase
         $this->registerJoe();
         $this->freeze('2026-08-30 13:00:00'); // a Sunday, but preseason
 
-        $this->assertStringContainsString('successfully', ph_add_pick('joeg', 'Chicago Bears', '1234'));
+        $this->assertStringContainsString('Chicago Bears', ph_add_pick('joeg', 'Chicago Bears', '1234'));
     }
 
     /*
@@ -207,6 +207,34 @@ final class PickFlowTest extends TestCase
         $table = ph_get_picks_html_table();
         $this->assertStringContainsString('Submitted', $table);
         $this->assertStringNotContainsString('Chicago Bears', $table);
+    }
+
+    /*
+     * Before the deadline the table has to answer "who still needs to pick",
+     * and an empty cell could not: it looked identical to a column with no
+     * data in it. The pick itself stays hidden, only the fact of it is public.
+     */
+    public function testTheTableSaysWhoHasNotPickedYet(): void
+    {
+        $this->registerJoe();
+        $this->assertSame(0, lp_store()->addUser('Ada', 'ada@example.com', 'ada', '1234'));
+
+        ph_add_pick('joeg', 'Chicago Bears', '1234');
+
+        $table = ph_get_picks_html_table();
+
+        $this->assertStringContainsString('Submitted', $table, 'joeg is in');
+        $this->assertStringContainsString('Not in yet', $table, 'ada is not');
+        $this->assertStringNotContainsString('Chicago Bears', $table, 'the pick itself stays hidden');
+    }
+
+    /* Once picks are locked, the outstanding ones read as missed, not pending. */
+    public function testAMissedWeekReadsAsNoPickOnceLocked(): void
+    {
+        $this->registerJoe();
+        $this->freeze(self::IN_SEASON_SUNDAY);
+
+        $this->assertStringContainsString('No pick', ph_get_picks_html_table());
     }
 
     public function testPicksAreRevealedOnceLocked(): void
