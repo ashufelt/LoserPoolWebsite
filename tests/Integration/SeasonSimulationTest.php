@@ -15,6 +15,7 @@ require_once __DIR__ . '/../../src/Handlers/team_handler.php';
 
 use function PickHandling\ph_add_pick;
 use function PickHandling\ph_get_picks_html_table;
+use function UserHandling\uh_get_user_option_list_html;
 use function UserHandling\uh_add_user;
 use function TeamHandler\get_team_options_html;
 
@@ -137,6 +138,37 @@ final class SeasonSimulationTest extends TestCase
         $this->assertStringContainsString('Still in', $standings);
         $this->assertStringContainsString('Out &middot; wk 1', $standings, 'carol and dave went out in week 1');
         $this->assertStringContainsString('Out &middot; wk 2', $standings, 'bob went out in week 2');
+    }
+
+    /*
+     * The username list leads with the players who are still in. Eliminated
+     * players stay on it, labelled: removing them reads as a lost
+     * registration, and a week-one buy-back is recorded by hand afterwards, so
+     * removal would lock a player who has paid to stay in out of picking until
+     * the commissioner got round to it.
+     */
+    public function testTheUsernameListPutsEliminatedPlayersLastAndLabelsThem(): void
+    {
+        $teams = Teams::all();
+
+        $this->register('alice');
+        $this->register('zeb');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->pick('zeb', $teams[2]);
+        /* Zeb backed a winner, so he is out despite sorting last already. */
+        $this->settleWeek(1, [$teams[0]], 2);
+
+        $options = uh_get_user_option_list_html();
+
+        $this->assertStringContainsString('zeb (out', $options);
+        $this->assertStringNotContainsString('alice (out', $options);
+        $this->assertLessThan(
+            strpos($options, 'zeb'),
+            strpos($options, 'alice'),
+            'players still in come first'
+        );
     }
 
     /*
