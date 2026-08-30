@@ -112,16 +112,8 @@ function ph_team_label(string $team): string
 function ph_get_picks_html_table(bool $out_of_band = false): string
 {
     $store = lp_store();
-    $show_weeks_count = 8;
     $hide_picks = lp_picks_are_hidden();
     $current_week = get_current_week();
-    if ($current_week <= $show_weeks_count) {
-        $start_week = 1;
-        $end_week = $show_weeks_count;
-    } else {
-        $start_week = $current_week - $show_weeks_count + 1;
-        $end_week = $current_week;
-    }
 
     $users = $store->allUsernames();
 
@@ -156,7 +148,18 @@ function ph_get_picks_html_table(bool $out_of_band = false): string
                 <tr class='pick_table'>
                     <th class='pickcolumn1 pick_table'>Player</th>
                     <th class='pickHeader pick_table'>Status</th>";
-    for ($i = $start_week; $i <= $end_week; $i++) {
+    /*
+     * Every week played so far, not a sliding window of the last few. The
+     * whole season is the record: no repeat picks means the question "has she
+     * used Cleveland yet?" is answered by reading a row, and a player shown
+     * as out in week 2 needs that column to still be there in week 12 to say
+     * what did it. Weeks are columns in a horizontal scroller with a pinned
+     * player column, so growing the table costs width, not legibility.
+     *
+     * Future weeks are left out rather than rendered empty: a column of blanks
+     * for a week nobody could have picked yet reads as missing data.
+     */
+    for ($i = 1; $i <= $current_week; $i++) {
         $picks_html_table .= "<th class='pickHeader pick_table'>Week " . ($i) . "</th>";
     }
     $picks_html_table .= "</tr>";
@@ -175,7 +178,7 @@ function ph_get_picks_html_table(bool $out_of_band = false): string
 
         $users_picks = $all_picks[$user] ?? [];
         $out_week = $standings[$user]['outWeek'];
-        for ($i = $start_week; $i <= $end_week; $i++) {
+        for ($i = 1; $i <= $current_week; $i++) {
             $pick = "";
             $result_class = "";
             $mark = "";

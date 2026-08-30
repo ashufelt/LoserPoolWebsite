@@ -347,4 +347,35 @@ final class SeasonSimulationTest extends TestCase
         $this->assertSame(4, $this->survivors());
         $this->assertStringContainsString('<strong>4</strong> still in of 6', ph_get_picks_html_table());
     }
+
+    /*
+     * The table showed a sliding window of the last eight weeks, so from week
+     * nine onwards the early season fell off the left edge: the week 1 column
+     * went first, taking with it the pick that eliminated most of the field.
+     * Both things this asserts were invisible on the deployed page in week 9.
+     */
+    public function testTheTableStillShowsWeekOneLateInTheSeason(): void
+    {
+        $teams = Teams::all();
+        $this->register('alice');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->settleWeek(1, [$teams[0]], 2);
+
+        /* Play on until the old eight week window would have dropped week 1. */
+        for ($week = 2; $week <= 10; $week++) {
+            $this->openWeek($week);
+            $this->pick('alice', $teams[$week * 2]);
+            $this->settleWeek($week, [$teams[$week * 2]], $week + 1);
+        }
+
+        $this->enterWeek(11);
+        $table = ph_get_picks_html_table();
+
+        $this->assertStringContainsString('Week 1<', $table, 'week 1 column');
+        $this->assertStringContainsString('Week 11<', $table, 'the current week');
+        $this->assertStringNotContainsString('Week 12<', $table, 'weeks not yet played');
+        $this->assertStringContainsString($teams[0], $table, "alice's week 1 pick");
+    }
 }
