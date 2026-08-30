@@ -713,6 +713,19 @@ select option[data-out] {
     margin-bottom: var(--sp-4);
 }
 
+/*
+ * Wide enough that these two stack on a phone rather than sharing the row.
+ *
+ * Side by side at 390px they got about 170px each, which is too narrow for an
+ * address and, worse, too narrow for the label: "Email you registered with"
+ * wrapped to two lines while "Username" stayed on one, so the email box sat
+ * 19px below the username box next to it. Stacking fixes the alignment and
+ * gives the longer of the two values room at the same time.
+ */
+.reset-form .field-row .field {
+    flex: 1 1 14rem;
+}
+
 .reset-form .actions {
     margin-top: var(--sp-4);
 }
