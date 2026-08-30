@@ -51,10 +51,13 @@
             <form class="pick-form" action="/picks/" method="post">
                 <div class="field">
                     <label for="userpicks">Username</label>
-                    <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load"
-                        hx-target="this" hx-swap="outerHTML">
-                        <option value="">Loading…</option>
-                    </select>
+                    <!-- The shell stays put: htmx swaps only the select inside it. -->
+                    <div class="select-shell">
+                        <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load"
+                            hx-target="this" hx-swap="outerHTML">
+                            <option value="">Loading…</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="field field-narrow">
@@ -106,8 +109,8 @@
                     <li><strong>Final four or fewer can split the pot</strong>, if everyone still in agrees.</li>
                 </ul>
                 <p class="hint">
-                    The dropdown only offers teams you are allowed to pick, so anything ineligible is already
-                    filtered out.
+                    The dropdown lists all 32 teams. Any you cannot pick this week are greyed out with
+                    the reason next to them, so you can see why rather than wondering where a team went.
                 </p>
             </section>
 
