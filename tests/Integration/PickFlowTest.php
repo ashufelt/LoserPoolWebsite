@@ -198,6 +198,38 @@ final class PickFlowTest extends TestCase
         $this->assertSame([], lp_store()->picksFor('joeg'), 'nothing was stored');
     }
 
+    /*
+     * Changing your mind is explicitly allowed, and changing it back to what
+     * it already was is the same operation. The no-repeat rule is about the
+     * other weeks: counting this week's own pick made a team a repeat of
+     * itself, so pressing Submit twice reported "already used this season" for
+     * a team used nowhere but here.
+     */
+    public function testResubmittingTheSameTeamForTheSameWeekIsNotARepeat(): void
+    {
+        $this->registerJoe();
+
+        $this->assertStringContainsString('Chicago Bears', ph_add_pick('joeg', 'Chicago Bears', '1234'));
+        $second = ph_add_pick('joeg', 'Chicago Bears', '1234');
+
+        $this->assertStringNotContainsString('Cannot repeat', $second);
+        $this->assertStringContainsString('Chicago Bears', $second);
+        $this->assertSame(['Chicago Bears'], array_values(lp_store()->picksFor('joeg')));
+    }
+
+    /* Changing to a different team and back again is the same case. */
+    public function testAPickCanBeChangedAndChangedBack(): void
+    {
+        $this->registerJoe();
+
+        ph_add_pick('joeg', 'Chicago Bears', '1234');
+        ph_add_pick('joeg', 'Kansas City Chiefs', '1234');
+        $back = ph_add_pick('joeg', 'Chicago Bears', '1234');
+
+        $this->assertStringNotContainsString('Cannot repeat', $back);
+        $this->assertSame(['Chicago Bears'], array_values(lp_store()->picksFor('joeg')));
+    }
+
     /* Other players' current-week picks are concealed until the slate starts. */
     public function testOtherPlayersPicksAreHiddenUntilLock(): void
     {

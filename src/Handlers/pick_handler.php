@@ -37,10 +37,21 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
     $week_number = intval($week);
     $users_picks = $store->picksFor($user);
     $ineligible = get_INELIGIBLE_reasons($week_number);
+
+    /*
+     * The no-repeat rule is about the other weeks. This week's own pick is the
+     * one a player is allowed to overwrite, and the page says so: submit again
+     * and the latest pick replaces the last one. Counting it made resubmitting
+     * the same team a repeat of itself, so pressing the button twice, or
+     * changing your mind and changing it back, answered "already used this
+     * season" for a team the player had used nowhere but here.
+     */
+    $earlier_picks = $users_picks;
+    unset($earlier_picks[$week_number]);
     $create_ecode = 0;
     if (!$store->verifyPin($user, $pickpin)) {
         return ph_status_bad("Username/PIN combo is not valid.");
-    } else if (in_array($team, $users_picks, true)) {
+    } else if (in_array($team, $earlier_picks, true)) {
         return ph_status_bad("Cannot repeat a choice. " . $team . " has already been used this season.");
     } else if (!in_array($team, Teams::all(), true)) {
         /*
