@@ -34,12 +34,30 @@ RUN chmod -R a+rX /var/www/html /var/www/src /var/www/data /var/www/bin
 # Directory listing off, and the class/data directories closed to the web.
 # Configured here rather than via .htaccess because AllowOverride is None in
 # the base image, which would silently ignore the .htaccess protections.
-RUN printf '%s\n' \
+#
+# The Cache-Control block is the reason mod_headers is enabled. style.css and
+# teampicker.js are served under fixed names with no fingerprint, so a browser
+# left to its own heuristics will happily keep a copy from before a deploy for
+# days. That is not a cosmetic problem here: the picker's popup is hidden by a
+# CSS rule, so a stale stylesheet leaves a dropdown that will not close and
+# looks like a broken control rather than an old file. "no-cache" still caches
+# and still answers 304; it only stops the browser skipping the check.
+#
+# Guarded with IfModule despite a2enmod above: an unrecognised Header directive
+# stops Apache from starting at all, and a site that will not boot is a worse
+# outcome than one serving a stale stylesheet.
+RUN a2enmod headers \
+ && printf '%s\n' \
       '<Directory /var/www/html>' \
       '    Options -Indexes +FollowSymLinks' \
       '    AllowOverride None' \
       '    Require all granted' \
       '</Directory>' \
+      '<IfModule mod_headers.c>' \
+      '    <FilesMatch "\.(css|js)$">' \
+      '        Header set Cache-Control "no-cache"' \
+      '    </FilesMatch>' \
+      '</IfModule>' \
       'ServerTokens Prod' \
       'ServerSignature Off' \
     > /etc/apache2/conf-available/pool.conf \

@@ -24,6 +24,11 @@ is underway. They are enforced in `src/Pool/`.
 - **Buy back in: week 1 only.** Recorded with `bin/buyback.php`, never inferred
   — an eliminated player can still submit picks, so continued play proves
   nothing.
+- **Registration closes when week 1 locks** and does not reopen. Use
+  `lp_registration_is_open()`, not `lp_picks_are_locked()`: the latter is true
+  on Sunday and Monday of *every* week and false again on Tuesday, so it would
+  reopen the pool to entrants for five days out of seven all season.
+  `bin/register.php` is the commissioner's way past the gate.
 - **Final four or fewer may split the pot**, unanimously. Commissioner-run;
   the site only reports who is left.
 

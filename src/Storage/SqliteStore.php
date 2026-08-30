@@ -191,6 +191,32 @@ final class SqliteStore implements PoolStore
         }
     }
 
+    public function emailFor(string $username): ?string
+    {
+        $stmt = $this->pdo->prepare("SELECT email FROM {$this->userTable} WHERE username = ?");
+        $stmt->execute([$username]);
+        $email = $stmt->fetchColumn();
+
+        return $email === false ? null : (string) $email;
+    }
+
+    public function setPin(string $username, string $pin): int
+    {
+        if (!$this->userExists($username)) {
+            return self::NO_SUCH_USER;
+        }
+
+        try {
+            $stmt = $this->pdo->prepare(
+                "UPDATE {$this->userTable} SET pin_hash = ? WHERE username = ?"
+            );
+            $stmt->execute([password_hash($pin, PASSWORD_DEFAULT), $username]);
+            return self::OK;
+        } catch (PDOException $e) {
+            return self::ERROR;
+        }
+    }
+
     public function picksFor(string $username): array
     {
         $stmt = $this->pdo->prepare(

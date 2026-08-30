@@ -58,6 +58,13 @@
     --radius: 16px;
     --radius-sm: 10px;
     --tap: 2.75rem;
+    /*
+     * One height for every control on the pick form. The username select, the
+     * PIN box and the team picker button sit side by side, and each was sizing
+     * itself: 44px, 46px and 44px, which is enough to make three labels sit on
+     * three baselines and read as three unrelated widgets.
+     */
+    --control-h: 2.75rem;
 }
 
 /*
@@ -358,13 +365,43 @@ input[type="email"],
 input[type="password"],
 select {
     width: 100%;
-    min-height: var(--tap);
+    height: var(--control-h);
     padding: 0.6rem var(--sp-3);
     background-color: var(--surface-raised);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
     color: var(--text);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/*
+ * The username control is a real <select>, and the team control is the
+ * enhanced picker drawn over one. Left alone they render as an OS widget next
+ * to a bespoke one. Dropping the platform appearance and drawing the same
+ * chevron in .select-shell below makes the pair read as one control family;
+ * the select is still a select, so it keeps its native popup and keyboard.
+ */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    font-weight: 600;
+    padding-right: var(--sp-6);
+}
+
+/* The chevron lives on the wrapper because htmx replaces the select itself. */
+.select-shell {
+    position: relative;
+}
+
+.select-shell::after {
+    content: "\25BE";
+    position: absolute;
+    top: 50%;
+    right: var(--sp-3);
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    pointer-events: none;
 }
 
 input:hover,
@@ -382,6 +419,35 @@ select:focus-visible {
     max-width: 7.5rem;
     letter-spacing: 0.3em;
     font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Where a form says what happened. Both states carry a word as well as a
+ * colour, and the panel only exists once there is something to say, so an
+ * empty status region takes up no room.
+ */
+.form-status {
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-size: 0.9375rem;
+    margin-bottom: var(--sp-4);
+}
+
+.form-status-ok {
+    background: var(--ok-bg);
+    border-color: var(--ok-border);
+    color: var(--ok-text);
+}
+
+.form-status-bad {
+    background: var(--bad-bg);
+    border-color: var(--bad-border);
+    color: var(--bad-text);
+}
+
+#register-status:not(:empty) {
+    margin-bottom: var(--sp-4);
 }
 
 .actions {
@@ -444,7 +510,7 @@ select:focus-visible {
     align-items: center;
     gap: var(--sp-3);
     width: 100%;
-    min-height: var(--tap);
+    height: var(--control-h);
     padding: 0.5rem var(--sp-3);
     background-color: var(--surface-raised);
     border: 1px solid var(--border-strong);
@@ -474,6 +540,16 @@ select:focus-visible {
     font-size: 0.8rem;
 }
 
+/*
+ * display:flex beats the browser's [hidden] rule, so the popup was painted at
+ * all times: a permanently open panel holding an empty search box, sitting
+ * under the button and reading as a second, broken dropdown. It must lose to
+ * [hidden].
+ */
+.teampicker-popup[hidden] {
+    display: none;
+}
+
 .teampicker-popup {
     position: absolute;
     z-index: 30;
@@ -492,7 +568,7 @@ select:focus-visible {
 }
 
 .teampicker-search {
-    min-height: 2.25rem;
+    height: 2.5rem;
 }
 
 .teampicker-list {
@@ -565,6 +641,14 @@ select option:disabled {
     color: var(--text-muted);
 }
 
+/*
+ * Eliminated players. Honoured on the desktop browsers that style options at
+ * all and ignored on iOS, which is why the grouping does the real work.
+ */
+select option[data-out] {
+    color: var(--text-muted);
+}
+
 .teampicker-empty {
     list-style: none;
     padding: var(--sp-3);
@@ -600,14 +684,61 @@ select option:disabled {
     margin-bottom: var(--sp-5);
 }
 
+/* --------------------------------------------------------- pin reset */
+
+.reset-disclosure {
+    margin-top: var(--sp-4);
+    border-top: 1px solid var(--border);
+    padding-top: var(--sp-3);
+}
+
+.reset-disclosure summary {
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    width: fit-content;
+}
+
+.reset-disclosure summary:hover {
+    color: var(--accent);
+}
+
+.reset-disclosure[open] summary {
+    margin-bottom: var(--sp-4);
+}
+
+.reset-form .hint {
+    margin-top: 0;
+    margin-bottom: var(--sp-4);
+}
+
+/*
+ * Wide enough that these two stack on a phone rather than sharing the row.
+ *
+ * Side by side at 390px they got about 170px each, which is too narrow for an
+ * address and, worse, too narrow for the label: "Email you registered with"
+ * wrapped to two lines while "Username" stayed on one, so the email box sat
+ * 19px below the username box next to it. Stacking fixes the alignment and
+ * gives the longer of the two values room at the same time.
+ */
+.reset-form .field-row .field {
+    flex: 1 1 14rem;
+}
+
+.reset-form .actions {
+    margin-top: var(--sp-4);
+}
+
 /* ----------------------------------------------------------------- rules */
 
 .rules {
     padding-left: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-3);
     font-size: 0.9375rem;
+}
+
+.rules li + li {
+    margin-top: var(--sp-3);
 }
 
 .rules li::marker {
@@ -761,6 +892,26 @@ td.pick_table {
     font-style: italic;
 }
 
+/* Nobody has picked here yet. Distinct from an empty cell, which used to mean
+   the same thing and looked like missing data. */
+.pick-none {
+    color: var(--text-muted);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.users_picks_heading {
+    width: 100%;
+    margin: 0 0 var(--sp-3);
+    font-size: 1.0625rem;
+}
+
+/* Shown, but not scored: this player was already out when they picked it. */
+.pick-void {
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+
 td.status-in {
     color: var(--ok-text);
     font-weight: 700;
@@ -890,8 +1041,9 @@ footer a {
         padding: var(--sp-6);
     }
 
+    /* The rules are the long card, so they get the wider column. */
     .grid-two {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.4fr 1fr;
         gap: var(--sp-6);
         align-items: start;
     }
@@ -910,6 +1062,28 @@ footer a {
     .pick-form .actions {
         grid-column: 1 / -1;
         margin-top: var(--sp-2);
+    }
+}
+
+/*
+ * Two short cards side by side, not one tall card beside a stub. The rules
+ * list is the tallest thing on the page and the card next to it is a single
+ * paragraph and a button, which left a column of dead space the height of a
+ * screen. Splitting the list in two once there is room to do it evens them up.
+ */
+@media (min-width: 75em) {
+    .rules {
+        columns: 2;
+        column-gap: var(--sp-6);
+    }
+
+    .rules li {
+        break-inside: avoid;
+    }
+
+    .rules li + li {
+        margin-top: 0;
+        margin-bottom: var(--sp-3);
     }
 }
 

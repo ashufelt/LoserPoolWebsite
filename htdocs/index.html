@@ -51,16 +51,20 @@
             <form class="pick-form" action="/picks/" method="post">
                 <div class="field">
                     <label for="userpicks">Username</label>
-                    <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load"
-                        hx-target="this" hx-swap="outerHTML">
-                        <option value="">Loading…</option>
-                    </select>
+                    <!-- The shell stays put: htmx swaps only the select inside it. -->
+                    <div class="select-shell">
+                        <select id="userpicks" name="userpick" hx-get="users/all.php" hx-trigger="load"
+                            hx-target="this" hx-swap="outerHTML">
+                            <option value="">Loading…</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="field field-narrow">
                     <label for="pickpin">PIN</label>
                     <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}"
-                        inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••">
+                        title="Four digits." inputmode="numeric" autocomplete="off" maxlength="4"
+                        placeholder="••••">
                 </div>
 
                 <div class="field">
@@ -82,6 +86,41 @@
             <p class="hint">
                 Changed your mind? Submit again, and your latest pick for the week replaces the last one.
             </p>
+
+            <!--
+              Collapsed, and last. Forgetting a PIN is rare and the form above
+              is why anyone is on this page; this should not compete with it.
+            -->
+            <!-- Outside the disclosure, so the answer survives it collapsing. -->
+            <div id="reset-status" role="status" aria-live="polite"></div>
+
+            <details class="reset-disclosure">
+                <summary>Forgot your PIN?</summary>
+                <form class="reset-form" hx-post="/users/reset-pin.php" hx-target="#reset-status"
+                    hx-swap="innerHTML"
+                    hx-on:lp-pin-reset="this.reset(); this.closest('details').open = false">
+                    <p class="hint">
+                        A PIN cannot be looked up, only replaced: the site stores a scrambled copy it
+                        cannot read back. Give your username and the email you registered with, and a
+                        new PIN is sent to that address.
+                    </p>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="resetuser">Username</label>
+                            <input type="text" id="resetuser" name="resetuser" required
+                                pattern="\w{3,20}" autocomplete="username">
+                        </div>
+                        <div class="field">
+                            <label for="resetemail">Email you registered with</label>
+                            <input type="email" id="resetemail" name="resetemail" required
+                                autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn btn-secondary">Email me a new PIN</button>
+                    </div>
+                </form>
+            </details>
         </section>
 
         <div id="both_tables_of_picks">
@@ -103,74 +142,40 @@
                     <li><strong>Picks are open Tuesday to Saturday</strong> and lock Sunday and Monday. Everyone
                         else's picks stay hidden until they lock.</li>
                     <li><strong>Buy back in: week 1 only.</strong></li>
+                    <li><strong>Registration closes when week 1 locks.</strong> Nobody joins a pool
+                        that is already running.</li>
                     <li><strong>Final four or fewer can split the pot</strong>, if everyone still in agrees.</li>
                 </ul>
                 <p class="hint">
-                    The dropdown only offers teams you are allowed to pick, so anything ineligible is already
-                    filtered out.
+                    The dropdown lists all 32 teams. Any you cannot pick this week are greyed out with
+                    the reason next to them, so you can see why rather than wondering where a team went.
                 </p>
             </section>
 
             <section class="card" aria-labelledby="register-heading">
                 <h2 id="register-heading">New here?</h2>
-                <p class="hint">
-                    Already playing? Just pick above. Registering takes a moment and you only do it
-                    once a season. Want a second entry? Register again with <code>_2</code> on the end.
-                </p>
 
                 <!--
-                  Collapsed by default. Most visits are returning players making
-                  a pick, and a six field form is a lot of page to scroll past
-                  to reach the thing they came for.
+                  Registration reports here. It sits outside the panel below so
+                  the result survives the form collapsing, and so it is next to
+                  the button that opens it again.
                 -->
-                <details class="register-disclosure">
-                    <summary class="btn btn-secondary">Register a username</summary>
-                <form class="register-form" hx-post="/users/add.php" hx-target="#picks_table" hx-swap="innerHTML">
-                    <div class="field">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}"
-                            autocomplete="name">
-                    </div>
+                <div id="register-status" role="status" aria-live="polite"></div>
 
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required autocomplete="email">
-                        <p class="field-note">Your name and email are never shown to other players.</p>
-                    </div>
-
-                    <div class="field">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required pattern="\w{3,20}"
-                            autocomplete="username">
-                        <p class="field-note">3–20 characters: letters, numbers and underscores.</p>
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field field-narrow">
-                            <label for="pin">PIN</label>
-                            <input type="password" id="pin" name="pin" required pattern="\d{4}"
-                                inputmode="numeric" maxlength="4" autocomplete="new-password">
-                        </div>
-                        <div class="field field-narrow">
-                            <label for="repin">Repeat PIN</label>
-                            <input type="password" id="repin" name="repin" required pattern="\d{4}"
-                                inputmode="numeric" maxlength="4" autocomplete="new-password">
-                        </div>
-                    </div>
-                    <p class="field-note">Four digits. You will need it every week, so pick something memorable.</p>
-
-                    <div class="actions">
-                        <button type="submit" class="btn btn-primary">Register</button>
-                    </div>
-                </form>
-                </details>
+                <!--
+                  The form is fetched rather than written here, because whether
+                  it should exist at all is a question about the season:
+                  registration closes when week 1 locks.
+                -->
+                <div id="register-panel" hx-get="users/form.php" hx-trigger="load" hx-target="this"
+                    hx-swap="innerHTML"></div>
             </section>
         </div>
     </main>
 
     <footer>
         <p>Stuck, or forgotten your PIN? Email
-            <a href="mailto:adamshufelt.official@gmail.com">adamshufelt.official@gmail.com</a>
+            <a href="mailto:josephrguardiola@gmail.com">josephrguardiola@gmail.com</a>
             from the address you signed up with.</p>
     </footer>
 
