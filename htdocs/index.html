@@ -63,7 +63,8 @@
                 <div class="field field-narrow">
                     <label for="pickpin">PIN</label>
                     <input type="password" id="pickpin" name="pickpin" required pattern="\d{4}"
-                        inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••">
+                        title="Four digits." inputmode="numeric" autocomplete="off" maxlength="4"
+                        placeholder="••••">
                 </div>
 
                 <div class="field">
@@ -175,7 +176,14 @@
                     hx-on:lp-registered="this.reset(); this.closest('details').open = false">
                     <div class="field">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required pattern="[\w\s]{3,30}"
+                        <!--
+                          No pattern. It used to be [\w\s]{3,30}, which rejects
+                          an apostrophe, a hyphen and a full stop, so O'Brien,
+                          Jean-Luc and J.R. could not register and were told
+                          nothing about why. The value is escaped on the way in
+                          and is never used as a key.
+                        -->
+                        <input type="text" id="name" name="name" required minlength="3" maxlength="30"
                             autocomplete="name">
                     </div>
 
@@ -188,6 +196,7 @@
                     <div class="field">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" required pattern="\w{3,20}"
+                            title="3 to 20 characters: letters, numbers and underscores. No spaces."
                             autocomplete="username">
                         <p class="field-note">3–20 characters: letters, numbers and underscores.</p>
                     </div>
@@ -196,12 +205,14 @@
                         <div class="field field-narrow">
                             <label for="pin">PIN</label>
                             <input type="password" id="pin" name="pin" required pattern="\d{4}"
-                                inputmode="numeric" maxlength="4" autocomplete="new-password">
+                                title="Four digits." inputmode="numeric" maxlength="4"
+                                autocomplete="new-password">
                         </div>
                         <div class="field field-narrow">
                             <label for="repin">Repeat PIN</label>
                             <input type="password" id="repin" name="repin" required pattern="\d{4}"
-                                inputmode="numeric" maxlength="4" autocomplete="new-password">
+                                title="Four digits, the same as above." inputmode="numeric" maxlength="4"
+                                autocomplete="new-password">
                         </div>
                     </div>
                     <p class="field-note">Four digits. You will need it every week, so pick something memorable.</p>

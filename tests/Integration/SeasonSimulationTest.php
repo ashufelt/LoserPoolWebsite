@@ -330,7 +330,8 @@ final class SeasonSimulationTest extends TestCase
     public function testTheSurvivorCountIsCorrectWhenTheFieldReachesFour(): void
     {
         $teams = Teams::all();
-        $players = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+        /* Three characters minimum: the same rule the registration form states. */
+        $players = ['pl1', 'pl2', 'pl3', 'pl4', 'pl5', 'pl6'];
         foreach ($players as $player) {
             $this->register($player);
         }

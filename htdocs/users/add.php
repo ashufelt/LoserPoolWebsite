@@ -11,16 +11,29 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     return;
 }
 
-$username = htmlspecialchars($_POST['username'] ?? '');
+$username = htmlspecialchars(trim($_POST['username'] ?? ''));
+$problem = null;
 
-if (!uh_add_user($_POST['name'], $_POST['email'], $_POST['username'], $_POST['pin'], $_POST['repin'])) {
+$registered = uh_add_user(
+    $_POST['name'] ?? '',
+    $_POST['email'] ?? '',
+    $_POST['username'] ?? '',
+    $_POST['pin'] ?? '',
+    $_POST['repin'] ?? '',
+    $problem
+);
+
+if (!$registered) {
     /*
-     * Failure keeps the form open with what was typed still in it. Retyping
-     * six fields to correct one of them is its own reason not to bother.
+     * Failure keeps the form open with what was typed still in it, and says
+     * which rule was broken. Retyping six fields to correct one of them is its
+     * own reason not to bother, and a refusal that lists everything it might
+     * have been leaves the player guessing which one it was.
      */
-    echo "<p class='form-status form-status-bad'>Could not register "
-        . ($username !== '' ? "<strong>" . $username . "</strong>" : "that username")
-        . ". Check that the two PINs match and that the username is not already taken.</p>";
+    echo "<p class='form-status form-status-bad' role='status'>"
+        . ($username !== '' ? "Could not register <strong>" . $username . "</strong>. " : "")
+        . htmlspecialchars((string) $problem)
+        . "</p>";
     return;
 }
 

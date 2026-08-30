@@ -9,21 +9,63 @@ use LoserPool\Pool\Standings;
 use LoserPool\Storage\PoolStore;
 
 
-function uh_add_user(string $name, string $email, string $new_user, string $pin, string $repin): bool
-{
+/*
+ * $problem comes back with the reason a registration was refused.
+ *
+ * Every refusal used to look the same from the outside: one sentence listing
+ * everything that might have been wrong. The browser catches most of these
+ * first, but only if its own rules agree with these, and a request that did
+ * not come from the form is not checked at all.
+ */
+function uh_add_user(
+    string $name,
+    string $email,
+    string $new_user,
+    string $pin,
+    string $repin,
+    ?string &$problem = null
+): bool {
     $store = lp_store();
-    $new_user = htmlspecialchars($new_user);
-    $name = htmlspecialchars($name);
-    $email = htmlspecialchars($email);
-    if ($pin != $repin) {
-        return false;
-    } else if (strlen($new_user) == 0) {
-        return false;
-    } else if (0 == $store->addUser($name, $email, $new_user, $pin)) {
-        return true;
-    } else {
+    $problem = null;
+    $new_user = htmlspecialchars(trim($new_user));
+    $name = htmlspecialchars(trim($name));
+    $email = htmlspecialchars(trim($email));
+
+    if ($name === "" || $email === "" || $new_user === "" || $pin === "") {
+        $problem = "Fill in every box.";
         return false;
     }
+
+    if ($pin !== $repin) {
+        $problem = "The two PINs do not match.";
+        return false;
+    }
+
+    if (preg_match('/^\d{4}$/', $pin) !== 1) {
+        $problem = "A PIN is four digits.";
+        return false;
+    }
+
+    /*
+     * The username is a key: it identifies picks, appears in the dropdown and
+     * travels in form posts. The name beside it is free text and is only ever
+     * displayed, so it is not held to this.
+     */
+    if (preg_match('/^\w{3,20}$/', $new_user) !== 1) {
+        $problem = "A username is 3 to 20 characters, letters, numbers and underscores, with no spaces.";
+        return false;
+    }
+
+    $code = $store->addUser($name, $email, $new_user, $pin);
+    if ($code === PoolStore::OK) {
+        return true;
+    }
+
+    $problem = $code === PoolStore::USER_EXISTS
+        ? "That username is already taken. Try another, or add _2 on the end for a second entry."
+        : "Could not save the registration. Try again.";
+
+    return false;
 }
 
 /*

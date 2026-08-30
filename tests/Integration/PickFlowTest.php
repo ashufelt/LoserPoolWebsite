@@ -230,6 +230,49 @@ final class PickFlowTest extends TestCase
         $this->assertSame(['Chicago Bears'], array_values(lp_store()->picksFor('joeg')));
     }
 
+    /*
+     * A refusal has to say which rule it broke. Every one of these used to
+     * produce the same sentence listing everything that might have been wrong.
+     */
+    public function testARefusedRegistrationSaysWhichRuleItBroke(): void
+    {
+        $cases = [
+            'mismatched PINs' => [['Joe', 'joe@example.com', 'joeg', '1234', '9999'], 'do not match'],
+            'a PIN that is not four digits' => [['Joe', 'joe@example.com', 'joeg', '12', '12'], 'four digits'],
+            'a username with a space' => [['Joe', 'joe@example.com', 'joe g', '1234', '1234'], 'no spaces'],
+            'a username of two characters' => [['Joe', 'joe@example.com', 'jo', '1234', '1234'], '3 to 20'],
+            'a missing email' => [['Joe', '', 'joeg', '1234', '1234'], 'every box'],
+        ];
+
+        foreach ($cases as $label => [$args, $expected]) {
+            $problem = null;
+            $args[] = &$problem;
+            $this->assertFalse(uh_add_user(...$args), $label . ' is refused');
+            $this->assertStringContainsString($expected, (string) $problem, $label);
+            unset($problem);
+        }
+    }
+
+    /* A name is displayed, never used as a key, so punctuation in it is fine. */
+    public function testANameWithPunctuationCanRegister(): void
+    {
+        $problem = null;
+
+        $this->assertTrue(
+            uh_add_user("Sean O'Brien-Smith Jr.", 'sean@example.com', 'seanob', '1234', '1234', $problem),
+            (string) $problem
+        );
+    }
+
+    public function testATakenUsernameSaysSoRatherThanListingEveryRule(): void
+    {
+        $this->registerJoe();
+        $problem = null;
+
+        $this->assertFalse(uh_add_user('Joe', 'other@example.com', 'joeg', '1234', '1234', $problem));
+        $this->assertStringContainsString('already taken', (string) $problem);
+    }
+
     /* Other players' current-week picks are concealed until the slate starts. */
     public function testOtherPlayersPicksAreHiddenUntilLock(): void
     {
