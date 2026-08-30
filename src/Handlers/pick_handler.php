@@ -77,7 +77,7 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
         } else if ($create_ecode == 1) {
             return ph_status_bad("Database error. Try viewing your pick, or submitting again.")
                 . "<p class='hint'>If 'View my picks' does not show it, email "
-                . "adamshufelt.official@gmail.com so the pick is not lost.</p>";
+                . "josephrguardiola@gmail.com before the deadline so the pick is not lost.</p>";
         }
     } else {
         return ph_status_ok(
