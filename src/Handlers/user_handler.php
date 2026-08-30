@@ -31,6 +31,17 @@ function uh_add_user(
     $name = htmlspecialchars(trim($name));
     $email = htmlspecialchars(trim($email));
 
+    /*
+     * Checked before anything else, because nothing the player types can make
+     * a closed pool accept them, and a form that validates six fields and then
+     * says "we are not taking entries" wastes the effort.
+     */
+    if (!lp_registration_is_open()) {
+        $problem = "Registration closed when week 1 locked. The pool is under way,"
+            . " so there is nothing to join until next season.";
+        return false;
+    }
+
     if ($name === "" || $email === "" || $new_user === "" || $pin === "") {
         $problem = "Fill in every box.";
         return false;
