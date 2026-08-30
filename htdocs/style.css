@@ -809,6 +809,12 @@ td.pick_table {
     font-style: italic;
 }
 
+/* Shown, but not scored: this player was already out when they picked it. */
+.pick-void {
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+
 td.status-in {
     color: var(--ok-text);
     font-weight: 700;

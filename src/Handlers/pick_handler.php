@@ -123,6 +123,7 @@ function ph_get_picks_html_table(): string
         }
 
         $users_picks = $all_picks[$user] ?? [];
+        $out_week = $standings[$user]['outWeek'];
         for ($i = $start_week; $i <= $end_week; $i++) {
             $pick = "";
             $result_class = "";
@@ -131,6 +132,15 @@ function ph_get_picks_html_table(): string
                 $pick = $users_picks[$i];
                 if ($hide_picks && ($i == $current_week)) {
                     $pick = "<span class='pick-pending'>Submitted</span>";
+                } elseif ($out_week !== null && $i > $out_week) {
+                    /*
+                     * Picks made after the week that ended a player's season.
+                     * Nothing stops an eliminated player carrying on, and
+                     * people do, but scoring those picks paints a run of green
+                     * survival ticks across a row whose status says the player
+                     * is out. They are shown, greyed, and not scored.
+                     */
+                    $pick = "<span class='pick-void'>" . ph_team_label($pick) . "</span>";
                 } else {
                     /*
                      * Result cells carry a glyph as well as a colour. Colour

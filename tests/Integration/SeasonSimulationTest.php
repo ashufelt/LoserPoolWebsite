@@ -139,6 +139,39 @@ final class SeasonSimulationTest extends TestCase
         $this->assertStringContainsString('Out &middot; wk 2', $standings, 'bob went out in week 2');
     }
 
+    /*
+     * Nothing stops an eliminated player from picking again, and people do.
+     * Scoring those picks put a row of green survival ticks next to a status
+     * of "Out", which reads as though the player is still alive.
+     */
+    public function testPicksMadeAfterEliminationAreNotScored(): void
+    {
+        $teams = Teams::all();
+
+        $this->register('alice');
+        $this->register('bob');
+
+        $this->openWeek(1);
+        $this->pick('alice', $teams[0]);
+        $this->pick('bob', $teams[2]);
+        /* Bob backed a winner in week 1 and did not buy back, so he is out. */
+        $this->settleWeek(1, [$teams[0]], 2);
+        $this->assertSame(1, $this->survivors());
+
+        /* Both pick a loser in week 2. Only Alice's counts. */
+        $this->openWeek(2);
+        $this->pick('alice', $teams[4]);
+        $this->pick('bob', $teams[6]);
+        $this->settleWeek(2, [$teams[4], $teams[6]], 3);
+
+        $table = ph_get_picks_html_table();
+
+        $this->assertStringContainsString('pick-void', $table, "Bob's week 2 pick is shown but not scored");
+        $this->assertSame(2, substr_count($table, 'res-correct'), 'only alice scores in weeks 1 and 2');
+        $this->assertStringContainsString($teams[6], $table, 'the pick itself is still listed');
+        $this->assertSame(1, $this->survivors(), 'a later pick cannot bring an eliminated player back');
+    }
+
     /* The no-repeat rule has to hold across the whole season, not one week. */
     public function testATeamCannotBeReusedLaterInTheSeason(): void
     {
