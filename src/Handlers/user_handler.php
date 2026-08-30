@@ -57,12 +57,28 @@ function uh_get_user_option_list_html(): string
     foreach ($users as $user) {
         $row = $standings[$user] ?? null;
         if ($row !== null && $row['status'] === Standings::OUT) {
-            $out .= '<option value="' . $user . '">' . $user
-                . ' (out &middot; wk ' . $row['outWeek'] . ')</option>';
+            $out .= '<option value="' . $user . '" data-out="' . $row['outWeek'] . '">'
+                . $user . ' (out &middot; wk ' . $row['outWeek'] . ')</option>';
             continue;
         }
         $still_in .= '<option value="' . $user . '">' . $user . '</option>';
     }
 
-    return $still_in . $out;
+    if ($out === '') {
+        return $still_in;
+    }
+
+    /*
+     * An optgroup rather than styling the options, because that is the part of
+     * a native select every browser actually renders differently: option
+     * colour is honoured on some desktop browsers and ignored outright on
+     * iOS, where most of these picks are made. The group heading greys and
+     * separates the eliminated players everywhere.
+     *
+     * Not disabled. They can still submit, and a week-one buy-back is recorded
+     * by hand afterwards, so disabling would lock out a player who has paid to
+     * stay in until the commissioner got round to it.
+     */
+    return $still_in
+        . '<optgroup label="Out of the pool">' . $out . '</optgroup>';
 }

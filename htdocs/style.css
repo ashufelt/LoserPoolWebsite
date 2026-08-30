@@ -641,6 +641,14 @@ select option:disabled {
     color: var(--text-muted);
 }
 
+/*
+ * Eliminated players. Honoured on the desktop browsers that style options at
+ * all and ignored on iOS, which is why the grouping does the real work.
+ */
+select option[data-out] {
+    color: var(--text-muted);
+}
+
 .teampicker-empty {
     list-style: none;
     padding: var(--sp-3);
