@@ -57,21 +57,43 @@ function get_team_options_html($user = ""): string
     $reasons = get_INELIGIBLE_reasons($week);
     $this_weeks_pick = $users_picks[$week] ?? null;
 
+    /*
+     * Two buckets, alphabetical within each. Scattering the unavailable teams
+     * through the list pushes the ones that can actually be picked down behind
+     * them: by the middle of the season most of the openings are used, so the
+     * list opens on a wall of greyed rows and the player scrolls past teams
+     * they cannot choose to reach the ones they can. Sorting them last keeps
+     * every team listed, which is the point, without making the list start
+     * with the useless half.
+     */
+    $selectable = "";
+    $unavailable = "";
+
+    /* This week's own pick leads, so the current choice is what the closed
+       control shows, and so the native select lands on it with no JavaScript. */
+    $current = $this_weeks_pick !== null ? ph_team_option($this_weeks_pick) : "";
+
     foreach (Teams::all() as $team) {
-        /* This week's own pick stays selectable, so the current choice shows. */
         if ($team === $this_weeks_pick) {
-            $options_list .= ph_team_option($team);
             continue;
         }
 
         $used_in = array_search($team, $users_picks, true);
         if ($used_in !== false) {
-            $options_list .= ph_team_option($team, 'Used in week ' . $used_in);
+            $unavailable .= ph_team_option($team, 'Used in week ' . $used_in);
             continue;
         }
 
-        $options_list .= ph_team_option($team, $reasons[$team] ?? null);
+        $reason = $reasons[$team] ?? null;
+        if ($reason !== null) {
+            $unavailable .= ph_team_option($team, $reason);
+            continue;
+        }
+
+        $selectable .= ph_team_option($team);
     }
+
+    $options_list .= $current . $selectable . $unavailable;
     $options_list .= "</select>";
     return $options_list;
 }

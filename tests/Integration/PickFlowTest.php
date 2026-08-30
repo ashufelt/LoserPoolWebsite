@@ -253,6 +253,48 @@ final class PickFlowTest extends TestCase
         $this->assertSame(32, substr_count($options, '<option'));
     }
 
+    /*
+     * Listed, but last. By the middle of a season most of the list is used
+     * teams and byes, and interleaving them alphabetically buries the handful
+     * that can still be picked behind rows that do nothing.
+     */
+    public function testUnavailableTeamsAreListedAfterTheSelectableOnes(): void
+    {
+        $this->registerJoe();
+
+        $options = get_team_options_html('joeg');
+
+        preg_match_all('/<option([^>]*)>([^<]+)<\\/option>/', $options, $matches, PREG_SET_ORDER);
+        $this->assertCount(32, $matches);
+
+        $seenUnavailable = false;
+        foreach ($matches as $option) {
+            if (strpos($option[1], 'disabled') !== false) {
+                $seenUnavailable = true;
+                continue;
+            }
+            $this->assertFalse(
+                $seenUnavailable,
+                $option[2] . ' can be picked but is listed after an unavailable team'
+            );
+        }
+
+        /* Guard against the assertion passing because nothing was disabled. */
+        $this->assertTrue($seenUnavailable, 'week 1 2026 has teams playing before the deadline');
+    }
+
+    /* The current pick leads, so a native select with no JavaScript shows it. */
+    public function testThisWeeksPickIsTheFirstOptionInTheList(): void
+    {
+        $this->registerJoe();
+        ph_add_pick('joeg', 'Kansas City Chiefs', '1234');
+
+        $options = get_team_options_html('joeg');
+
+        preg_match_all('/<option[^>]*>([^<]+)<\\/option>/', $options, $matches);
+        $this->assertSame('Kansas City Chiefs', $matches[1][0]);
+    }
+
     /* An unknown player still gets a usable list rather than an error. */
     public function testTheDropdownWorksForAnUnknownUser(): void
     {
