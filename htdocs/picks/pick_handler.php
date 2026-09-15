@@ -2,8 +2,8 @@
 
 namespace PickHandling;
 
-include_once "../SqlAccess/SqlAccessController.php";
-include_once "../data/week_manager.php";
+include_once __DIR__ . "/../SqlAccess/SqlAccessController.php";
+include_once __DIR__ . "/../data/week_manager.php";
 
 use SqlAccess\SqlAccessController;
 

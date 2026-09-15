@@ -2,7 +2,7 @@
 
 namespace UserHandling;
 
-include_once "../SqlAccess/SqlAccessController.php";
+include_once __DIR__ . "/../SqlAccess/SqlAccessController.php";
 
 use SqlAccess\SqlAccessController;
 

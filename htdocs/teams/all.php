@@ -1,6 +1,6 @@
 <?php
 
-include_once("team_handler.php");
+include_once(__DIR__ . "/team_handler.php");
 
 use function TeamHandler\get_team_options_html;
 

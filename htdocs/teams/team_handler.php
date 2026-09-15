@@ -2,8 +2,8 @@
 
 namespace TeamHandler;
 
-include_once "../data/week_manager.php";
-include_once "../picks/pick_handler.php";
+include_once __DIR__ . "/../data/week_manager.php";
+include_once __DIR__ . "/../picks/pick_handler.php";
 
 use function PickHandling\ph_get_user_picks_list;
 

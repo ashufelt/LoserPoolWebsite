@@ -1,6 +1,6 @@
 <?php
 
-include_once("user_handler.php");
+include_once(__DIR__ . "/user_handler.php");
 
 use function UserHandling\uh_get_user_option_list_html;
 
