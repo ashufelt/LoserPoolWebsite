@@ -5,42 +5,8 @@ namespace TeamHandler;
 include_once __DIR__ . "/../data/week_manager.php";
 include_once __DIR__ . "/../picks/pick_handler.php";
 
+use LoserPool\Nfl\Teams;
 use function PickHandling\ph_get_user_picks_list;
-
-const TEAMS = [
-    "Arizona Cardinals",
-    "Atlanta Falcons",
-    "Baltimore Ravens",
-    "Buffalo Bills",
-    "Carolina Panthers",
-    "Chicago Bears",
-    "Cincinnati Bengals",
-    "Cleveland Browns",
-    "Dallas Cowboys",
-    "Denver Broncos",
-    "Detroit Lions",
-    "Green Bay Packers",
-    "Houston Texans",
-    "Indianapolis Colts",
-    "Jacksonville Jaguars",
-    "Kansas City Chiefs",
-    "Las Vegas Raiders",
-    "Los Angeles Chargers",
-    "Los Angeles Rams",
-    "Miami Dolphins",
-    "Minnesota Vikings",
-    "New England Patriots",
-    "New Orleans Saints",
-    "New York Giants",
-    "New York Jets",
-    "Philadelphia Eagles",
-    "Pittsburgh Steelers",
-    "San Francisco 49ers",
-    "Seattle Seahawks",
-    "Tampa Bay Buccaneers",
-    "Tennessee Titans",
-    "Washington Commanders"
-];
 
 function get_team_options_html($user = ""): string
 {
@@ -53,7 +19,7 @@ function get_team_options_html($user = ""): string
         $users_picks = ph_get_user_picks_list($user);
     }
 
-    foreach (TEAMS as $team) {
+    foreach (Teams::all() as $team) {
         if (!in_array($team, get_INELIGIBLE_teams(get_current_week())) && !in_array($team, $users_picks)) {
             $options_list .= "<option>" . $team . "</option>";
         } else if (in_array($team, $users_picks) && (array_key_exists(get_current_week(), $users_picks))) {

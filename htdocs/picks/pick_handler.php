@@ -25,7 +25,7 @@ function ph_add_pick(string $userin, string $teamin, string $pinin): string
         return "<h4>Username/PIN combo is not valid</h4>";
     } else if (in_array($team, $users_picks, true)) {
         return "<h4>Cannot repeat a choice</h4>";
-    } else if (is_sunday_or_monday() && intval(date('z')) > 245) {
+    } else if (lp_picks_are_locked()) {
        return "<h4>Can't make a pick on Sunday or Monday</h4>";
     } else if (0 != ($create_ecode = $controller->add_pick($user, $team, $week_number))) {
         if ($create_ecode == 2) {
@@ -45,7 +45,7 @@ function ph_get_picks_html_table(): string
 {
     $controller = new SqlAccessController();
     $show_weeks_count = 8;
-    $hide_picks = !is_sunday_or_monday() || intval(date('z')) < 245;
+    $hide_picks = lp_picks_are_hidden();
     $current_week = get_current_week();
     if ($current_week <= $show_weeks_count) {
         $start_week = 1;

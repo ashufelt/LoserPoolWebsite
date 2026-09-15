@@ -1,0 +1,529 @@
+{
+ "events": [
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Denver Broncos"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Seattle Seahawks"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-16T00:15Z",
+   "id": "401872995"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Jacksonville Jaguars"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Houston Texans"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T13:30Z",
+   "id": "401872996"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Atlanta Falcons"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Chicago Bears"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401872999"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Cleveland Browns"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Baltimore Ravens"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401872997"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Indianapolis Colts"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Tennessee Titans"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401873003"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "New England Patriots"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "New York Jets"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401873001"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "New York Giants"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "New Orleans Saints"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401873000"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Philadelphia Eagles"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Carolina Panthers"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401872998"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Tampa Bay Buccaneers"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Pittsburgh Steelers"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T17:00Z",
+   "id": "401873002"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Los Angeles Rams"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Arizona Cardinals"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T20:05Z",
+   "id": "401873004"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Kansas City Chiefs"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Los Angeles Chargers"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T20:25Z",
+   "id": "401873006"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Las Vegas Raiders"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Buffalo Bills"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-18T20:25Z",
+   "id": "401873005"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Green Bay Packers"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Dallas Cowboys"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-19T00:20Z",
+   "id": "401873007"
+  },
+  {
+   "competitions": [
+    {
+     "competitors": [
+      {
+       "score": "0",
+       "team": {
+        "displayName": "San Francisco 49ers"
+       },
+       "winner": null
+      },
+      {
+       "score": "0",
+       "team": {
+        "displayName": "Washington Commanders"
+       },
+       "winner": null
+      }
+     ],
+     "status": {
+      "type": {
+       "completed": false,
+       "name": "STATUS_SCHEDULED"
+      }
+     }
+    }
+   ],
+   "date": "2026-10-20T00:15Z",
+   "id": "401873008"
+  }
+ ],
+ "season": {
+  "type": 2,
+  "year": 2026
+ },
+ "week": {
+  "number": 6,
+  "teamsOnBye": [
+   {
+    "abbreviation": "CIN",
+    "displayName": "Cincinnati Bengals",
+    "id": "4",
+    "isActive": true,
+    "links": [
+     {
+      "href": "https://www.espn.com/nfl/team/_/name/cin/cincinnati-bengals",
+      "isExternal": false,
+      "isPremium": false,
+      "rel": [
+       "clubhouse",
+       "desktop",
+       "team"
+      ],
+      "text": "Clubhouse"
+     }
+    ],
+    "location": "Cincinnati",
+    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png",
+    "name": "Bengals",
+    "shortDisplayName": "Bengals",
+    "uid": "s:20~l:28~t:4"
+   },
+   {
+    "abbreviation": "DET",
+    "displayName": "Detroit Lions",
+    "id": "8",
+    "isActive": true,
+    "links": [
+     {
+      "href": "https://www.espn.com/nfl/team/_/name/det/detroit-lions",
+      "isExternal": false,
+      "isPremium": false,
+      "rel": [
+       "clubhouse",
+       "desktop",
+       "team"
+      ],
+      "text": "Clubhouse"
+     }
+    ],
+    "location": "Detroit",
+    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png",
+    "name": "Lions",
+    "shortDisplayName": "Lions",
+    "uid": "s:20~l:28~t:8"
+   },
+   {
+    "abbreviation": "MIA",
+    "displayName": "Miami Dolphins",
+    "id": "15",
+    "isActive": true,
+    "links": [
+     {
+      "href": "https://www.espn.com/nfl/team/_/name/mia/miami-dolphins",
+      "isExternal": false,
+      "isPremium": false,
+      "rel": [
+       "clubhouse",
+       "desktop",
+       "team"
+      ],
+      "text": "Clubhouse"
+     }
+    ],
+    "location": "Miami",
+    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/mia.png",
+    "name": "Dolphins",
+    "shortDisplayName": "Dolphins",
+    "uid": "s:20~l:28~t:15"
+   },
+   {
+    "abbreviation": "MIN",
+    "displayName": "Minnesota Vikings",
+    "id": "16",
+    "isActive": true,
+    "links": [
+     {
+      "href": "https://www.espn.com/nfl/team/_/name/min/minnesota-vikings",
+      "isExternal": false,
+      "isPremium": false,
+      "rel": [
+       "clubhouse",
+       "desktop",
+       "team"
+      ],
+      "text": "Clubhouse"
+     }
+    ],
+    "location": "Minnesota",
+    "logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/min.png",
+    "name": "Vikings",
+    "shortDisplayName": "Vikings",
+    "uid": "s:20~l:28~t:16"
+   }
+  ]
+ }
+}
