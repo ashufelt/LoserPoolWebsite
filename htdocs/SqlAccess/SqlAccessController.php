@@ -3,7 +3,9 @@
 namespace SqlAccess;
 
 include_once __DIR__ . "/conn_info.php";
+require_once __DIR__ . "/../src/autoload.php";
 
+use LoserPool\Pool\SeasonConfig;
 use mysqli;
 use function ConnectionInfo\get_host;
 use function ConnectionInfo\get_user;
@@ -17,8 +19,13 @@ class SqlAccessController
     protected $construct_error = null;
     private string $log_file;
 
-    private const USER_TABLE = "Users_25";
-    private const PICKS_TABLE = "Picks_25";
+    /*
+     * Each season gets its own pair of tables, created on first request. The
+     * suffix comes from SeasonConfig so a rollover is one edit in one file
+     * rather than a hunt through the data layer.
+     */
+    private const USER_TABLE = "Users_" . SeasonConfig::TABLE_SUFFIX;
+    private const PICKS_TABLE = "Picks_" . SeasonConfig::TABLE_SUFFIX;
     /*
     * Constructor. Establishes connection with SQL, and creates DB, connects to DB
     * and creates two tables (Users and Picks). Should gracefully only create when
